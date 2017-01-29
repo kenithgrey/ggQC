@@ -1,6 +1,6 @@
 require(rQC)
 require(plyr)
-#
+##
 
 
 df <- data.frame(process = rep(1,100), DIN = rnorm(100,0,1), repitition=letters[1:20] )
