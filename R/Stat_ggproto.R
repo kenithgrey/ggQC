@@ -1,10 +1,10 @@
 
 XBar <- ggplot2::ggproto("Xbar", ggplot2::Stat,
-        compute_group = function(data, scales, n=NULL, digits=1, subgrouping=NULL){
+        compute_group = function(data, scales, n=NULL, digits=1){
           #print(dfs)
           limits_df <- data.frame(yintercept =
             c(
-              t(ylines_XbarR(data = data, value = "y", grouping = subgrouping, n=n))[-c(1:2)]
+              t(ylines_XbarR(data = data, value = "y", grouping = "x", n=n))[-c(1:2)]
             )
           )
           limits_df$y = limits_df$yintercept
@@ -23,7 +23,7 @@ xbar <- function(mapping = NULL,
                        na.rm = FALSE,
                        show.legend = NA,
                        inherit.aes = TRUE,
-                       n=NULL, digits=1, subgrouping=NULL,
+                       n=NULL, digits=1,
                        ...) {
   ggplot2::layer(
     stat = XBar,
@@ -35,7 +35,7 @@ xbar <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n,
-                  digits=digits, subgrouping = "subgroup", ...)
+                  digits=digits, ...)
   )
 }
 
@@ -47,7 +47,7 @@ xbar_label <- function(mapping = NULL,
                  na.rm = FALSE,
                  show.legend = NA,
                  inherit.aes = TRUE,
-                 n=NULL,digits=1, subgrouping=NULL,
+                 n=NULL,digits=1,
                  ...) {
   ggplot2::layer(
     stat = XBar,
@@ -59,8 +59,7 @@ xbar_label <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, hjust=1.1,
-                  vjust=.5, size=3,n=n, digits=digits,
-                  subgrouping = "subgroup", ...)
+                  vjust=.5, size=3,n=n, digits=digits, ...)
   )
 }
 
