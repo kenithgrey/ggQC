@@ -76,13 +76,14 @@ return(constants)
 Ns_in_table <-  2:20
 require(snow)
 clus <- makeCluster(3)
+set.seed(5555)
 system.time(test <- parLapply(clus, Ns_in_table, Make_Qualitity_Control_Constants)) #139 seconds for 10; 
 Constants_Table <- do.call(rbind, test)
-#write.table(Constants_Table, file = "Constants_Table.csv", quote = F, sep = ",", row.names = F)
+write.table(Constants_Table, file = "../R/Constants_Table.csv", quote = F, sep = ",", row.names = F)
 
 ```
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
 
 
 n <- 2
