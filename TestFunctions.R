@@ -1,5 +1,6 @@
 require(rQC)
 require(plyr)
+require(ggplot2)
 ##
 
 
@@ -11,12 +12,14 @@ df_all$regions <- rep(c("top", "bottom"), each=50)
 
 ylines_XbarR(data = df_all, value = "DIN", grouping = "repitition", n=2)
 
-ddply(df_all,
+LimitData <- ddply(df_all,
       .variables = c("process","regions"),
       .fun = function(df) {
         ylines_XbarR(data = df, value = "DIN",
                      grouping = "repitition")}  )
 
+(LimitData$xBar_UCL - LimitData$xBar_Bar) ==
+(LimitData$xBar_Bar - LimitData$xBar_LCL)
 
 ddply(df_all, .variables = "process", summarise,
       mean = mean(DIN),
@@ -26,7 +29,7 @@ ddply(df_all, .variables = "process", summarise,
       )
 
 
-ggplot(df_all, aes(x=repitition, y=DIN, subgroup=repitition, group=process)) +
+ggplot(df_all, aes(x=repitition, y=DIN, group=process)) +
   geom_point() + #geom_line() +
   stat_summary(fun.y = "mean", colour = "red", size = 1, geom = c("line"))+
   stat_summary(fun.y = "mean", colour = "red", size = 2, geom = c("point"))+
