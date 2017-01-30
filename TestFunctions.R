@@ -10,23 +10,31 @@ df_all <- rbind(df, df2)
 df_all$x <- rep(1:100, times=2)
 df_all$regions <- rep(c("top", "bottom"), each=50)
 
-ylines_XbarR(data = df_all, value = "DIN", grouping = "repitition", n=2)
-
-LimitData <- ddply(df_all,
-      .variables = c("process","regions"),
-      .fun = function(df) {
-        ylines_XbarR(data = df, value = "DIN",
-                     grouping = "repitition")}  )
-
-(LimitData$xBar_UCL - LimitData$xBar_Bar) ==
-(LimitData$xBar_Bar - LimitData$xBar_LCL)
+mR(y=df_all$DIN)
+xBar_one_UCL(y=df_all$DIN)
+xBar_one_LCL(y=df_all$DIN)
 
 ddply(df_all, .variables = "process", summarise,
       mean = mean(DIN),
       mR = mR(DIN),
       LCL = xBar_one_LCL(DIN),
       UCL = xBar_one_UCL(DIN)
-      )
+)
+
+
+QC_Lines(data = df_all, value = "DIN", grouping = "repitition", n=2)
+
+LimitData <- ddply(df_all,
+      .variables = c("process","regions"),
+      .fun = function(df) {
+        QC_Lines(data = df, value = "DIN",
+                     grouping = "repitition", method = "xBar.sBar")}  )
+
+(LimitData$xBar_UCL - LimitData$xBar_Bar) ==
+(LimitData$xBar_Bar - LimitData$xBar_LCL)
+
+# xBar_Bar(df_all, "DIN", "repitition")
+# xMedian_Bar(df_all, "DIN", "repitition")
 
 
 ggplot(df_all, aes(x=repitition, y=DIN, group=process)) +
