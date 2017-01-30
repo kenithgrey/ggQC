@@ -4,7 +4,7 @@ XBar <- ggplot2::ggproto("Xbar", ggplot2::Stat,
           #print(dfs)
           limits_df <- data.frame(yintercept =
             c(
-              t(ylines_XbarR(data = data, value = "y", grouping = "x", n=n))[-c(1:2)]
+              t(QC_Lines(data = data, value = "y", grouping = "x", n=n))[-c(1:2)]
             )
           )
           limits_df$y = limits_df$yintercept
