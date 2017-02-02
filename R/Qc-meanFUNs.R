@@ -12,7 +12,7 @@ sBar <- dispersionFUN(sd, mean)
 xBar_Bar <- XCentral_LimitFUN(mean)
 xMedian_Bar <- XCentral_LimitFUN(median)
 
-# X-Limit Functions -------------------------------------------------------
+# X-Limit Functions (+/-) ------------------------------
 # +---------------+---------------+------------------+
 # |               | mean(x)       | median(x)        |
 # +===============+===============+==================+

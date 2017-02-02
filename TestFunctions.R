@@ -24,10 +24,10 @@ ddply(df_all, .variables = "process", summarise,
 
 QC_Lines(data = df_all, value = "DIN", grouping = "repitition", n=2)
 
-LimitData <- ddply(df_all,
+ddply(df_all,
       .variables = c("process","regions"),
       .fun = function(df) {
-        QC_Lines(data = df, value = "DIN",
+        QC_Lines(data = df, value = "DIN", n=20,
                      grouping = "repitition", method = "xBar.sBar")}  )
 
 (LimitData$xBar_UCL - LimitData$xBar_Bar) ==
@@ -37,10 +37,10 @@ LimitData <- ddply(df_all,
 # xMedian_Bar(df_all, "DIN", "repitition")
 
 
-ggplot(df_all, aes(x=repitition, y=DIN, group=process)) +
+ggplot(df_all, aes(x=repitition, y=DIN, group=process, color=as.factor(process))) +
   geom_point() + #geom_line() +
   stat_summary(fun.y = "mean", colour = "red", size = 1, geom = c("line"))+
   stat_summary(fun.y = "mean", colour = "red", size = 2, geom = c("point"))+
-  xbar(digits = 2) +
-  xbar_label(digits = 2) +
-  facet_grid(process~regions, scales = "free_x") + theme_bw()
+  value_control_lines(digits = 2, method = "xMedian.rMedian") +
+  value_control_lines(digits = 2, method="xMedian.rMedian") +
+  facet_grid(.~regions, scales = "free_x") + theme_bw()

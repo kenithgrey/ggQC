@@ -1,4 +1,5 @@
 # 2nd Order Functions ------------------------------------------------------
+  # Report Lines for XmR chart
 ylines_indv <- function(y){
   QC_indv_functions <- list(mR = mR,
                             xBar_one_LCL = xBar_one_LCL,
@@ -9,6 +10,7 @@ ylines_indv <- function(y){
                 FUN = function(f){f(y)}))
 }
 
+#Report lines for subgroup plots
 QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, n=NULL, method="xBar.rBar"){
   switch(method,
          "xBar.rBar" = {
