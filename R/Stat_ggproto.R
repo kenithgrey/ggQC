@@ -1,10 +1,11 @@
 
-XBar <- ggplot2::ggproto("Xbar", ggplot2::Stat,
-        compute_group = function(data, scales, n=NULL, digits=1){
+Value_Control_Lines <- ggplot2::ggproto("Xbar", ggplot2::Stat,
+        compute_group = function(data, scales, n=NULL, digits=1, method=NULL ){
           #print(dfs)
           limits_df <- data.frame(yintercept =
             c(
-              t(QC_Lines(data = data, value = "y", grouping = "x", n=n))[-c(1:2)]
+              t(QC_Lines(data = data, value = "y", grouping = "x",
+                         n=n, method = method))[-c(1:2)]
             )
           )
           limits_df$y = limits_df$yintercept
@@ -15,7 +16,7 @@ XBar <- ggplot2::ggproto("Xbar", ggplot2::Stat,
         )
 
 
-xbar <- function(mapping = NULL,
+value_control_lines <- function(mapping = NULL,
                        data = NULL,
                        geom = "hline",
                        yintercept = NULL,
@@ -24,9 +25,10 @@ xbar <- function(mapping = NULL,
                        show.legend = NA,
                        inherit.aes = TRUE,
                        n=NULL, digits=1,
+                       method="xBar.rBar",
                        ...) {
   ggplot2::layer(
-    stat = XBar,
+    stat = Value_Control_Lines,
     #yintercept=XBar,
     data = data,
     mapping = mapping,
@@ -35,11 +37,11 @@ xbar <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n,
-                  digits=digits, ...)
+                  digits=digits, method=method, ...)
   )
 }
 
-xbar_label <- function(mapping = NULL,
+value_control_labels <- function(mapping = NULL,
                  data = NULL,
                  geom = "label",
                  yintercept = NULL,
@@ -47,10 +49,10 @@ xbar_label <- function(mapping = NULL,
                  na.rm = FALSE,
                  show.legend = NA,
                  inherit.aes = TRUE,
-                 n=NULL,digits=1,
+                 n=NULL,digits=1, method="xBar.rBar",
                  ...) {
   ggplot2::layer(
-    stat = XBar,
+    stat = Value_Control_Lines,
     #yintercept=XBar,
     data = data,
     mapping = mapping,
@@ -59,7 +61,8 @@ xbar_label <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, hjust=1.1,
-                  vjust=.5, size=3,n=n, digits=digits, ...)
+                  vjust=.5, size=3,n=n,
+                  digits=digits,method=method, ...)
   )
 }
 
