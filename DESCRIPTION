@@ -1,12 +1,18 @@
 Package: rQC
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Scaleable Quality Control
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Kenith Grey
+Maintainer: Kenith Grey <kenithgrey@r-bar.net>
+Description: Scaleable Quality Control makes the determinating quality control
+  limits and ploting scaleable for single variable as well as multi-parameter processes. A 
+  range of methods are available for constuctiong QC charts in ggplot including the 
+  standard XmR and XbarR charts. Additional methods are avalable for robust analysis of 
+  noisy data using xMedian-rMedian calculations and plotting capabilites.   
+Depends: R (>= 2.10)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat
+RoxygenNote: 6.0.0
+Imports: ggplot2

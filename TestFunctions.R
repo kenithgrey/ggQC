@@ -1,6 +1,7 @@
 require(rQC)
 require(plyr)
 require(ggplot2)
+require(gridExtra)
 ##
 
 
@@ -81,3 +82,32 @@ ggplot(Wheeler108, aes(x=Hour, y=value, group=1)) +
   stat_QC_labels(digits = 2) + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
   facet_grid(.~Cavity, scales = "free_x") # + theme_bw()
 
+QCrange <- function(x){
+  max(x) - min(x)
+}
+
+
+
+ggvalues <- ggplot(Wheeler108, aes(x=Hour, y=value, group=1)) +
+  #geom_point() + #geom_line() +
+  #geom_line(aes(group=interaction(Hour,PressCycle))) +
+  #geom_line(data = Wheeler108, aes(group=as.factor(Hour))) +
+  stat_summary(fun.y = "mean", colour = "red", size = 1, geom = c("line") )+
+  stat_summary(fun.y = "mean", colour = "red", size = 2, geom = c("point"))+
+  stat_QC(digits = 2, method="xBar.sBar") +
+  stat_QC_labels(digits = 2, method="xBar.sBar") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+  facet_grid(.~Cavity, scales = "free_x") # + theme_bw()
+
+ggDispersion <- ggplot(Wheeler108, aes(x=Hour, y=value, group=1)) +
+  #geom_point() + #geom_line() +
+  #geom_line(aes(group=interaction(Hour,PressCycle))) +
+  #geom_line(data = Wheeler108, aes(group=as.factor(Hour))) +
+  stat_summary(fun.y = "sd", colour = "red", size = 1, geom = c("line") )+
+  stat_summary(fun.y = "sd", colour = "red", size = 2, geom = c("point"))+
+  stat_QC(digits = 2, method = "sBar") +
+  stat_QC_labels(digits = 2, method = "sBar") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  +
+  facet_grid(.~Cavity, scales = "free_x") # + theme_bw()
+
+grid.arrange(ggvalues, ggDispersion, nrow=2)

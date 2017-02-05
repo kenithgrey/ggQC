@@ -1,8 +1,8 @@
 # QC Constants ------------------------------------------------------------
-qcK <- read.csv(file = "Stat/Constants_Table.csv", header=T)
-qcK$b2 <- qcK$A6 * sqrt(qcK$n) # used for median(x) Rbar
-qcK$b4 <- qcK$A9 * sqrt(qcK$n) # used for median(x) RMedian
-
+#qcK <- read.csv(file = "../Stat/Constants_Table.csv", header=T)
+#qcK$b2 <- qcK$A6 * sqrt(qcK$n) # used for median(x) Rbar
+#qcK$b4 <- qcK$A9 * sqrt(qcK$n) # used for median(x) RMedian
+#devtools::use_data(qcK, internal = TRUE)
 
 
 chartoptions <- data.frame(    #List of constant based on chart need
@@ -12,7 +12,7 @@ chartoptions <- data.frame(    #List of constant based on chart need
                       "median_rBar",
                       "median_rMedian"),
     Kname = c("d2", "d4", "c4", "b2", "b4"),
-stringsAsFactors = F)
+stringsAsFactors = FALSE)
 
 #chartType(mean, rBar)
 
