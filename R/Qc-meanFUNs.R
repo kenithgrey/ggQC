@@ -1,12 +1,32 @@
 # Xbar.One Functions ------------------------------------------------------
 mR <- function(y) {mean(abs(diff(y)))}
+mR_UCL <- function(y) {mR(y)*3.268}
 xBar_one_UCL <- function(y) {mean(y) + 2.66 * mR(y)}
 xBar_one_LCL <- function(y) {mean(y) - 2.66 * mR(y)}
 
-# Dispersion Functions ----------------------------------------------------
+# Dispersion Central Limit Functions ----------------------------------------------------
 rBar <- dispersionFUN(function(x){max(x)-min(x)}, mean)
 rMedian <- dispersionFUN(function(x){max(x)-min(x)}, median)
 sBar <- dispersionFUN(sd, mean)
+
+# Dispersion Limit Functions ----------------------------------------------------
+# +---------------+---------------+------------------+
+# |               | lower_limit   | upper_limit      |
+# +===============+===============+==================+
+# | rBar          | D3            | D4               |
+# +---------------+---------------+------------------+
+# | rMedian       | D5            | D6               |
+# +---------------+---------------+------------------+
+# | sBar          | B3            | B4               |
+# +---------------+---------------+------------------+
+
+rBar_UCL <- DispersionLimitFun(rBar, "+")
+rBar_LCL <- DispersionLimitFun(rBar, "-")
+rMedian_UCL <- DispersionLimitFun(rMedian, "+")
+rMedian_LCL <- DispersionLimitFun(rMedian, "-")
+sBar_UCL <- DispersionLimitFun(sBar, "+")
+sBar_LCL <- DispersionLimitFun(sBar, "-")
+
 
 # Central Limit Functions -----------------------------------------------
 xBar_Bar <- XCentral_LimitFUN(mean)
@@ -36,9 +56,13 @@ xMedian_rMedian_LCL <- xLimitFun(median, rMedian, "-")
 
 
 # N needed by Functions ---------------------------------------------------
-NFUN <- function(data, value, grouping, ...){
-  f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
-  N <- floor(mean(aggregate(f1, FUN="length", data = data)[,2]))
+NFUN <- function(data, value=NULL, grouping=NULL, formula=NULL, ...){
+  if(is.null(formula)){
+    f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
+  }else{f1 <- formula}
+
+  N_df <- (aggregate(f1, FUN = "length", data = data))
+  N <- floor(mean(N_df[,ncol(N_df)]))
   N
 }
 

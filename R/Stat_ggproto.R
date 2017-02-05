@@ -1,11 +1,11 @@
 
-Value_Control_Lines <- ggplot2::ggproto("Xbar", ggplot2::Stat,
+Stat_QC <- ggplot2::ggproto("Xbar", ggplot2::Stat,
         compute_group = function(data, scales, n=NULL, digits=1, method=NULL ){
           #print(dfs)
           limits_df <- data.frame(yintercept =
             c(
               t(QC_Lines(data = data, value = "y", grouping = "x",
-                         n=n, method = method))[-c(1:2)]
+                         n=n, method = method))[-c(1:4)]
             )
           )
           limits_df$y = limits_df$yintercept
@@ -16,7 +16,7 @@ Value_Control_Lines <- ggplot2::ggproto("Xbar", ggplot2::Stat,
         )
 
 
-value_control_lines <- function(mapping = NULL,
+stat_QC <- function(mapping = NULL,
                        data = NULL,
                        geom = "hline",
                        yintercept = NULL,
@@ -28,7 +28,7 @@ value_control_lines <- function(mapping = NULL,
                        method="xBar.rBar",
                        ...) {
   ggplot2::layer(
-    stat = Value_Control_Lines,
+    stat = Stat_QC,
     #yintercept=XBar,
     data = data,
     mapping = mapping,
@@ -41,7 +41,7 @@ value_control_lines <- function(mapping = NULL,
   )
 }
 
-value_control_labels <- function(mapping = NULL,
+stat_QC_labels <- function(mapping = NULL,
                  data = NULL,
                  geom = "label",
                  yintercept = NULL,
@@ -52,7 +52,7 @@ value_control_labels <- function(mapping = NULL,
                  n=NULL,digits=1, method="xBar.rBar",
                  ...) {
   ggplot2::layer(
-    stat = Value_Control_Lines,
+    stat = Stat_QC,
     #yintercept=XBar,
     data = data,
     mapping = mapping,
