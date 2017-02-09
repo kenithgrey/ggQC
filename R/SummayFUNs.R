@@ -1,7 +1,7 @@
 # 2nd Order Functions ------------------------------------------------------
   # Report Lines for XmR chart
 ylines_indv <- function(y){
-  QC_indv_functions <- list(mR = mR,
+  QC_indv_functions <- list(mR = mR, mR_UCL = mR_UCL,
                             xBar_one_LCL = xBar_one_LCL,
                             mean = mean,
                             xBar_one_UCL = xBar_one_UCL)
@@ -63,6 +63,14 @@ QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL,
                          sBar_LCL = sBar_LCL,
                          sBar = sBar,
                          sBar_UCL = sBar_UCL)}
+         # ,
+         # "mR" = {
+         #   print("hi")
+         #   Lines <- list(N = ZERO, N = ZERO,
+         #                 mean = ZERO, N = ZERO,
+         #                 mR_LCL = ZERO,
+         #                 mR = mR,
+         #                 mR_UCL = mR_UCL)}
   )
 
   unlist(lapply(Lines,

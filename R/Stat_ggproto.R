@@ -1,17 +1,38 @@
 
-Stat_QC <- ggplot2::ggproto("Xbar", ggplot2::Stat,
+Stat_QC <- ggplot2::ggproto("Stat_QC", ggplot2::Stat,
         compute_group = function(data, scales, n=NULL, digits=1, method=NULL ){
-          #print(dfs)
+          #print(data)
+          temp <- aggregate(data=data, y~x, mean)
+          #temp3 <- t(ylines_indv(temp$y))
+          #print(temp)
+          #print(mR_UCL(temp$y))
+          if(method == "mR"){
+            limits_df <- data.frame(yintercept =
+                                      c(
+                                        t(ylines_indv(temp$y))[c(1:2)]
+                                      )
+            )
+            #print(limits_df)
+            limits_df$y = limits_df$yintercept
+            limits_df$x = Inf
+            limits_df$label = round(limits_df$yintercept,digits)
+            print(limits_df)
+            limits_df
+          }else{
+
           limits_df <- data.frame(yintercept =
             c(
               t(QC_Lines(data = data, value = "y", grouping = "x",
                          n=n, method = method))[-c(1:4)]
             )
           )
+          #print(limits_df)
           limits_df$y = limits_df$yintercept
           limits_df$x = Inf
           limits_df$label = round(limits_df$yintercept,digits)
+          #print(limits_df)
           limits_df
+          }
         }
         )
 

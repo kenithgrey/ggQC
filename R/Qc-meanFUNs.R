@@ -1,12 +1,18 @@
+# General Funs ------------------------------------------------------------
+ZERO <- function(...){0}
+QCrange <- function(y){max(y) - min(y)}
+mR_points<- function(y){c(NA, abs(diff(y)))}
+mR_points_gg <- dispersionFUN(mean, mR_points)
+
 # Xbar.One Functions ------------------------------------------------------
-mR <- function(y) {mean(abs(diff(y)))}
-mR_UCL <- function(y) {mR(y)*3.268}
+mR <- function(y, ...) {mean(abs(diff(y)))}
+mR_UCL <- function(y, ...) {mR(y)*3.268}
 xBar_one_UCL <- function(y) {mean(y) + 2.66 * mR(y)}
 xBar_one_LCL <- function(y) {mean(y) - 2.66 * mR(y)}
 
 # Dispersion Central Limit Functions ----------------------------------------------------
-rBar <- dispersionFUN(function(x){max(x)-min(x)}, mean)
-rMedian <- dispersionFUN(function(x){max(x)-min(x)}, median)
+rBar <- dispersionFUN(QCrange, mean)
+rMedian <- dispersionFUN(QCrange, median)
 sBar <- dispersionFUN(sd, mean)
 
 # Dispersion Limit Functions ----------------------------------------------------
