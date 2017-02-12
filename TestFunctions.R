@@ -137,28 +137,33 @@ qplot(data=df, x=x, y=y) +
 
 
 # Two Way XmR Chart -------------------------------------------------------
+#rm(ggRbar)
 ggX <- ggplot(data = df_all, aes(x=repitition,y=DIN)) +
   geom_point(alpha=.3) +
   stat_summary(fun.y = mean, color="black", geom=c("line")) +
   stat_summary(fun.y = mean, color="black", geom=c("point")) +
   stat_QC(digits = 2) +
   stat_QC(digits = 2, n=1, color="blue") + #indv
+  stat_QC(digits = 2, n=1, color="green", method="XmR") + #XmR
   stat_QC_labels(digits=2) +
 
   facet_grid(.~process, scales = "free_x")
 
 #df_all2<-transform(df_all, repitition=as.factor(repitition))
-ggmR <- ggplot(data = df, aes(x,y)) +
+
+ggmR <- ggplot(data = df_all, aes(x=repitition,y=DIN)) +
   #geom_point() +
   stat_mR(color="red", geom=c("line")) +
   stat_mR(color="red")  +
-  stat_QC(digits = 2, method="mR") # +
-  #facet_grid(.~process, scales = "free_x")
+  stat_QC(digits = 2, method="mR")  +
+
+  facet_grid(.~process, scales = "free_x")
 
 
 ggRbar <- ggplot(data = df_all, aes(x=repitition,y=DIN)) +
   #geom_point() +
   stat_summary(fun.y = "QCrange", color="blue", geom = "point") +
-  stat_QC(digits=2, method="rBar") +facet_grid(.~process, scales = "free_x")
+  stat_QC(digits=2, method="rBar") +
+  facet_grid(.~process, scales = "free_x")
 
 grid.arrange(ggX, ggmR, ggRbar, nrow=3)

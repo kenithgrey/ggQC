@@ -15,6 +15,16 @@ chartoptions <- data.frame(    #List of constant based on chart need
 stringsAsFactors = FALSE)
 
 #chartType(mean, rBar)
+# N needed by Functions ---------------------------------------------------
+NFUN <- function(data, value=NULL, grouping=NULL, formula=NULL, ...){
+  if(is.null(formula)){
+    f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
+  }else{f1 <- formula}
+
+  N_df <- (aggregate(f1, FUN = "length", data = data))
+  N <- floor(mean(N_df[,ncol(N_df)]))
+  N
+}
 
 # General Dispersion Function Factory -------------------------------------
   # Function factory to creat Rbar, Rmedian, Sbar functions
