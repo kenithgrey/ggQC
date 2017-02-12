@@ -1,13 +1,46 @@
 # 2nd Order Functions ------------------------------------------------------
   # Report Lines for XmR chart
-ylines_indv <- function(y){
-  QC_indv_functions <- list(mR = mR,
-                            xBar_one_LCL = xBar_one_LCL,
-                            mean = mean,
-                            xBar_one_UCL = xBar_one_UCL)
+ylines_indv <- function(y, n=1, method = "XmR"){
+  switch(method,
+         "mR" = {
+          QC_indv_functions <- list(
+                mR_LCL = ZERO,
+                mR = mR, mR_UCL = mR_UCL,
+                xBar_one_LCL = xBar_one_LCL,
+                mean = mean,
+                xBar_one_UCL = xBar_one_UCL)
+                },
 
-  unlist(lapply(QC_indv_functions,
-                FUN = function(f){f(y)}))
+         "XmR" = {
+           QC_indv_functions <- list(
+                xBar_one_LCL = xBar_one_LCL,
+                mean = mean,
+                xBar_one_UCL = xBar_one_UCL,
+                mR_LCL = ZERO,mR = mR, mR_UCL = mR_UCL)
+                 },
+         "c" = {
+           QC_indv_functions <- list(
+                cBar_LCL = cBar_LCL,
+                mean = mean,
+                cBar_UCL = cBar_UCL)
+               },
+         "np" = {
+           QC_indv_functions <- list(
+             npBar_LCL = npBar_LCL,
+             npBar = npBar,
+             npBar_UCL = npBar_UCL)
+         },
+         "p" = {
+           QC_indv_functions <- list(
+             pBar_LCL = pBar_LCL,
+             pBar = pBar,
+             pBar_UCL = pBar_UCL)
+         }
+        )
+
+
+         unlist(lapply(QC_indv_functions,
+                FUN = function(f){f(y, n=n)}))
 }
 
 #Report lines for subgroup plots
@@ -63,6 +96,14 @@ QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL,
                          sBar_LCL = sBar_LCL,
                          sBar = sBar,
                          sBar_UCL = sBar_UCL)}
+         # ,
+         # "mR" = {
+         #   print("hi")
+         #   Lines <- list(N = ZERO, N = ZERO,
+         #                 mean = ZERO, N = ZERO,
+         #                 mR_LCL = ZERO,
+         #                 mR = mR,
+         #                 mR_UCL = mR_UCL)}
   )
 
   unlist(lapply(Lines,
