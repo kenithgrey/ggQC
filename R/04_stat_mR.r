@@ -9,7 +9,7 @@ Stat_MR <- ggplot2::ggproto("Stat_MR", ggplot2::Stat,
 
 )
 
-
+#' @export
 stat_mR <- function(mapping = NULL,
                     data = NULL,
                     geom = "point",
@@ -22,7 +22,6 @@ stat_mR <- function(mapping = NULL,
 
   ggplot2::layer(
     stat = Stat_MR,
-    #yintercept=XBar,
     data = data,
     mapping = mapping,
     geom = geom,

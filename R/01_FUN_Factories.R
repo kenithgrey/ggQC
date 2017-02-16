@@ -21,7 +21,7 @@ NFUN <- function(data, value=NULL, grouping=NULL, formula=NULL, ...){
     f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
   }else{f1 <- formula}
 
-  N_df <- (aggregate(f1, FUN = "length", data = data))
+  N_df <- (stats::aggregate(f1, FUN = "length", data = data))
   N <- floor(mean(N_df[,ncol(N_df)]))
   N
 }
@@ -34,7 +34,7 @@ dispersionFUN <- function(subgroup_method, group_method,...){
     f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
     }else{f1 <- formula}
 
-    agg <- aggregate(f1, FUN = subgroup_method, data = data)
+    agg <- stats::aggregate(f1, FUN = subgroup_method, data = data)
     group_method(agg[,ncol(agg)])
   }
 }
@@ -47,7 +47,7 @@ XCentral_LimitFUN <- function(centralLimitFunction){
     f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
     }else{f1 <- formula}
 
-    agg <- aggregate(f1,
+    agg <- stats::aggregate(f1,
                      FUN = centralLimitFunction,
                      data = data)
     mean(agg[,ncol(agg)])
@@ -71,11 +71,11 @@ xLimitFun <- function(xMethod, dispersionMethod, PM){
       f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
     }else{f1 <- formula}
 
-    agg <- aggregate(f1,
+    agg <- stats::aggregate(f1,
                      FUN = xMethod,
                      data = data)
     #If N is non integer use the smallest conservative value
-    N_df <- (aggregate(f1, FUN = "length", data = data))
+    N_df <- (stats::aggregate(f1, FUN = "length", data = data))
     N <- floor(mean(N_df[,ncol(N_df)]))
 
     if(is.null(n)){n <- N} #Defaul calc limits off average subgroup size
@@ -121,7 +121,7 @@ DispersionLimitFun <- function(dispersionMethod, PM){
       f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
     }else{f1 <- formula}
 
-    N_df <- (aggregate(f1, FUN = "length", data = data))
+    N_df <- (stats::aggregate(f1, FUN = "length", data = data))
     N <- floor(mean(N_df[,ncol(N_df)]))
 
     if(N > 20 || N < 2){

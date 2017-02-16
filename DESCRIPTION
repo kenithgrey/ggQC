@@ -4,9 +4,9 @@ Title: Scaleable Quality Control
 Version: 0.1.0
 Author: Kenith Grey
 Maintainer: Kenith Grey <kenithgrey@r-bar.net>
-Description: Scaleable Quality Control makes the determinating quality control
+Description: Scaleable Quality Control makes determinating quality control
   limits and ploting scaleable for single variable as well as multi-parameter processes. A 
-  range of methods are available for constuctiong QC charts in ggplot including the 
+  range of methods are available for constuctiong QC charts in ggplot2 including the 
   standard XmR and XbarR charts. Additional methods are avalable for robust analysis of 
   noisy data using xMedian-rMedian calculations and plotting capabilites.   
 Depends: R (>= 2.10)
@@ -16,4 +16,6 @@ LazyData: true
 Suggests: testthat,
     gridExtra
 RoxygenNote: 6.0.0
-Imports: ggplot2
+Imports: ggplot2,
+    reshape2,
+    stats

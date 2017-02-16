@@ -7,9 +7,9 @@ Wheeler108_test <- plyr::ddply(Wheeler108,
                                .fun = function(df) {
                                  QC_Lines(data = df, formula = value~Cavity+Hour)}  )
 
-write.csv(x = Wheeler104_test, file = "Wheeler104_test.csv")
-write.csv(x = Wheeler105_test, file = "Wheeler105_test.csv")
-write.csv(x = Wheeler108_test[,-1], file = "Wheeler108_test.csv")
+#write.csv(x = Wheeler104_test, file = "Wheeler104_test.csv")
+#write.csv(x = Wheeler105_test, file = "Wheeler105_test.csv")
+#write.csv(x = Wheeler108_test[,-1], file = "Wheeler108_test.csv")
 
 Wheeler104_test <-read.csv(file="Wheeler104_test.csv")
 Wheeler105_test <- read.csv(file="Wheeler105_test.csv")
