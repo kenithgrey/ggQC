@@ -1,6 +1,8 @@
 # XmR Test ----------------------------------------------------------------
 context("Individual Limit and Range Functions (XmR)")
 
+expect_equal(mR_points(-5:5), c(NA, rep(1,10)), tolerance = .01, scale = 1)
+
 Wheeler49 <- c(39,41,41,41,43,44,41,42,40,41,44,40)
 testthat::test_that("XmR Function Work", {
   expect_equal(mean(Wheeler49), 41.42, tolerance = .02, scale = 1)

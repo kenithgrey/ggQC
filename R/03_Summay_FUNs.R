@@ -1,5 +1,8 @@
 # 2nd Order Functions ------------------------------------------------------
   # Report Lines for XmR chart
+
+
+#' @export
 ylines_indv <- function(y, n=1, method = "XmR"){
   switch(method,
          "mR" = {
@@ -21,7 +24,7 @@ ylines_indv <- function(y, n=1, method = "XmR"){
          "c" = {
            QC_indv_functions <- list(
                 cBar_LCL = cBar_LCL,
-                mean = mean,
+                cBar = mean,
                 cBar_UCL = cBar_UCL)
                },
          "np" = {
@@ -31,19 +34,22 @@ ylines_indv <- function(y, n=1, method = "XmR"){
              npBar_UCL = npBar_UCL)
          },
          "p" = {
-           QC_indv_functions <- list(
-             pBar_LCL = pBar_LCL,
-             pBar = pBar,
-             pBar_UCL = pBar_UCL)
+            p_chart_data <- data.frame(
+                       pBar_LCL = pBar_LCL(y, n),
+                       pBar = pBar(y, n),
+                       pBar_UCL = pBar_UCL(y, n)
+                       )
+             return(p_chart_data)
          }
         )
 
-
+         #print(n)
          unlist(lapply(QC_indv_functions,
                 FUN = function(f){f(y, n=n)}))
 }
 
 #Report lines for subgroup plots
+#' @export
 QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL, method="xBar.rBar"){
   switch(method,
          "xBar.rBar" = {
@@ -96,14 +102,7 @@ QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL,
                          sBar_LCL = sBar_LCL,
                          sBar = sBar,
                          sBar_UCL = sBar_UCL)}
-         # ,
-         # "mR" = {
-         #   print("hi")
-         #   Lines <- list(N = ZERO, N = ZERO,
-         #                 mean = ZERO, N = ZERO,
-         #                 mR_LCL = ZERO,
-         #                 mR = mR,
-         #                 mR_UCL = mR_UCL)}
+
   )
 
   unlist(lapply(Lines,
