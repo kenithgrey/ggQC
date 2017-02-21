@@ -3,7 +3,7 @@
 
 
 #' @export
-ylines_indv <- function(y, n=1, method = "XmR"){
+ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
   switch(method,
          "mR" = {
           QC_indv_functions <- list(
@@ -40,12 +40,20 @@ ylines_indv <- function(y, n=1, method = "XmR"){
                        pBar_UCL = pBar_UCL(y, n)
                        )
              return(p_chart_data)
+         },
+         "u" = {
+           u_chart_data <- data.frame(
+             uBar_LCL = uBar_LCL(y, n),
+             uBar = uBar(y, n),
+             uBar_UCL = uBar_UCL(y, n)
+           )
+           return(u_chart_data)
          }
         )
 
          #print(n)
          unlist(lapply(QC_indv_functions,
-                FUN = function(f){f(y, n=n)}))
+                FUN = function(f){f(y, n=n, na.rm = na.rm)}))
 }
 
 #Report lines for subgroup plots

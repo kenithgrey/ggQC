@@ -16,7 +16,7 @@ mR_points<- function(y){c(NA, abs(diff(y)))}
 mR_points_gg <- dispersionFUN(mean, mR_points)
 
 
-# Count Data --------------------------------------------------------------
+# Count Data c-chart --------------------------------------------------------------
 #' @export
 #' @title Upper Control Limit: Count Data (c-chart)
 #' @description Calculates upper control limit (UCL) for count data aquired
@@ -194,7 +194,7 @@ pBar_LCL <- function(y, n, ...){
 #' @description Calculates point-wise upper control limit (UCL)
 #' for count data aquired over a variable area of
 #' opportunity.
-#' @param y Vector of count data. Observations
+#' @param y Vector of counts per unit opportunity (rate). Observations
 #' may have a different area of opportinity, n.
 #' @param n A vector representing the area of opportunity.
 #' @param ... further arguments passed to or from other methods.
@@ -203,9 +203,28 @@ pBar_LCL <- function(y, n, ...){
 #' set.seed(5555)
 #' counts <- rpois(100, 25)
 #' n <- rpois(100, 15)
-#' uBar_UCL(y = counts, n = n)
+#' uBar_UCL(y = counts / n, n = n)
 #'
-uBar_UCL <- function(y, n, ...){(mean(y) + 3*sqrt( mean(y) / n ))}
+uBar_UCL <- function(y, n, ...){(pBar(y, n) + 3*sqrt( pBar(y, n) / n ))}
+
+#' @export
+#' @title Mean Rate: Count Data (c-chart)
+#' @description Calculates overall mean rate
+#' for count data aquired over a variable area of
+#' opportunity.
+#' @inheritParams uBar_UCL
+#' @return A vector of mean rate, length equal to length of
+#' parameter y.
+#' @examples
+#' set.seed(5555)
+#' counts <- rpois(100, 25)
+#' n <- rpois(100, 15)
+#' uBar(y = counts / n, n = n)
+#'
+uBar <- function(y, n, ...){
+  pbar <- sum(n * y)/sum(n)
+  rep(pbar, length(n))
+}
 
 #' @export
 #' @title Lower Control Limit: Count Data (u-chart)
@@ -218,24 +237,62 @@ uBar_UCL <- function(y, n, ...){(mean(y) + 3*sqrt( mean(y) / n ))}
 #' set.seed(5555)
 #' counts <- rpois(100, 25)
 #' n <- rpois(100, 15)
-#' uBar_LCL(y = counts, n = n)
+#' uBar_LCL(y = counts / n, n = n)
 #
 uBar_LCL <- function(y, n, ...){
-  LCL <- mean(y) -(3*sqrt( mean(y) / n ))
+  LCL <- pBar(y, n) -(3*sqrt(pBar(y, n) / n ))
   LCL[LCL < 0] <- 0
   return(LCL)
   }
 
 
 # Xbar.One Functions ------------------------------------------------------
+
 #' @export
-mR <- function(y, ...) {mean(abs(diff(y)))}
+#' @title Mean One Point Moving Range
+#' @description Calculates the mean one-point moving range used when constructing a moving-range chart.
+#' @param y Vector of values
+#' @param na.rm a logical value indicating whether NA values should be stripped before the computation proceeds.
+#' @param ... further arguments passed to or from other methods.
+#' @return A number; mean one point moving range.
+#' @examples
+#' set.seed(5555)
+#' values <- rnorm(n = 100, mean = 25, sd = 1)
+#' mR(values)
+mR <- function(y, na.rm = TRUE, ...) {mean(abs(diff(y)), na.rm = na.rm)}
+
 #' @export
-mR_UCL <- function(y, ...) {mR(y)*3.268}
+#' @title Mean One Point Moving Range Upper Control Limit (UCL)
+#' @description Calculates the mean one-point moving range UCL used when constructing a moving-range chart.
+#' @inheritParams mR
+#' @return A number; mean one point moving range UCL.
+#' @examples
+#' set.seed(5555)
+#' values <- rnorm(n = 100, mean = 25, sd = 1)
+#' mR_UCL(values)
+mR_UCL <- function(y, na.rm = FALSE, ...) {mR(y, na.rm = na.rm, ...)*3.268}
+
 #' @export
-xBar_one_UCL <- function(y, ...) {mean(y) + 2.66 * mR(y)}
+#' @title xBar_One Upper Control Limit (UCL)
+#' @description Calculates the xBar_One UCL used when constructing a xBar-One chart.
+#' @inheritParams mR
+#' @return A number; xBar_One Upper Control Limit (UCL)
+#' @examples
+#' set.seed(5555)
+#' values <- rnorm(n = 100, mean = 25, sd = 1)
+#' xBar_one_UCL(values)
+xBar_one_UCL <- function(y, na.rm = FALSE, ...) {mean(y, na.rm = na.rm, ...) + 2.66 * mR(y, na.rm = na.rm, ...)}
+
 #' @export
-xBar_one_LCL <- function(y, ...) {mean(y) - 2.66 * mR(y)}
+#' @title xBar_One Lower Control Limit (LCL)
+#' @description Calculates the xBar_One LCL used when constructing a xBar-One chart.
+#' @inheritParams mR
+#' @return A number; xBar_One Lower Control Limit (LCL)
+#' @examples
+#' set.seed(5555)
+#' values <- rnorm(n = 100, mean = 25, sd = 1)
+#' xBar_one_LCL(values)
+xBar_one_LCL <- function(y, na.rm = FALSE, ...) {mean(y, na.rm = na.rm, ...) - 2.66 * mR(y, na.rm = na.rm, ...)}
 
 # Dispersion Central Limit Functions ----------------------------------------------------
 #' @export

@@ -7,7 +7,7 @@
 uBar_LCL(y, n, ...)
 }
 \arguments{
-\item{y}{Vector of count data. Observations
+\item{y}{Vector of counts per unit opportunity (rate). Observations
 may have a different area of opportinity, n.}
 
 \item{n}{A vector representing the area of opportunity.}
@@ -26,5 +26,5 @@ opportunity.
 set.seed(5555)
 counts <- rpois(100, 25)
 n <- rpois(100, 15)
-uBar_LCL(y = counts, n = n)
+uBar_LCL(y = counts / n, n = n)
 }

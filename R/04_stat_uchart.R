@@ -6,14 +6,11 @@ Stat_UCHART <- ggplot2::ggproto("Stat_UCHART", ggplot2::Stat,
                                     warning("**u-chart Error**\n supply vector of opportunity, 'n', in ggplot aes", call. = FALSE)
                                     return(NULL)
                                   }
-                                  data$UCL <- uBar_UCL(data$y, data$n)
-                                  data$LCL <- uBar_LCL(data$y, data$n)
-                                  data$mean <- mean(data$y)
-                                  uchart_data <- reshape2::melt(data = data[,c("x","mean","UCL","LCL")],
-                                                          id.vars = c("x"))
+                                  udata <- ylines_indv(y = data$y, data$n, method = "u")
+                                  udata$x <- data$x
+                                  uchart_data <- reshape2::melt(udata, id.vars=c("x"))
                                   colnames(uchart_data) <- c("x", "group", "y")
                                   uchart_data
-
                                 }
 
 )
