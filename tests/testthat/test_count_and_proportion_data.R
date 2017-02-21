@@ -83,5 +83,15 @@ expect_equal(ylines_indv(y = wheeler264$Proportion_Incomplete,
 
 
 # u-chart Checks ----------------------------------------------------------
+wheeler276 <- read.table(file = "wheeler_USPC_276.csv", header=TRUE, sep=",")
+wheeler276_test <- ylines_indv(y = wheeler276$Rate, wheeler276$No_of_Radiators, method = "u")
+#write.csv(wheeler276_test, "tests/testthat/wheeler276_test.csv", quote = FALSE)
+wheeler276_results <- read.csv("wheeler276_test.csv", header=TRUE)[,-1]
+
+context("u-chart functions")
+testthat::test_that("u-chart functions", {
+  expect_equal(wheeler276_test, wheeler276_results,
+               tolerance = .01,
+               scale = 1)})
 
 

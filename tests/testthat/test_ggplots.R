@@ -28,3 +28,17 @@
 # ggplot(data = wheeler264, aes(x=Day, y=Proportion_Incomplete, n=Num_Items_in_Set)) +
 #   geom_point() + geom_line() +
 #   stat_pchart()
+
+# U-CHART ----------------------------------------------------------------
+# |CHECK-PLOT| u-chart ggplot Checks
+# ggplot(data = wheeler276, aes(x=ID, y=Rate)) +
+#   geom_point() + geom_line() +
+#   stat_QC(method="u")
+#
+# ggplot(data = wheeler276, aes(x=ID, y=Rate)) +
+#   geom_point() + geom_line() +
+#   stat_uchart()
+#
+# ggplot(data = wheeler276, aes(x=ID, y=Rate, n=No_of_Radiators)) +
+#   geom_point() + geom_line() +
+#   stat_uchart()

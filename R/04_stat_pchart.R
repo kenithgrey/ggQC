@@ -9,16 +9,6 @@ Stat_PCHART <- ggplot2::ggproto("Stat_PCHART", ggplot2::Stat,
                               pchart_data <- reshape2::melt(pdata, id.vars=c("x"))
                               colnames(pchart_data) <- c("x", "group", "y")
                               pchart_data
-
-
-                              # data$UCL <- pBar_UCL(data$y, data$n)
-                              # data$LCL <- pBar_LCL(data$y, data$n)
-                              # data$mean <- mean(data$y)
-                              # pchart_data <- reshape2::melt(data = data[,c("x","mean","UCL","LCL")],
-                              #                                     id.vars = c("x"))
-                              # colnames(pchart_data) <- c("x", "group", "y")
-                              # pchart_data
-
                             }
 
 )
