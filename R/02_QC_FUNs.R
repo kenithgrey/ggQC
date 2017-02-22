@@ -2,7 +2,7 @@
 ZERO <- function(...){0}
 QCrange <- function(y){max(y) - min(y)}
 #' @export
-#' @title One Point Moving Range
+#' @title One Point Moving Range Datapoints
 #' @description Calculates a one-point moving range vector given an input vector of values.
 #'  Output often used to produce mR-chart.
 #' @param y : vector of values
@@ -208,7 +208,7 @@ pBar_LCL <- function(y, n, ...){
 uBar_UCL <- function(y, n, ...){(pBar(y, n) + 3*sqrt( pBar(y, n) / n ))}
 
 #' @export
-#' @title Mean Rate: Count Data (c-chart)
+#' @title Mean Rate: Count Data (u-chart)
 #' @description Calculates overall mean rate
 #' for count data aquired over a variable area of
 #' opportunity.
