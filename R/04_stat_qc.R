@@ -1,6 +1,6 @@
 
 Stat_QC <- ggplot2::ggproto("Stat_QC", ggplot2::Stat,
-                            compute_group = function(data, scales, n=NULL, digits=1, method=NULL, na.rm = na.rm ){
+                            compute_group = function(data, scales, n=NULL, digits=1, method=NULL, na.rm = na.rm, color=color ){
                               temp <- aggregate(data=data, y~x, mean)
                               #print(temp)
                               if(method %in% c("mR", "XmR", "c")){
@@ -48,7 +48,8 @@ Stat_QC <- ggplot2::ggproto("Stat_QC", ggplot2::Stat,
                               limits_df$y = limits_df$yintercept
                               limits_df$x = Inf
                               limits_df$label = round(limits_df$yintercept,digits)
-                              #print(limits_df)
+                              limits_df$colour = c("red", "red", "red")
+                              print(limits_df)
                               limits_df
 
                             }
@@ -64,7 +65,7 @@ stat_QC <- function(mapping = NULL,
                     show.legend = NA,
                     inherit.aes = TRUE,
                     n=NULL, digits=1,
-                    method="xBar.rBar",
+                    method="xBar.rBar", colour=c("red", "green", "red"),
                     ...) {
   ggplot2::layer(
     stat = Stat_QC,
@@ -75,7 +76,9 @@ stat_QC <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n,
-                  digits=digits, method=method, ...)
+                  digits=digits, method=method, colour = colour,
+                  # this could be bad
+                  ...)
   )
 }
 

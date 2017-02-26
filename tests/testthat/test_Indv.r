@@ -58,7 +58,7 @@ Wheeler43 <- read.csv(file = "Wheeler_USPC_43.csv", header=T)
 testthat::test_that("XbarR Function Work", {
   expect_equal(xBar_Bar(data = Wheeler43, value = "values", grouping = "subgroup"), 4.763, tolerance = .001, scale = 1)
   expect_equal(xBar_rBar_LCL(data = Wheeler43, value = "values", grouping = "subgroup"), 1.811, tolerance = .001, scale = 1)
-  expect_equal(xBar_rBar_UCL(data = Wheeler43, value = "values", grouping = "subgroup"), 7.715, tolerance = .001, scale = 1)
+  expect_equal(xBar_rBar_UCL(data = Wheeler43, value = "values", grouping = "subgroup"), 7.715, tolerance = .002, scale = 1)
   expect_equal(rBar(data = Wheeler43, value = "values", grouping = "subgroup"), 4.05, tolerance = .001, scale = 1)
   expect_equal(rBar_LCL(data = Wheeler43, value = "values", grouping = "subgroup"), 0, tolerance = .01, scale = 1)
   expect_equal(rBar_UCL(data = Wheeler43, value = "values", grouping = "subgroup"), 9.24, tolerance = .01, scale = 1)
