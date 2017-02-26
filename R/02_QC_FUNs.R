@@ -296,10 +296,34 @@ xBar_one_LCL <- function(y, na.rm = FALSE, ...) {mean(y, na.rm = na.rm, ...) - 2
 
 # Dispersion Central Limit Functions ----------------------------------------------------
 #' @export
+#' @title Mean Subgroup Range
+#' @description Calculates the mean subgroup range used when constructing a XbarR chart.
+#' @param data data frame to be processed
+#' @param value numeric vector in data frame with values of interest.
+#' @param grouping single factor/variable to split the data frame "values" by.
+#' @param formula a formula, such as y ~ x1 + x2, where the y variable is
+#'   numeric data to be split into groups according to the grouping x
+#'   factors/variables
+#' @param ... further arguments passed to or from other methods.
+#' @return A number; mean subgroup range.
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' rBar(data = df, formula = v~g)
 rBar <- dispersionFUN(QCrange, mean)
+
 #' @export
 rMedian <- dispersionFUN(QCrange, stats::median)
+
 #' @export
+#' @title Mean Subgroup Standard Deviation
+#' @description Calculates the mean subgroup stadard deviation used when constructing a XbarS chart.
+#' @inheritParams rBar
+#' @return A number; mean subgroup standard deviation.
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' sBar(data = df, formula = v~g)
 sBar <- dispersionFUN(sd, mean)
 
 # Dispersion Limit Functions ----------------------------------------------------
@@ -314,16 +338,56 @@ sBar <- dispersionFUN(sd, mean)
 # +---------------+---------------+------------------+
 
 #' @export
+#' @title Mean Subgroup Range Upper Control Limit (UCL)
+#' @description Calculates the mean subgroup range upper control limit
+#'  (UCL) used when constructing a XbarR chart.
+#' @inheritParams rBar
+#' @return A number; mean subgroup range upper control limit (UCL).
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' rBar_UCL(data = df, formula = v~g)
 rBar_UCL <- DispersionLimitFun(rBar, "+")
+
 #' @export
+#' @title Mean Subgroup Range Lower Control Limit (LCL)
+#' @description Calculates the mean subgroup range Lower control limit
+#'  (UCL) used when constructing a XbarR chart.
+#' @inheritParams rBar
+#' @return A number; mean subgroup range lower control limit (LCL).
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' rBar_LCL(data = df, formula = v~g)
 rBar_LCL <- DispersionLimitFun(rBar, "-")
+
 #' @export
 rMedian_UCL <- DispersionLimitFun(rMedian, "+")
 #' @export
 rMedian_LCL <- DispersionLimitFun(rMedian, "-")
+
 #' @export
+#' @title Mean Subgroup Standard Deviation Upper Control Limit (UCL)
+#' @description Calculates the mean subgroup standard deviation upper control limit
+#'  (UCL) used when constructing a XbarS chart.
+#' @inheritParams rBar
+#' @return A number; mean subgroup standard deviation upper control limit (UCL).
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' sBar_UCL(data = df, formula = v~g)
 sBar_UCL <- DispersionLimitFun(sBar, "+")
+
 #' @export
+#' @title Mean Subgroup Standard Deviation Lower Control Limit (LCL)
+#' @description Calculates the mean subgroup standard deviation Lower control limit
+#'  (UCL) used when constructing a XbarR chart.
+#' @inheritParams rBar
+#' @return A number; mean subgroup standard deviation lower control limit (LCL).
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' sBar_LCL(data = df, formula = v~g)
 sBar_LCL <- DispersionLimitFun(sBar, "-")
 
 
