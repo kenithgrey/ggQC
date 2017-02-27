@@ -1,12 +1,12 @@
 
 Stat_QC <- ggplot2::ggproto("Stat_QC", ggplot2::Stat,
-                            compute_group = function(data, scales, n=NULL, digits=1, method=NULL, na.rm = na.rm, color=color ){
+                            compute_group = function(data, scales, n=NULL, digits=1, method=NULL){
                               temp <- aggregate(data=data, y~x, mean)
                               #print(temp)
                               if(method %in% c("mR", "XmR", "c")){
                                 limits_df <- data.frame(yintercept =
                                                           c(t(ylines_indv(temp$y,
-                                                                          method = method, na.rm = na.rm))[c(1:3)])
+                                                                          method = method))[c(1:3)])
                                 )
                               }else if(method == "np"){
                                 if (is.null(n)){
@@ -19,7 +19,7 @@ Stat_QC <- ggplot2::ggproto("Stat_QC", ggplot2::Stat,
                                 #print(temp$y/n)
                                 limits_df <- data.frame(yintercept =
                                                           c(t(ylines_indv(temp$y, n=n,
-                                                                          method = method, na.rm = na.rm))[c(1:3)])
+                                                                          method = method))[c(1:3)])
 
                                 )
                               }
@@ -34,22 +34,22 @@ Stat_QC <- ggplot2::ggproto("Stat_QC", ggplot2::Stat,
                                 print(data)
                                 limits_df <- data.frame(yintercept =
                                                           c(t(ylines_indv(temp$y/n, n=n,
-                                                                          method = method, na.rm = na.rm))[c(1:3)])
+                                                                          method = method))[c(1:3)])
 
                                 )
                               }else{
                                 limits_df <- data.frame(yintercept =
                                                           c(t(QC_Lines(data = data,
                                                                        value = "y", grouping = "x",
-                                                                       n=n, method = method, na.rm = na.rm))[-c(1:4)])
+                                                                       n=n, method = method))[-c(1:4)])
                                 )
                               }
                               #print(limits_df)
                               limits_df$y = limits_df$yintercept
                               limits_df$x = Inf
                               limits_df$label = round(limits_df$yintercept,digits)
-                              limits_df$colour = c("red", "red", "red")
-                              print(limits_df)
+                              #print(limits_df)
+                              #print(data$group)
                               limits_df
 
                             }
@@ -65,8 +65,7 @@ stat_QC <- function(mapping = NULL,
                     show.legend = NA,
                     inherit.aes = TRUE,
                     n=NULL, digits=1,
-                    method="xBar.rBar", colour=c("red", "green", "red"),
-                    ...) {
+                    method="xBar.rBar", color=c("red", "green", "red"), ...) {
   ggplot2::layer(
     stat = Stat_QC,
     data = data,
@@ -74,9 +73,10 @@ stat_QC <- function(mapping = NULL,
     geom = geom,
     position = position,
     show.legend = show.legend,
+
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n,
-                  digits=digits, method=method, colour = colour,
+                  digits=digits, method=method, color=color,
                   # this could be bad
                   ...)
   )

@@ -31,7 +31,7 @@ testthat::test_that("Rbar Rbar_UCL rBar_LCL work using formula", {
   expect_equal(W43_formula_rBarUCL, 9.24, tolerance = .01, scale = 1)
 })
 
-# Rbar Test Single Data Vector --------------------------------------------
+# Rbar Test Single Data Vector with missing Data --------------------------------------------
   # The aggregate function seems to be robust to the missing data
   # The effect of missing data here is that it will lower n to the lowest
   # average integer 3 instead of 4 opening up the limits.
