@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_QC_FUNs.R
 \name{mR_points}
 \alias{mR_points}
-\title{One Point Moving Range}
+\title{One Point Moving Range Datapoints}
 \usage{
 mR_points(y)
 }

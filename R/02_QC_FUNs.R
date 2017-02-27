@@ -393,8 +393,18 @@ sBar_LCL <- DispersionLimitFun(sBar, "-")
 
 # Central Limit Functions -----------------------------------------------
 #' @export
+#' @title Mean of Subgroup Means
+#' @description Calculates the mean subgroup means used when constructing a xBar-R or xBar-S charts.
+#' @inheritParams rBar
+#' @return A number; mean of subgroup means.
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_Bar(data = df, formula = v~g)
 xBar_Bar <- XCentral_LimitFUN(mean)
+
 #' @export
+#' #See Wheeler USPC 232
 xMedian_Bar <- XCentral_LimitFUN(stats::median)
 
 # X-Limit Functions (+/-) ------------------------------
@@ -408,9 +418,31 @@ xMedian_Bar <- XCentral_LimitFUN(stats::median)
 # | sBar          | c4            |                  |
 # +---------------+---------------+------------------+
 #' @export
+#' @title Mean of Subgroup Means Upper Control Limit (UCL)
+#' @description Calculates the mean of subgroup means upper control limit used when constructing a xBar-R charts.
+#' @inheritParams rBar
+#' @param n a number indicating a hypothetical subgroup size other than n
+#' determined by the floor length of subgroup values.
+#' @param natural logial, if TRUE calculate limits for individuals (n=1) else calculate for
+#' n determined by the floor length of subgroup values
+#' @return A number; mean of subgroup means.
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_rBar_UCL(data = df, formula = v~g)
 xBar_rBar_UCL <- xLimitFun(mean, rBar, "+")
+
 #' @export
+#' @title Mean of Subgroup Means Lower Control Limit (UCL)
+#' @description Calculates the mean of subgroup means lower control limit used when constructing a xBar-R charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup means.
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_rBar_LCL(data = df, formula = v~g)
 xBar_rBar_LCL <- xLimitFun(mean, rBar, "-")
+
 #' @export
 xBar_rMedian_UCL <- xLimitFun(mean, rMedian, "+")
 #' @export

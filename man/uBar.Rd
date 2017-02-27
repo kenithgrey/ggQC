@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_QC_FUNs.R
 \name{uBar}
 \alias{uBar}
-\title{Mean Rate: Count Data (c-chart)}
+\title{Mean Rate: Count Data (u-chart)}
 \usage{
 uBar(y, n, ...)
 }

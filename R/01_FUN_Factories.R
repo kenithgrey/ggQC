@@ -44,7 +44,8 @@ dispersionFUN <- function(subgroup_method, group_method,...){
 # General X Central Limit Factory -----------------------------------------
   # Function Factory to create Xbar and Xmedian
 XCentral_LimitFUN <- function(centralLimitFunction){
-  function(data, value, grouping, n = 2, natural = F, formula=NULL){
+  function(data, value, grouping, formula=NULL, ...){
+  #function(data, value, grouping, n = 2, natural = F, formula=NULL){
     if(is.null(formula)){
     f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
     }else{f1 <- formula}
