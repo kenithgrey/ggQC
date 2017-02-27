@@ -1,5 +1,7 @@
 # General Funs ------------------------------------------------------------
 ZERO <- function(...){0}
+
+#' @export
 QCrange <- function(y){max(y) - min(y)}
 #' @export
 #' @title One Point Moving Range Datapoints
@@ -403,8 +405,8 @@ sBar_LCL <- DispersionLimitFun(sBar, "-")
 #' xBar_Bar(data = df, formula = v~g)
 xBar_Bar <- XCentral_LimitFUN(mean)
 
+#See Wheeler USPC 232
 #' @export
-#' #See Wheeler USPC 232
 xMedian_Bar <- XCentral_LimitFUN(stats::median)
 
 # X-Limit Functions (+/-) ------------------------------
