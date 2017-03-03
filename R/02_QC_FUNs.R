@@ -2,7 +2,15 @@
 ZERO <- function(...){0}
 
 #' @export
+#' @title Range: Max Min Difference
+#' @description Given a set of numbers, calculates the difference between the maximum and minimum value.
+#' @param y : vector of values
+#' @return a number.
+#' @examples
+#' y <- seq(-5:5)
+#' QCrange(y)
 QCrange <- function(y){max(y) - min(y)}
+
 #' @export
 #' @title One Point Moving Range Datapoints
 #' @description Calculates a one-point moving range vector given an input vector of values.
@@ -12,7 +20,6 @@ QCrange <- function(y){max(y) - min(y)}
 #' @examples
 #' y <- seq(-5:5)
 #' mR_points(y)
-#'
 mR_points<- function(y){c(NA, abs(diff(y)))}
 
 mR_points_gg <- dispersionFUN(mean, mR_points)
@@ -315,6 +322,14 @@ xBar_one_LCL <- function(y, na.rm = FALSE, ...) {mean(y, na.rm = na.rm, ...) - 2
 rBar <- dispersionFUN(QCrange, mean)
 
 #' @export
+#' @title Median of Subgroup Ranges
+#' @description Calculates the median of subgroup ranges, used when constructing xBar_rMedian charts.
+#' @inheritParams rBar
+#' @return A number; Median subgroup range.
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' rMedian(data = df, formula = v~g)
 rMedian <- dispersionFUN(QCrange, stats::median)
 
 #' @export
@@ -364,8 +379,27 @@ rBar_UCL <- DispersionLimitFun(rBar, "+")
 rBar_LCL <- DispersionLimitFun(rBar, "-")
 
 #' @export
+#' @title Median of Subgroup Ranges Upper Control Limit (UCL)
+#' @description Calculates the median of subgroup range upper control limit
+#'  (UCL) used when constructing a xBar_rMedian chart.
+#' @inheritParams rBar
+#' @return A number; median of subgroup range upper control limit (UCL).
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' rMedian_UCL(data = df, formula = v~g)
 rMedian_UCL <- DispersionLimitFun(rMedian, "+")
+
 #' @export
+#' @title Median of Subgroup Ranges Lower Control Limit (LCL)
+#' @description Calculates the median of subgroup range Lower control limit
+#'  (LCL) used when constructing a xBar_rMedian chart.
+#' @inheritParams rBar
+#' @return A number; median of subgroup range lower control limit (LCL).
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' rMedian_LCL(data = df, formula = v~g)
 rMedian_LCL <- DispersionLimitFun(rMedian, "-")
 
 #' @export
@@ -407,6 +441,14 @@ xBar_Bar <- XCentral_LimitFUN(mean)
 
 #See Wheeler USPC 232
 #' @export
+#' @title Mean of Subgroup Medians
+#' @description Calculates the mean subgroup medians used when constructing a xMedian-R charts.
+#' @inheritParams rBar
+#' @return A number; mean of subgroup medians.
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xMedian_Bar(data = df, formula = v~g)
 xMedian_Bar <- XCentral_LimitFUN(stats::median)
 
 # X-Limit Functions (+/-) ------------------------------
@@ -427,7 +469,7 @@ xMedian_Bar <- XCentral_LimitFUN(stats::median)
 #' determined by the floor length of subgroup values.
 #' @param natural logial, if TRUE calculate limits for individuals (n=1) else calculate for
 #' n determined by the floor length of subgroup values
-#' @return A number; mean of subgroup means.
+#' @return A number; mean of subgroup means upper control limit.
 #' @examples
 #' set.seed(5555)
 #' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
@@ -435,10 +477,10 @@ xMedian_Bar <- XCentral_LimitFUN(stats::median)
 xBar_rBar_UCL <- xLimitFun(mean, rBar, "+")
 
 #' @export
-#' @title Mean of Subgroup Means Lower Control Limit (UCL)
+#' @title Mean of Subgroup Means Lower Control Limit (LCL)
 #' @description Calculates the mean of subgroup means lower control limit used when constructing a xBar-R charts.
 #' @inheritParams xBar_rBar_UCL
-#' @return A number; mean of subgroup means.
+#' @return A number; mean of subgroup means lower control limit.
 #' @examples
 #' set.seed(5555)
 #' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
@@ -446,20 +488,80 @@ xBar_rBar_UCL <- xLimitFun(mean, rBar, "+")
 xBar_rBar_LCL <- xLimitFun(mean, rBar, "-")
 
 #' @export
+#' @title Mean of Subgroup Means Upper Control Limit (UCL) based on Median Range
+#' @description Calculates the mean of subgroup means upper control limit based on the
+#' median range. The result is used when constructing a xBar-rMedian charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup means Upper Control Limit (UCL) based on Median Range
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_rMedian_UCL(data = df, formula = v~g)
 xBar_rMedian_UCL <- xLimitFun(mean, rMedian, "+")
+
 #' @export
+#' @title Mean of Subgroup Means Lower Control Limit (LCL) based on Median Range
+#' @description Calculates the mean of subgroup means lower control limit based on the
+#' median range. The result is used when constructing a xBar-rMedian charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup means Lower Control Limit (LCL) based on Median Range
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_rMedian_LCL(data = df, formula = v~g)
 xBar_rMedian_LCL <- xLimitFun(mean, rMedian, "-")
+
 #' @export
 xBar_sBar_UCL <- xLimitFun(mean, sBar, "+")
 #' @export
 xBar_sBar_LCL <- xLimitFun(mean, sBar, "-")
+
 #' @export
+#' @title Mean of Subgroup Medians Upper Control Limit (UCL) based on mean Range
+#' @description Calculates the mean of subgroup medians upper control limit based on the
+#' mean subgroup range. The result is used when constructing a xMedian-R charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup means Upper Control Limit (UCL) based on Median Range
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xMedian_rBar_UCL(data = df, formula = v~g)
 xMedian_rBar_UCL <- xLimitFun(stats::median, rBar, "+")
+
 #' @export
+#' @title Mean of Subgroup Medians Lower Control Limit (LCL) based on Mean Range
+#' @description Calculates the mean of subgroup medians lower control limit based on the
+#' mean range. The result is used when constructing a xMedian-R charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup medians Lower Control Limit (LCL) based on mean range
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_rMedian_LCL(data = df, formula = v~g)
 xMedian_rBar_LCL <- xLimitFun(stats::median, rBar, "-")
+
 #' @export
+#' @title Mean of Subgroup Medians Upper Control Limit (UCL) based on Median Range
+#' @description Calculates the mean of subgroup medians upper control limit based on the
+#' median subgroup range. The result is used when constructing a xMedian-rMedian charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup median upper  Control Limit (UCL) based on Median Range
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xMedian_rMedian_UCL(data = df, formula = v~g)
 xMedian_rMedian_UCL <- xLimitFun(stats::median, rMedian, "+")
+
 #' @export
+#' @title Mean of Subgroup Medians Lower Control Limit (LCL) based on Median Range
+#' @description Calculates the mean of subgroup medians lower control limit based on the
+#' median subgroup range. The result is used when constructing a xMedian-rMedian charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup median Lower Control Limit (LCL) based on Median Range
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xMedian_rMedian_LCL(data = df, formula = v~g)
 xMedian_rMedian_LCL <- xLimitFun(stats::median, rMedian, "-")
 
 

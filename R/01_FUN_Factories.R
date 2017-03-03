@@ -1,18 +1,18 @@
 # QC Constants ------------------------------------------------------------
 # 2/25/2016 installed a set of constants based on the average of 9 simulations
 # Fixed error with D5 and D6
-# qcK <- read.csv(file = "QC_Constants.qck", header=T)
-# qcK$b2 <- qcK$A6 * sqrt(qcK$n) # used for median(x) Rbar
-# qcK$b4 <- qcK$A9 * sqrt(qcK$n) # used for median(x) RMedian
-# devtools::use_data(qcK, internal = TRUE, overwrite = T)
+ # qcK <- read.csv(file = "R/QC_Constants.csv", header=T)
+ # qcK$b2 <- 3/(qcK$A6 * sqrt(qcK$n)) # used for median(x) Rbar
+ # qcK$b4 <- 3/(qcK$A9 * sqrt(qcK$n)) # used for median(x) RMedian
+ # devtools::use_data(qcK, internal = TRUE, overwrite = T)
 
 
 chartoptions <- data.frame(    #List of constant based on chart need
     chart_options = c("mean_rBar",
                       "mean_rMedian",
                       "mean_sBar",
-                      "median_rBar",
-                      "median_rMedian"),
+                      "stats::median_rBar",
+                      "stats::median_rMedian"),
     Kname = c("d2", "d4", "c4", "b2", "b4"),
 stringsAsFactors = FALSE)
 
@@ -68,7 +68,7 @@ xLimitFun <- function(xMethod, dispersionMethod, PM){
   dispersionMethod_txt <- deparse(substitute(dispersionMethod))
   SelectedChartType <- paste0(xMethod_txt, "_", dispersionMethod_txt)
   CT <- chartoptions$Kname[chartoptions$chart_options == SelectedChartType]
-
+  #print(CT)
   function(data, value, grouping, n = NULL, natural = F, formula=NULL){
     if(is.null(formula)){
       f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))

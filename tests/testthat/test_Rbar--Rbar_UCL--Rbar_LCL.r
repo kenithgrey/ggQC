@@ -58,7 +58,7 @@ testthat::test_that("missing value Rbar Rbar_UCL rBar_LCL work using formula", {
   expect_equal(W43_missing_formula_rBarUCL, 10.046, tolerance = .01, scale = 1)
 })
 
-# Changing N is not allowed the change the value of Rbar and Rbar_(UL)CL.
+# Changing N is not allowed the change the value of Rbar and Rbar_(UL)CL. ------
 W43_missing_formula_DF <- as.data.frame.list(QC_Lines(Wheeler_43_missing, formula = values~subgroup, method = "rBar")) #Same As Above
 rBar_n_innert <-  as.data.frame.list(QC_Lines(Wheeler_43_missing, formula = values~subgroup, n=10, method = "rBar"))
 testthat::test_that("missing value Rbar Rbar_UCL rBar_LCL work using formula", {

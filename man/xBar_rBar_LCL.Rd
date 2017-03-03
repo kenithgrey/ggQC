@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_QC_FUNs.R
 \name{xBar_rBar_LCL}
 \alias{xBar_rBar_LCL}
-\title{Mean of Subgroup Means Lower Control Limit (UCL)}
+\title{Mean of Subgroup Means Lower Control Limit (LCL)}
 \usage{
 xBar_rBar_LCL(data, value, grouping, n = NULL, natural = F,
   formula = NULL)
@@ -25,7 +25,7 @@ numeric data to be split into groups according to the grouping x
 factors/variables}
 }
 \value{
-A number; mean of subgroup means.
+A number; mean of subgroup means lower control limit.
 }
 \description{
 Calculates the mean of subgroup means lower control limit used when constructing a xBar-R charts.
