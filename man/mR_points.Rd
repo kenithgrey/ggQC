@@ -19,5 +19,4 @@ Calculates a one-point moving range vector given an input vector of values.
 \examples{
 y <- seq(-5:5)
 mR_points(y)
-
 }
