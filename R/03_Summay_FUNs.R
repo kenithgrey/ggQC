@@ -52,8 +52,10 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
         )
 
          #print(n)
-         unlist(lapply(QC_indv_functions,
+           as.data.frame.list(
+           unlist(lapply(QC_indv_functions,
                 FUN = function(f){f(y, n=n, na.rm = na.rm)}))
+           )
 }
 
 #Report lines for subgroup plots
@@ -112,8 +114,8 @@ QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL,
                          sBar_UCL = sBar_UCL)}
 
   )
-
+  as.data.frame.list(
   unlist(lapply(Lines,
                 FUN = function(f){f(data=data, value=value, grouping=grouping, formula=formula, n=n)}))
-
+  )
 }

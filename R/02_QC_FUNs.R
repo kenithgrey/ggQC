@@ -512,8 +512,28 @@ xBar_rMedian_UCL <- xLimitFun(mean, rMedian, "+")
 xBar_rMedian_LCL <- xLimitFun(mean, rMedian, "-")
 
 #' @export
+#' @title Mean of Subgroup Means Upper Control Limit (UCL) based on Standard Deviation
+#' @description Calculates the mean of subgroup means upper control limit based on the
+#' standard deviation. The result is used when constructing a xBar-S charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup means Upper Control Limit (UCL) based on standard deviation
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_sBar_UCL(data = df, formula = v~g)
 xBar_sBar_UCL <- xLimitFun(mean, sBar, "+")
+
 #' @export
+#' @export
+#' @title Mean of Subgroup Means Lower Control Limit (LCL) based on Standard Deviation
+#' @description Calculates the mean of subgroup means lower control limit based on the
+#' standard deviation. The result is used when constructing a xBar-S charts.
+#' @inheritParams xBar_rBar_UCL
+#' @return A number; mean of subgroup means Lower Control Limit (LCL) based on standard deviation
+#' @examples
+#' set.seed(5555)
+#' df <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B","C","D","E"), each=12))
+#' xBar_sBar_LCL(data = df, formula = v~g)
 xBar_sBar_LCL <- xLimitFun(mean, sBar, "-")
 
 #' @export

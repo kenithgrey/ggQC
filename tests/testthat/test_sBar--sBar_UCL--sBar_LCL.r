@@ -96,9 +96,30 @@ testthat::test_that("QC_ylines method = sBar works", {
 
 
 
+
+
+# Short Test of Xbar_sBar -------------------------------------------------
+
+xBar_sBar_QC_ylines_test <- as.data.frame.list(QC_Lines(web_data, formula = values~groups, method = "xBar.sBar"))
+#write.csv(x = xBar_sBar_QC_ylines_test, file = "tests/testthat/sxBar_sBar_QC_ylines_results.csv", quote = F, row.names = F)
+sBar_QC_ylines_results <- read.csv(file = "sxBar_sBar_QC_ylines_results.csv", header=TRUE)
+
+context("xBar_sBar_LCL -- xBar_sBar_UCL")
+testthat::test_that("QC_ylines method = sBar works", {
+  expect_equal(xBar_sBar_LCL(web_data, formula = values~groups), 0.01272201, tolerance = .01, scale = 1)
+  expect_equal(xBar_sBar_UCL(web_data, formula = values~groups), 0.01855799, tolerance = .01, scale = 1)
+  expect_equal(xBar_sBar_QC_ylines_test, sBar_QC_ylines_results, tolerance = .01, scale = 1)
+})
+
 # XBAR
-# UCL = 0.016 + [(1.427)(0.002)] = 0.0189 (3a)
-# LCL = 0.016 − [(1.427)(0.002)] = 0.0131
+  # The difference between me and that data in the expected web data
+  # is due to rounding.
+  # 0.015640000-0.01272201 = 0.00291799
+  # 0.015640000-0.01855799 = 0.00291799
+  # .016 - 0.00291799 = 0.01308201
+  # .016 + 0.00291799 = 0.01891799
+  # UCL = 0.016 + [(1.427)(0.002)] = 0.0189 (3a)
+  # LCL = 0.016 − [(1.427)(0.002)] = 0.0131
 # SBAR
 # .002078*2.089
 # UCL = ( 2.089 )(0.002) = 0.00418 (1a) B4 is right
