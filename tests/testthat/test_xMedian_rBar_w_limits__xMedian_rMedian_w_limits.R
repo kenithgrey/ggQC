@@ -1,5 +1,5 @@
 require(rQC)
-require(tidyr)
+#require(tidyr)
 # Desipersion Central Limit Tests -----------------------------------------
 
 # Setup -------------------------------------------------------------------
@@ -30,7 +30,7 @@ testthat::test_that("rMedian rMedian_UCL rMedian_LCL work using formula", {
   expect_equal(Wheeler_232_V_G_rMedian, 7.5, tolerance = .01, scale = 1)
   expect_equal(Wheeler_232_V_G_rMedianUCL, 16.3, tolerance = .1, scale = 1)
 })
-
+QC_Lines(Wheeler_232, value = "value", grouping = "Subgroup", method="rMedian")
 
 
 Wheeler_232_V_G_xMedian_Bar <- xMedian_Bar(Wheeler_232, value = "value", grouping = "Subgroup") #0.3
@@ -180,8 +180,8 @@ testthat::test_that("missing value Rbar Rbar_UCL rBar_LCL work using formula", {
 #Will calculate for Xbar but not Rbar_UCL
 
 set.seed(5555)
-nTest <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B"), each=30))
-testthat::test_that("warnings tripped for n < 20", {
+nTest <- data.frame(v=rnorm(26, 0, 1), g=rep(letters[1:26], each=1))
+testthat::test_that("warnings tripped for n = 1", {
   testthat::expect_warning(rBar_UCL(data = nTest, formula = v~g))
   testthat::expect_warning(rMedian_UCL(data = nTest, formula = v~g))
   testthat::expect_warning(QC_Lines(data = nTest, formula = v~g, n=20))

@@ -73,8 +73,8 @@ testthat::test_that("missing value sBar sBar_UCL sBar_LCL n inert", {
 #Does not repond to n
 #QC_Lines(web_data_missing, formula = values~groups, n=30, method = "rBar")
 set.seed(5555)
-nTest <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B"), each=30))
-testthat::test_that("warnings tripped for n < 20", {
+nTest <- data.frame(v=rnorm(26, 0, 1), g=rep(letters[1:26], each=1))
+testthat::test_that("warnings tripped for n = 1", {
   testthat::expect_warning(sBar_UCL(data = nTest, formula = v~g))
   testthat::expect_warning(QC_Lines(data = nTest, formula = v~g, n=20, method="sBar"))
 })

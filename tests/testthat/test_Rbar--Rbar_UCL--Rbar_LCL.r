@@ -70,12 +70,12 @@ testthat::test_that("missing value Rbar Rbar_UCL rBar_LCL work using formula", {
   #Will calculate for Xbar but not Rbar_UCL
 
 set.seed(5555)
-nTest <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B"), each=30))
+nTest <- data.frame(v=rnorm(26, 0, 1), g=rep(letters[1:26], each=1))
 testthat::test_that("warnings tripped for n < 20", {
 testthat::expect_warning(rBar_UCL(data = nTest, formula = v~g))
 testthat::expect_warning(QC_Lines(data = nTest, formula = v~g, n=20))
 })
-
+#QC_Lines(data = nTest, formula = v~g)
 # Testing QC_ylines ----------------------------------------------------------
 
 W43_V_G_DF <- as.data.frame.list(QC_Lines(Wheeler_43, value = "values", grouping = "subgroup", method = "rBar")) #Same As Above
