@@ -1,3 +1,24 @@
+
+# ylines_ind --> QC_Lines mR ----------------------------------------------
+context("QC_Lines mR")
+set.seed(5555)
+dataIn <- rnorm(100, 0, 1)
+  mR_Test1 <- QC_Lines(data = dataIn, method = "mR")
+  mR_Test2 <- ylines_indv(y = dataIn, method = "mR")
+
+dataIn2 <- c(NA, dataIn)
+  mR_Test4 <- QC_Lines(data = dataIn2, method = "mR")
+  mR_Test5 <- QC_Lines(data = dataIn2, method = "mR", na.rm = T)
+
+testthat::test_that("XmR Function Work", {
+  expect_equal(mR_Test1, mR_Test2, tolerance = .02, scale = 1)
+  expect_message(QC_Lines(data = data.frame(x = 1:100, data = dataIn), value = DIN, method = "mR"))
+  expect_equal(is.na(mR_Test4$mR_UCL), T)
+  expect_equal(mR_Test5$mR_UCL, 3.14217, tolerance = .02, scale = 1)
+})
+
+
+
 # Raw Data ----------------------------------------------------------------
 Wheeler49 <- c(39,41,41,41,43,44,41,42,40,41,44,40)
 Wheeler49_df <- data.frame(values = c(39,41,41,41,43,44,41,42,40,41,44,40),
@@ -26,11 +47,16 @@ testthat::test_that("XmR Function Work", {
   expect_equal(xBar_one_UCL(Wheeler49), 46.02, tolerance = .02, scale = 1)
 })
 
-
-Wheeler49_Test <- as.data.frame.list(ylines_indv(y=Wheeler49_df$values, method="XmR")) # Good
-WheelerEMP15_Test <- as.data.frame.list(ylines_indv(y=WheelerEMP15_df$values, method="XmR")) # Good
+Wheeler49_Test <- QC_Lines(data=Wheeler49_df$values, method="XmR") # Good
+WheelerEMP15_Test <- QC_Lines(data=WheelerEMP15_df$values, method="XmR") # Good
 Wheeler49_and_WheelerEMP15_Test <- plyr::ddply(df_wheelerXmR, .variables = "gen", .fun=function(data){
-  ylines_indv(data$values, method = "XmR")}) # Good
+  QC_Lines(data = data$values, method = "XmR")}) # Good
+
+
+# Wheeler49_Test <- as.data.frame.list(ylines_indv(y=Wheeler49_df$values, method="XmR")) # Good
+# WheelerEMP15_Test <- as.data.frame.list(ylines_indv(y=WheelerEMP15_df$values, method="XmR")) # Good
+# Wheeler49_and_WheelerEMP15_Test <- plyr::ddply(df_wheelerXmR, .variables = "gen", .fun=function(data){
+#   ylines_indv(data$values, method = "XmR")}) # Good
 
 
 # XmR Group Limit and Range Function  -------------------------------------

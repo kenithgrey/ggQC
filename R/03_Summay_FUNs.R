@@ -2,7 +2,7 @@
   # Report Lines for XmR chart
 
 
-#' @export
+
 ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
   switch(method,
          "mR" = {
@@ -13,7 +13,6 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
                 mean = mean,
                 xBar_one_UCL = xBar_one_UCL)
                 },
-
          "XmR" = {
            QC_indv_functions <- list(
                 xBar_one_LCL = xBar_one_LCL,
@@ -60,8 +59,56 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
 
 #Report lines for subgroup plots
 #' @export
-QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL, method="xBar.rBar"){
+QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL, method="xBar.rBar", na.rm = FALSE){
   switch(method,
+         "mR" = {
+           if(is.vector(data)){
+             return(ylines_indv(y = data, n = 1, method = "mR", na.rm = na.rm))
+           }else{
+             return(message("Error: method 'mR' requires a vector not a dataframe in data arg."))
+
+             }
+          },
+         "XmR" = {
+           if(is.vector(data)){
+             return(ylines_indv(y = data, n = 1, method = "XmR", na.rm = na.rm))
+           }else{
+             return(message("Error: method 'XmR' requires a vector not a dataframe in data arg."))
+
+           }
+         },
+         "c" = {
+           if(is.vector(data)){
+             return(ylines_indv(y = data, n = 1, method = "c", na.rm = na.rm))
+           }else{
+             return(message("Error: method 'c' requires a vector not a dataframe in data arg."))
+
+           }
+         },
+         "np" = {
+           if(is.vector(data)){
+             return(ylines_indv(y = data, n = n, method = "np", na.rm = na.rm))
+           }else{
+             return(message("Error: method 'np' requires a vector not a dataframe in data arg."))
+
+           }
+         },
+         "p" = {
+           if(is.vector(data)){
+             return(ylines_indv(y = data, n = n, method = "p", na.rm = na.rm))
+           }else{
+             return(message("Error: method 'p' requires a vector not a dataframe in data arg."))
+
+           }
+         },
+         "u" = {
+           if(is.vector(data)){
+             return(ylines_indv(y = data, n = n, method = "u", na.rm = na.rm))
+           }else{
+             return(message("Error: method 'u' requires a vector not a dataframe in data arg."))
+
+           }
+         },
          "xBar.rBar" = {
            Lines <- list(rBar_LCL = rBar_LCL , rBar = rBar, rBar_UCL = rBar_UCL,
                          d2_N = NFUN,

@@ -1,10 +1,10 @@
 # QC Constants ------------------------------------------------------------
 # 2/25/2016 installed a set of constants based on the average of 9 simulations
 # Fixed error with D5 and D6
- # qcK <- read.csv(file = "R/QC_Constants.csv", header=T)
+ #qcK <- read.csv(file = "R/QC_Constants.csv", header=T)
  # qcK$b2 <- 3/(qcK$A6 * sqrt(qcK$n)) # used for median(x) Rbar
  # qcK$b4 <- 3/(qcK$A9 * sqrt(qcK$n)) # used for median(x) RMedian
- # devtools::use_data(qcK, internal = TRUE, overwrite = T)
+#  devtools::use_data(qcK, internal = TRUE, overwrite = T)
 
 
 chartoptions <- data.frame(    #List of constant based on chart need
@@ -85,12 +85,13 @@ xLimitFun <- function(xMethod, dispersionMethod, PM){
     else if(natural == T){n <- 1} # If natural limits use n = 1
     else{n = n} # if user defined use n provided.
 
-    if(n > 20 || n < 1){
-      warning("Control Chart Constants only available for 1 < n < 20")
+    if(N < 2){
+      warning("For n = 1, use XmR methods")
       return(NA)
     }
     #Look up the constant value in the table qcK for n == ...
-    BCF <- 3/(qcK[qcK$n == N,CT]*sqrt(n)) #if n=1 (natural)
+    #BCF <- 3/(qcK[qcK$n == N,CT]*sqrt(n)) #if n=1 (natural)
+    BCF <- 3/(QC_constants(N)[1, CT]*sqrt(n)) #if n=1 (natural)
     Reduce(PM, right = T, #PM(+/-) report high or low limit
            c(mean(agg[,ncol(agg)]),
              dispersionMethod(data = data, value = value,
@@ -127,11 +128,13 @@ DispersionLimitFun <- function(dispersionMethod, PM){
     N_df <- (stats::aggregate(f1, FUN = "length", data = data))
     N <- floor(mean(N_df[,ncol(N_df)]))
 
-    if(N > 20 || N < 2){
-      warning("Control Chart Constants only available for 1 < n < 20")
+    #if(N > 20 || N < 2){
+    if(N < 2){
+      warning("For n = 1, use XmR methods")
       return(NA)
     }
-    BCF <- (qcK[qcK$n == N,dK])
+    #BCF <- (qcK[qcK$n == N,dK])
+    BCF <- QC_constants(N)[1, dK]
     dispersionMethod(data = data, value = value,grouping=grouping, formula=formula)*BCF
   }
 }

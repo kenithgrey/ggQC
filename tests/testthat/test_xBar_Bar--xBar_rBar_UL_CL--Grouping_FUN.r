@@ -73,8 +73,8 @@ testthat::test_that("Changing n can change the value of Xbar limits but not Rbar
 #QC_Lines(Wheeler_43_missing, formula = values~subgroup, n=30, method = "rBar")
 #Will calculate for Xbar but not Rbar_UCL
 set.seed(5555)
-nTest <- data.frame(v=rnorm(60, 0, 1), g=rep(c("A","B"), each=30))
-testthat::test_that("warnings tripped for n < 20", {
+nTest <- data.frame(v=rnorm(26, 0, 1), g=rep(letters[1:26], each=1))
+testthat::test_that("warnings tripped for n = 1", {
   testthat::expect_warning(xBar_rBar_LCL(data = nTest, formula = v~g))
   testthat::expect_warning(xBar_rBar_UCL(data = nTest, formula = v~g))
   testthat::expect_warning(QC_Lines(data = nTest, formula = v~g, n=20))
@@ -133,7 +133,7 @@ Wheeler105_results <- read.csv(file="Wheeler105_results.csv")
 Wheeler108_results <- read.csv(file="Wheeler108_results.csv")
 
 testthat::test_that("Multi Dimentional Grouping Formulas Work", {
-  expect_equal(Wheeler104_test, Wheeler104_results[-1], tolerance = .001, scale = 1)
+  expect_equal(Wheeler104_test, Wheeler104_results[-1], tolerance = .0015, scale = 1)
   expect_equal(Wheeler105_test, Wheeler105_results[-1], tolerance = .001, scale = 1)
   expect_equal(Wheeler108_test[-1], Wheeler108_results[-1], tolerance = .001, scale = 1)
   #  expect_equal(xBar_rBar_LCL(data = Wheeler43, value = "values", grouping = "subgroup"), 1.811, tolerance = .001, scale = 1)
