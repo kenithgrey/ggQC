@@ -42,8 +42,8 @@ c5 <- function(n) {sqrt(1-c4(n)^2)}
 # ratio <- aggregate(sd_median_per_sd_mean_ratio~n, FUN = mean, data=b2b4)
 # colnames(ratio) <- c("n", "ratio")
 # write.csv(ratio, file = "b2b4constants.csv", quote = F, row.names = F)
-# ratio <- read.csv("b2b4constants.csv")
-#devtools::use_data(ratio, internal = TRUE, overwrite = TRUE)
+# b2b4 <- read.csv("b2b4constants.csv")
+# devtools::use_data(b2b4, internal = TRUE, overwrite = TRUE)
 #data(b2b4_agg)
 #data(sysdata, envir=environment())
 #b2b4agg
@@ -52,15 +52,25 @@ c5 <- function(n) {sqrt(1-c4(n)^2)}
 # x <- rnorm(10, 0, 1)
 # devtools::use_data(x, internal = T, overwrite = T)
 
-ratio <- data.frame(n=1:20, ratio=2:21)
-b2b4_ratio <- function(n, data=ratio){
+# export
+#find_data <- function(){
+#  b2b4
+#}
+
+#data(sysdata)
+
+#find_data
+
+#ratio <- data.frame(n=1:20, ratio=2:21)
+b2b4_ratio <- function(n){
+  #ratio <- find_data
   if(n <= 200){
-    b2b4 <- data$ratio[data$n == n]
+    b2b4_out <- b2b4$ratio[b2b4$n == n]
   }else{
     #mean(sd_median_per_sd_mean_ratio[n>200])
-    b2b4 <- 1.25286
+    b2b4_out <- 1.25286
   }
-  return(b2b4)
+  return(b2b4_out)
 }
 
 
@@ -102,7 +112,7 @@ QC_constants <- function(n) {
   ), digits = 6)
 }
 
-QC_constants(5)
-n <- 5
-d2(n) - 3*d3(n)/d4(n)
+#QC_constants(5)
+#n <- 5
+#d2(n) - 3*d3(n)/d4(n)
 #QC_constants(7)[1,"b4"]

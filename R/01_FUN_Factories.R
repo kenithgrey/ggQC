@@ -1,7 +1,7 @@
 # QC Constants ------------------------------------------------------------
 # 2/25/2016 installed a set of constants based on the average of 9 simulations
 # Fixed error with D5 and D6
- #qcK <- read.csv(file = "R/QC_Constants.csv", header=T)
+# qcK <- read.csv(file = "R/QC_Constants.csv", header=T)
  # qcK$b2 <- 3/(qcK$A6 * sqrt(qcK$n)) # used for median(x) Rbar
  # qcK$b4 <- 3/(qcK$A9 * sqrt(qcK$n)) # used for median(x) RMedian
 #  devtools::use_data(qcK, internal = TRUE, overwrite = T)
