@@ -1,7 +1,7 @@
 Package: rQC
 Type: Package
 Title: Scaleable Quality Control
-Version: 0.0.0.7100
+Version: 0.0.0.8000
 Author: Kenith Grey
 Maintainer: Kenith Grey <kenithgrey@r-bar.net>
 Description: Scaleable Quality Control makes determinating quality control
@@ -18,4 +18,5 @@ Suggests: testthat,
 RoxygenNote: 6.0.0
 Imports: ggplot2,
     reshape2,
-    stats
+    stats,
+    plyr

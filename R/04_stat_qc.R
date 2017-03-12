@@ -27,7 +27,7 @@ Stat_QC_LIMITS <- ggplot2::ggproto("Stat_QC_LIMITS", ggplot2::Stat,
       pdata$x <- data$x
       pchart_data <- reshape2::melt(pdata[,c(1,3,4)], id.vars=c("x"))
       colnames(pchart_data) <- c("x", "group", "y")
-
+      pchart_data$x <- pchart_data$x + 0.5
       return(pchart_data)
 
     }else if(method == "u"){
@@ -39,7 +39,7 @@ Stat_QC_LIMITS <- ggplot2::ggproto("Stat_QC_LIMITS", ggplot2::Stat,
       udata$x <- data$x
       uchart_data <- reshape2::melt(udata[,c(1,3,4)], id.vars=c("x"))
       colnames(uchart_data) <- c("x", "group", "y")
-
+      uchart_data$x <- uchart_data$x + 0.5
       return(uchart_data)
 
     }else{
@@ -147,7 +147,7 @@ stat_QC <- function(mapping = NULL,
       position = position, show.legend = show.legend,
       inherit.aes = inherit.aes,
       params = list(na.rm = na.rm, n=n, digits=digits, method=method,
-                    color= color.qc_limits, ...)
+                    color= color.qc_limits, direction="vh", ...)
     )
 
     Centerline <- ggplot2::layer(
