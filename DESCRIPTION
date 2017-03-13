@@ -1,7 +1,7 @@
 Package: rQC
 Type: Package
 Title: Scaleable Quality Control
-Version: 0.0.0.8000
+Version: 0.0.0.8500
 Author: Kenith Grey
 Maintainer: Kenith Grey <kenithgrey@r-bar.net>
 Description: Scaleable Quality Control makes determinating quality control

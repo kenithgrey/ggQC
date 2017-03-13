@@ -83,18 +83,18 @@ stat_mR <- function(mapping = NULL,
     params = list(na.rm = na.rm, color=color.mr_point, ...))
 
   Limits <- ggplot2::layer(
-    stat = Stat_QC_LIMITS, data = data, mapping = mapping,
+    stat = STAT_QC, data = data, mapping = mapping,
     geom = "hline", position = position, show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=1, digits=1, method="mR",
-                  color= color.qc_limits, ...))
+                  color= color.qc_limits, draw.line = "limit", ...))
 
   Centerline <- ggplot2::layer(
-    stat = Stat_QC_CL, data = data, mapping = mapping,
+    stat = STAT_QC, data = data, mapping = mapping,
     geom = "hline", position = position, show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=1, digits=1, method="mR",
-                  color=color.qc_center, ...)
+                  color=color.qc_center,draw.line = "center", ...)
   )
 
 
