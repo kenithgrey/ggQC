@@ -71,7 +71,7 @@ ggplot stat used to create a mR chart in ggplot
 #########################
 
 # Load Libraries ----------------------------------------------------------
- require(rQC)
+ require(ggQC)
  require(ggplot2)
 
 # Setup Data --------------------------------------------------------------

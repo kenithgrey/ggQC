@@ -4,9 +4,9 @@
 \alias{stat_QC}
 \title{Produce QC Charts with ggplot Framework.}
 \usage{
-stat_QC(mapping = NULL, data = NULL, geom = "hline", yintercept = NULL,
+stat_QC(mapping = NULL, data = NULL, geom = "hline",
   position = "identity", na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE, n = NULL, digits = 1, method = "xBar.rBar",
+  inherit.aes = TRUE, n = NULL, method = "xBar.rBar",
   color.qc_limits = "red", color.qc_center = "green", ...)
 }
 \arguments{
@@ -72,18 +72,18 @@ data need to produce the mR plot in ggplot.
 \description{
 Produce QC charts with ggplot framework. Support for faceting and
 layering of multiple QC chart lines on a single plot. Charts supported (see method argument):
-#' \itemize{
+\itemize{
 \item \bold{Individuals Charts}: mR, XmR,
 \item \bold{Attribute Charts}: c, np, p, u,
 \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
 xMedian.rMedian,
 \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 }
-To label chart lines see \link[rQC]{stat_QC_labels}
+To label chart lines see \link[ggQC]{stat_QC_labels}
 }
 \examples{
 # Load Libraries ----------------------------------------------------------
- require(rQC)
+ require(ggQC)
  require(ggplot2)
 
 # Setup Data --------------------------------------------------------------

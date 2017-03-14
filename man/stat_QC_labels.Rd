@@ -84,7 +84,7 @@ for methods supported.
 #########################
 
 # Load Libraries ----------------------------------------------------------
- require(rQC)
+ require(ggQC)
  require(ggplot2)
 
 # Setup Data --------------------------------------------------------------

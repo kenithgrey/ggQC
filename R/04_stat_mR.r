@@ -23,7 +23,7 @@ Stat_MR <- ggplot2::ggproto("Stat_MR", ggplot2::Stat,
 #' #########################
 #'
 #'# Load Libraries ----------------------------------------------------------
-#'  require(rQC)
+#'  require(ggQC)
 #'  require(ggplot2)
 #'
 #'# Setup Data --------------------------------------------------------------

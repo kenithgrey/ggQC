@@ -81,7 +81,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' xMedian.rMedian,
 #' \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
-#'To label chart lines see \link[rQC]{stat_QC_labels}
+#'To label chart lines see \link[ggQC]{stat_QC_labels}
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
@@ -99,7 +99,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' @return data need to produce the mR plot in ggplot.
 #' @examples
 #'# Load Libraries ----------------------------------------------------------
-#'  require(rQC)
+#'  require(ggQC)
 #'  require(ggplot2)
 #'
 #'# Setup Data --------------------------------------------------------------
@@ -198,12 +198,13 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 stat_QC <- function(mapping = NULL,
                     data = NULL,
                     geom = "hline",
-                    yintercept = NULL,
+                    #yintercept = NULL,
                     position = "identity",
                     na.rm = FALSE,
                     show.legend = NA,
                     inherit.aes = TRUE,
-                    n=NULL, digits=1,
+                    n=NULL,
+                    #digits=1,
                     method="xBar.rBar",
                     color.qc_limits = "red", color.qc_center = "green", ...) {
 
@@ -213,7 +214,7 @@ stat_QC <- function(mapping = NULL,
       geom = "step",
       position = position, show.legend = show.legend,
       inherit.aes = inherit.aes,
-      params = list(na.rm = na.rm, n=n, digits=digits, method=method,
+      params = list(na.rm = na.rm, n=n, digits=1, method=method,
                     color= color.qc_limits, direction="vh", draw.line = "limit",
                     ...)
     )
@@ -224,7 +225,7 @@ stat_QC <- function(mapping = NULL,
       position = position, show.legend = show.legend,
       inherit.aes = inherit.aes,
       params = list(na.rm = na.rm, n=n,
-                    digits=digits, method=method,
+                    digits=1, method=method,
                     color=color.qc_center, draw.line = "center",
                     ...)
     )
@@ -234,7 +235,7 @@ stat_QC <- function(mapping = NULL,
     stat = STAT_QC, data = data, mapping = mapping,
     geom = geom, position = position, show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, n=n, digits=digits, method=method,
+    params = list(na.rm = na.rm, n=n, digits=1, method=method,
                   color= color.qc_limits, draw.line = "limit", ...)
   )
 
@@ -243,7 +244,7 @@ stat_QC <- function(mapping = NULL,
     geom = geom, position = position, show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n,
-                  digits=digits, method=method,
+                  digits=1, method=method,
                   color=color.qc_center, draw.line = "center", ...)
   )
   }
@@ -281,7 +282,7 @@ stat_QC <- function(mapping = NULL,
 #' #########################
 #'
 #'# Load Libraries ----------------------------------------------------------
-#'  require(rQC)
+#'  require(ggQC)
 #'  require(ggplot2)
 #'
 #'# Setup Data --------------------------------------------------------------

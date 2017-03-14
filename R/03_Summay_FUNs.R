@@ -110,7 +110,7 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
 #' #############################################
 #'
 #'# Load Libraries ----------------------------------------------------------
-#'  require(rQC)
+#'  require(ggQC)
 #'  require(plyr)
 #'  require(ggplot2)
 #'
