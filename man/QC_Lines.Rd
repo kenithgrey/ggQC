@@ -70,7 +70,7 @@ If using the \bold{formula} argument do not use \bold{value} and \bold{group} ar
 #############################################
 
 # Load Libraries ----------------------------------------------------------
- require(rQC)
+ require(ggQC)
  require(plyr)
  require(ggplot2)
 
