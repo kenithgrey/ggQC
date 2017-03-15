@@ -1,3 +1,23 @@
+##############################
+# Copyright 2017 Kenith Grey #
+##############################
+
+# Copyright Notice --------------------------------------------------------
+# This file is part of ggQC.
+#
+# ggQC is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ggQC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
+
 STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
   compute_group = function(data, scales, n=NULL, digits=1, method=NULL, draw.line=draw.line){
      temp <- aggregate(data=data, y~x, mean)
@@ -73,7 +93,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' @export
 #' @title Produce QC Charts with ggplot Framework.
 #' @description Produce QC charts with ggplot framework. Support for faceting and
-#' layering of multiple QC chart lines on a single plot. Charts supported (see method argument):
+#' layering of multiple QC chart lines on a single plot. Charts supported (see method argument for call):
 #' \itemize{
 #' \item \bold{Individuals Charts}: mR, XmR,
 #' \item \bold{Attribute Charts}: c, np, p, u,
@@ -81,7 +101,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' xMedian.rMedian,
 #' \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
-#'To label chart lines see \link[ggQC]{stat_QC_labels}
+#'To label chart lines see \link[rQC]{stat_QC_labels}
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.

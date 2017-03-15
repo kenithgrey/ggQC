@@ -71,7 +71,7 @@ data need to produce the mR plot in ggplot.
 }
 \description{
 Produce QC charts with ggplot framework. Support for faceting and
-layering of multiple QC chart lines on a single plot. Charts supported (see method argument):
+layering of multiple QC chart lines on a single plot. Charts supported (see method argument for call):
 \itemize{
 \item \bold{Individuals Charts}: mR, XmR,
 \item \bold{Attribute Charts}: c, np, p, u,
@@ -79,7 +79,7 @@ layering of multiple QC chart lines on a single plot. Charts supported (see meth
 xMedian.rMedian,
 \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 }
-To label chart lines see \link[ggQC]{stat_QC_labels}
+To label chart lines see \link[rQC]{stat_QC_labels}
 }
 \examples{
 # Load Libraries ----------------------------------------------------------

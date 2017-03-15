@@ -1,3 +1,23 @@
+##############################
+# Copyright 2017 Kenith Grey #
+##############################
+
+# Copyright Notice --------------------------------------------------------
+# This file is part of ggQC.
+#
+# ggQC is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ggQC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
+
 # 2nd Order Functions ------------------------------------------------------
   # Report Lines for XmR chart
 
@@ -60,7 +80,7 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
 #Report lines for subgroup plots
 #' @export
 #' @title Calculate QC Limits
-#' @description Calculates QC chart lines for the following chart types:
+#' @description Calculates QC chart lines for the following chart types and reports in a dataframe:
 #' \itemize{
 #' \item \bold{Individuals Charts}: mR, XmR,
 #' \item \bold{Attribute Charts}: c, np, p, u,
@@ -70,13 +90,13 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
 #' }
 #' @param data vector or dataframe, as indicated below for each chart type
 #' \itemize{
-#' \item \bold{Indivduals & Attribute Charts}: vector of values;
+#' \item \bold{Individuals & Attribute Charts}: vector of values;
 #' \item \bold{Studentized & Dispersion Charts}: dataframe
 #' }
-#' @param value \bold{Studentize Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest
-#' @param grouping \bold{Studentize Charts} and \bold{Dispersion Charts}: single factor/variable to split
+#' @param value \bold{Studentized Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest
+#' @param grouping \bold{Studentized Charts} and \bold{Dispersion Charts}: single factor/variable to split
 #' the dataframe "values" by
-#' @param formula \bold{Studentize Charts} and \bold{Dispersion Charts}: a formula,
+#' @param formula \bold{Studentized Charts} and \bold{Dispersion Charts}: a formula,
 #' such as y ~ x1 + x2, where the y variable is
 #' numeric data to be split into groups according to the grouping x
 #' factors/variables

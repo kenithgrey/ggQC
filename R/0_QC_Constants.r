@@ -1,11 +1,33 @@
+##############################
+# Copyright 2017 Kenith Grey #
+##############################
+
+# Copyright Notice --------------------------------------------------------
+# This file is part of ggQC.
+#
+# ggQC is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ggQC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
+
 # Formula for constants ---------------------------------------------------
 # d2 & d3
 #   Barbosa, Emanuel Pimentel, Mario Antonio Gneri and Ariane Meneguetti.
 #   “Range Control Charts Revisited: Simpler Tippett-like Formulae, Its Practical Implementation,
 #   and the Study of False Alarm.” Communications in Statistics - Simulation and Computation
 #   42 (2013): 247-262.
+#
 # c4 & c5
-#   Wheeler et., al
+#   Wheeler et., al Wheeler, DJ, and DS Chambers. Understanding Statistical Process Control,
+#   2nd Ed. Knoxville, TN: SPC, 1992. Print.
 
 d2 <- function(n) {
   Ew <- function(x){1 - stats::ptukey(q = x, nmeans = n, df = Inf)}
@@ -31,7 +53,11 @@ c5 <- function(n) {sqrt(1-c4(n)^2)}
 
 
 # #b2b4_ratio --------------------------------------------------------------
-#  filelist <- list.files(path = "../Stat/1e4/", pattern = "csv", full.names = T)
+# The function b2b4 ratio is
+# the results of simulated data to determine bias correction
+# factors for subgroup medians#
+#
+# filelist <- list.files(path = "../Stat/1e4/", pattern = "csv", full.names = T)
 # #
 # loadfiles <- function(FILE){
 #   temp <- read.csv(file = FILE, header=T)

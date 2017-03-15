@@ -10,16 +10,16 @@ QC_Lines(data = NULL, value = NULL, grouping = NULL, formula = NULL,
 \arguments{
 \item{data}{vector or dataframe, as indicated below for each chart type
 \itemize{
-\item \bold{Indivduals & Attribute Charts}: vector of values;
+\item \bold{Individuals & Attribute Charts}: vector of values;
 \item \bold{Studentized & Dispersion Charts}: dataframe
 }}
 
-\item{value}{\bold{Studentize Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest}
+\item{value}{\bold{Studentized Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest}
 
-\item{grouping}{\bold{Studentize Charts} and \bold{Dispersion Charts}: single factor/variable to split
+\item{grouping}{\bold{Studentized Charts} and \bold{Dispersion Charts}: single factor/variable to split
 the dataframe "values" by}
 
-\item{formula}{\bold{Studentize Charts} and \bold{Dispersion Charts}: a formula,
+\item{formula}{\bold{Studentized Charts} and \bold{Dispersion Charts}: a formula,
 such as y ~ x1 + x2, where the y variable is
 numeric data to be split into groups according to the grouping x
 factors/variables}
@@ -52,7 +52,7 @@ a dataframe,
 }
 }
 \description{
-Calculates QC chart lines for the following chart types:
+Calculates QC chart lines for the following chart types and reports in a dataframe:
 \itemize{
 \item \bold{Individuals Charts}: mR, XmR,
 \item \bold{Attribute Charts}: c, np, p, u,
