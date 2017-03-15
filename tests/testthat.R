@@ -1,6 +1,6 @@
 library(testthat)
-library(rQC)
+library(ggQC)
 #require(plyr)
-test_check("rQC")
+test_check("ggQC")
 
 

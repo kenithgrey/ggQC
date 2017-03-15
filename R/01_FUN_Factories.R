@@ -1,11 +1,22 @@
-# QC Constants ------------------------------------------------------------
-# 2/25/2016 installed a set of constants based on the average of 9 simulations
-# Fixed error with D5 and D6
-# qcK <- read.csv(file = "R/QC_Constants.csv", header=T)
- # qcK$b2 <- 3/(qcK$A6 * sqrt(qcK$n)) # used for median(x) Rbar
- # qcK$b4 <- 3/(qcK$A9 * sqrt(qcK$n)) # used for median(x) RMedian
-#  devtools::use_data(qcK, internal = TRUE, overwrite = T)
+##############################
+# Copyright 2017 Kenith Grey #
+##############################
 
+# Copyright Notice --------------------------------------------------------
+# This file is part of ggQC.
+#
+# ggQC is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ggQC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 
 chartoptions <- data.frame(    #List of constant based on chart need
     chart_options = c("mean_rBar",
