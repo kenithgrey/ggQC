@@ -1,4 +1,4 @@
-require(rQC)
+require(ggQC)
 #require(tidyr)
 # Desipersion Central Limit Tests -----------------------------------------
 
