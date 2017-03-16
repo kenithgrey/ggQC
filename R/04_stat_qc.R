@@ -101,7 +101,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' xMedian.rMedian,
 #' \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
-#'To label chart lines see \link[rQC]{stat_QC_labels}
+#'To label chart lines see \link[ggQC]{stat_QC_labels}
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.

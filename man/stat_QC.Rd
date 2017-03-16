@@ -79,7 +79,7 @@ layering of multiple QC chart lines on a single plot. Charts supported (see meth
 xMedian.rMedian,
 \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 }
-To label chart lines see \link[rQC]{stat_QC_labels}
+To label chart lines see \link[ggQC]{stat_QC_labels}
 }
 \examples{
 # Load Libraries ----------------------------------------------------------
