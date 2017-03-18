@@ -46,15 +46,19 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{n}{number, for \bold{Studentized Charts}, used for custom or hypothetical subgroup size.}
+\item{n}{number, for
+\itemize{
+  \item \bold{Studentized Charts}, used for custom or hypothetical subgroup size.
+  \item \bold{np Charts}, used to specify a fixed area of opportunity.
+}}
 
 \item{method}{string, calling the following methods:
 \itemize{
-\item \bold{Individuals Charts}: mR, XmR,
-\item \bold{Attribute Charts}: c, np, p, u,
-\item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
+  \item \bold{Individuals Charts}: mR, XmR,
+  \item \bold{Attribute Charts}: c, np, p, u,
+  \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
 xMedian.rMedian
-\item \bold{Dispersion Charts}: rBar, rMedian, sBar.
+  \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 }}
 
 \item{color.qc_limits}{color, used to colorize the plot's upper and lower mR control limits.}
@@ -174,6 +178,22 @@ ggplot(data = bin_data, aes(x=trial,
                            n=Num_Items_Inspected)) +
  geom_point() + geom_line() +
  stat_QC(method = "u")
+
+
+#############################
+#  Example 5:  np Chart     #
+#############################
+# np chart Setup -----------------------------------------------------------
+ set.seed(5555)
+ bin_data <- data.frame(
+   trial=1:30,
+   NumNonConforming = rbinom(30, 30, prob = .50))
+ Units_Tested_Per_Batch <- 60
+
+# Plot np chart ------------------------------------------------------------
+ ggplot(data = bin_data, aes(trial, NumNonConforming)) +
+  geom_point() +
+  stat_QC(method = "np", n = Units_Tested_Per_Batch)
 
 
 }

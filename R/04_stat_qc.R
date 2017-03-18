@@ -105,14 +105,18 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
-#' @param n number, for \bold{Studentized Charts}, used for custom or hypothetical subgroup size.
+#' @param n number, for
+#' \itemize{
+#'   \item \bold{Studentized Charts}, used for custom or hypothetical subgroup size.
+#'   \item \bold{np Charts}, used to specify a fixed area of opportunity.
+#' }
 #' @param method string, calling the following methods:
 #' \itemize{
-#' \item \bold{Individuals Charts}: mR, XmR,
-#' \item \bold{Attribute Charts}: c, np, p, u,
-#' \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
+#'   \item \bold{Individuals Charts}: mR, XmR,
+#'   \item \bold{Attribute Charts}: c, np, p, u,
+#'   \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
 #' xMedian.rMedian
-#' \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
+#'   \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
 #' @param color.qc_center color, used to colorize the plot's center line.
@@ -213,6 +217,22 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #'  stat_QC(method = "u")
 #'
 #'
+#'#############################
+#'#  Example 5:  np Chart     #
+#'#############################
+#'# np chart Setup -----------------------------------------------------------
+#'  set.seed(5555)
+#'  bin_data <- data.frame(
+#'    trial=1:30,
+#'    NumNonConforming = rbinom(30, 30, prob = .50))
+#'  Units_Tested_Per_Batch <- 60
+#'
+#'# Plot np chart ------------------------------------------------------------
+#'  ggplot(data = bin_data, aes(trial, NumNonConforming)) +
+#'   geom_point() +
+#'   stat_QC(method = "np", n = Units_Tested_Per_Batch)
+#'
+#'
 
 
 stat_QC <- function(mapping = NULL,
@@ -282,7 +302,11 @@ stat_QC <- function(mapping = NULL,
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
-#' @param n number, for \bold{Studentized Charts}, used for custom or hypothetical subgroup size.
+#' @param n number, for
+#' \itemize{
+#'   \item \bold{Studentized Charts}, used for custom or hypothetical subgroup size.
+#'   \item \bold{np Charts}, used to specify a fixed area of opportunity.
+#' }
 #' @param digits integer, indicating the number of decimal places
 #' @param text.size number, size of the text label
 #' @param method string, calling the following methods:

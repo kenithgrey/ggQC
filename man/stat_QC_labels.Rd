@@ -46,7 +46,11 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link{borders}}.}
 
-\item{n}{number, for \bold{Studentized Charts}, used for custom or hypothetical subgroup size.}
+\item{n}{number, for
+\itemize{
+  \item \bold{Studentized Charts}, used for custom or hypothetical subgroup size.
+  \item \bold{np Charts}, used to specify a fixed area of opportunity.
+}}
 
 \item{digits}{integer, indicating the number of decimal places}
 
