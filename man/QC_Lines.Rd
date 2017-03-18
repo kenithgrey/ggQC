@@ -28,6 +28,7 @@ factors/variables}
 \itemize{
 \item \bold{Individuals Charts}: No effect
 \item \bold{Attribute Charts}: (p and u) vector, indicating sample area of opportunity.
+\item \bold{Attribute Charts}: (np) number, indicating constant sampling area of opportunity.
 \item \bold{Studentized Charts}: number, user specified subgroup size.
 \item \bold{Dispersion Charts}: No effect
 }}
