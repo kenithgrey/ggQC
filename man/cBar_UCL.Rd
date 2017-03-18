@@ -4,11 +4,13 @@
 \alias{cBar_UCL}
 \title{Upper Control Limit: Count Data (c-chart)}
 \usage{
-cBar_UCL(y, ...)
+cBar_UCL(y, na.rm = FALSE, ...)
 }
 \arguments{
 \item{y}{Vector of count data. Each observation having the
 same-area of opportunity.}
+
+\item{na.rm}{a logical value indicating whether NA values should be stripped before the computation proceeds.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
