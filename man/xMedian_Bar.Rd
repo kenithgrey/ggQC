@@ -9,7 +9,7 @@ xMedian_Bar(data, value, grouping, formula = NULL, ...)
 \arguments{
 \item{data}{data frame to be processed}
 
-\item{value}{numeric vector in data frame with values of interest.}
+\item{value}{numeric vector in a data frame with values of interest.}
 
 \item{grouping}{single factor/variable to split the data frame "values" by.}
 
@@ -23,7 +23,7 @@ factors/variables}
 A number; mean of subgroup medians.
 }
 \description{
-Calculates the mean subgroup medians used when constructing a xMedian-R charts.
+Calculates the mean of subgroup medians used when constructing a xMedian-R charts.
 }
 \examples{
 set.seed(5555)

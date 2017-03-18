@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_QC_FUNs.R
 \name{mR}
 \alias{mR}
-\title{Mean One Point Moving Range}
+\title{Mean One-Point Moving Range}
 \usage{
 mR(y, na.rm = TRUE, ...)
 }
@@ -14,7 +14,7 @@ mR(y, na.rm = TRUE, ...)
 \item{...}{further arguments passed to or from other methods.}
 }
 \value{
-A number; mean one point moving range.
+A number; mean one-point moving range.
 }
 \description{
 Calculates the mean one-point moving range used when constructing a moving-range chart.

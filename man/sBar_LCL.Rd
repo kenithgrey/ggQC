@@ -10,7 +10,7 @@ sBar_LCL(data = data, value = value, grouping = grouping,
 \arguments{
 \item{data}{data frame to be processed}
 
-\item{value}{numeric vector in data frame with values of interest.}
+\item{value}{numeric vector in a data frame with values of interest.}
 
 \item{grouping}{single factor/variable to split the data frame "values" by.}
 
@@ -25,7 +25,7 @@ A number; mean subgroup standard deviation lower control limit (LCL).
 }
 \description{
 Calculates the mean subgroup standard deviation Lower control limit
- (UCL) used when constructing a XbarR chart.
+ (UCL) used when constructing a XbarS chart.
 }
 \examples{
 set.seed(5555)

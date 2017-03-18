@@ -2,13 +2,13 @@
 % Please edit documentation in R/02_QC_FUNs.R
 \name{pBar}
 \alias{pBar}
-\title{Mean Propotion: Binomial Data (p-chart)}
+\title{Mean Proportion: Binomial Data (p-chart)}
 \usage{
 pBar(y, n, ...)
 }
 \arguments{
 \item{y}{Vector of binomial proportion data (not counts). Observations
-may have a different area of opportinity, n.}
+may have a different area of opportunity, n.}
 
 \item{n}{A vector representing the area of opportunity.}
 
@@ -19,8 +19,8 @@ A vector of mean proportion, length equal to length of
 parameter y.
 }
 \description{
-Calculates overall mean porportion
-for binomial proportion data aquired over a variable area of
+Calculates overall mean proportion
+for binomial proportion data acquired over a variable area of
 opportunity.
 }
 \examples{

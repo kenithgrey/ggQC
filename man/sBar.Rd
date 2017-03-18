@@ -9,7 +9,7 @@ sBar(data, value, grouping, formula = NULL, ...)
 \arguments{
 \item{data}{data frame to be processed}
 
-\item{value}{numeric vector in data frame with values of interest.}
+\item{value}{numeric vector in a data frame with values of interest.}
 
 \item{grouping}{single factor/variable to split the data frame "values" by.}
 
@@ -23,7 +23,7 @@ factors/variables}
 A number; mean subgroup standard deviation.
 }
 \description{
-Calculates the mean subgroup stadard deviation used when constructing a XbarS chart.
+Calculates the mean subgroup standard deviation used when constructing a XbarS chart.
 }
 \examples{
 set.seed(5555)

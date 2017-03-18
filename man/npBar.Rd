@@ -8,7 +8,7 @@ npBar(y, n, ...)
 }
 \arguments{
 \item{y}{Vector of binomial count data (not proportions). Each observation
-having the same-area of opportinity.}
+having the same-area of opportunity.}
 
 \item{n}{A number representing the area of opportunity.}
 
@@ -19,7 +19,7 @@ A number; mean value
 }
 \description{
 Calculates the mean value for
-binomial count data aquired over the same-sized area of
+binomial count data acquired over the same-sized area of
 opportunity.
 }
 \examples{

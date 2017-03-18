@@ -13,7 +13,7 @@ QCrange(y)
 a number.
 }
 \description{
-Given a set of numbers, calculates the difference between the maximum and minimum value.
+Given a set of numbers, function calculates the difference between the maximum and minimum value.
 }
 \examples{
 y <- seq(-5:5)

@@ -8,7 +8,7 @@ pBar_LCL(y, n, ...)
 }
 \arguments{
 \item{y}{Vector of binomial proportion data (not counts). Observations
-may have a different area of opportinity, n.}
+may have a different area of opportunity, n.}
 
 \item{n}{A vector representing the area of opportunity.}
 
@@ -19,7 +19,7 @@ A vector; point-wise 3-sigma lower control limit (LCL)
 }
 \description{
 Calculates point-wise lower control limit (LCL)
-for binomial proportion data aquired over a variable area of
+for binomial proportion data acquired over a variable area of
 opportunity.
 }
 \examples{

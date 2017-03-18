@@ -8,7 +8,7 @@ cBar_LCL(y, ...)
 }
 \arguments{
 \item{y}{Vector of count data. Each observation having the
-same-area of opportinity.}
+same-area of opportunity.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -16,7 +16,7 @@ same-area of opportinity.}
 A number; 3-sigma lower control limit (LCL). Function returns 0 for negative values.
 }
 \description{
-Calculates lower control limit (LCL) for count data aquired
+Calculates lower control limit (LCL) for count data acquired
 over the same-sized area of opportunity. Negative values are reported as 0.
 }
 \examples{
