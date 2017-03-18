@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_QC_FUNs.R
 \name{mR_UCL}
 \alias{mR_UCL}
-\title{Mean One Point Moving Range Upper Control Limit (UCL)}
+\title{Mean One-Point Moving Range Upper Control Limit (UCL)}
 \usage{
 mR_UCL(y, na.rm = FALSE, ...)
 }
@@ -14,7 +14,7 @@ mR_UCL(y, na.rm = FALSE, ...)
 \item{...}{further arguments passed to or from other methods.}
 }
 \value{
-A number; mean one point moving range UCL.
+A number; mean one-point moving range UCL.
 }
 \description{
 Calculates the mean one-point moving range UCL used when constructing a moving-range chart.

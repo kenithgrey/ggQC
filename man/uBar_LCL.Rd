@@ -8,18 +8,18 @@ uBar_LCL(y, n, ...)
 }
 \arguments{
 \item{y}{Vector of counts per unit opportunity (rate). Observations
-may have a different area of opportinity, n.}
+may have a different area of opportunity, n.}
 
 \item{n}{A vector representing the area of opportunity.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
 \value{
-A vector; point-wise 3-sigma lpper control limit (LCL)
+A vector; point-wise 3-sigma lower control limit (LCL)
 }
 \description{
 Calculates point-wise lower control limit (LCL)
-for count data aquired over a variable area of
+for count data acquired over a variable area of
 opportunity.
 }
 \examples{

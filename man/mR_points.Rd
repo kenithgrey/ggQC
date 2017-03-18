@@ -2,7 +2,7 @@
 % Please edit documentation in R/02_QC_FUNs.R
 \name{mR_points}
 \alias{mR_points}
-\title{One Point Moving Range Datapoints}
+\title{One Point Moving Range of Vector}
 \usage{
 mR_points(y)
 }
@@ -10,7 +10,7 @@ mR_points(y)
 \item{y}{: vector of values}
 }
 \value{
-Vector of one point moving range.
+Vector of one-point moving range.
 }
 \description{
 Calculates a one-point moving range vector given an input vector of values.

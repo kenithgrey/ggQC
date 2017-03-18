@@ -9,7 +9,7 @@ xBar_Bar(data, value, grouping, formula = NULL, ...)
 \arguments{
 \item{data}{data frame to be processed}
 
-\item{value}{numeric vector in data frame with values of interest.}
+\item{value}{numeric vector in a data frame with values of interest.}
 
 \item{grouping}{single factor/variable to split the data frame "values" by.}
 

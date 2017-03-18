@@ -8,7 +8,7 @@ uBar_UCL(y, n, ...)
 }
 \arguments{
 \item{y}{Vector of counts per unit opportunity (rate). Observations
-may have a different area of opportinity, n.}
+may have a different area of opportunity, n.}
 
 \item{n}{A vector representing the area of opportunity.}
 
@@ -19,7 +19,7 @@ A vector; point-wise 3-sigma upper control limit (UCL)
 }
 \description{
 Calculates point-wise upper control limit (UCL)
-for count data aquired over a variable area of
+for count data acquired over a variable area of
 opportunity.
 }
 \examples{

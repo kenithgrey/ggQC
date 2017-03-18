@@ -8,7 +8,7 @@ cBar_UCL(y, ...)
 }
 \arguments{
 \item{y}{Vector of count data. Each observation having the
-same-area of opportinity.}
+same-area of opportunity.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -16,7 +16,7 @@ same-area of opportinity.}
 A number; 3-sigma upper control limit (UCL)
 }
 \description{
-Calculates upper control limit (UCL) for count data aquired
+Calculates upper control limit (UCL) for count data acquired
 over the same-sized area of opportunity.
 }
 \examples{

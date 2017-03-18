@@ -10,14 +10,14 @@ xMedian_rMedian_UCL(data, value, grouping, n = NULL, natural = F,
 \arguments{
 \item{data}{data frame to be processed}
 
-\item{value}{numeric vector in data frame with values of interest.}
+\item{value}{numeric vector in a data frame with values of interest.}
 
 \item{grouping}{single factor/variable to split the data frame "values" by.}
 
-\item{n}{a number indicating a hypothetical subgroup size other than n
+\item{n}{a number indicating a hypothetical subgroup size other than, function determined subgroup n
 determined by the floor length of subgroup values.}
 
-\item{natural}{logial, if TRUE calculate limits for individuals (n=1) else calculate for
+\item{natural}{logical, if TRUE calculate limits for individuals (n=1) else calculate for
 n determined by the floor length of subgroup values}
 
 \item{formula}{a formula, such as y ~ x1 + x2, where the y variable is
@@ -25,7 +25,7 @@ numeric data to be split into groups according to the grouping x
 factors/variables}
 }
 \value{
-A number; mean of subgroup median upper  Control Limit (UCL) based on Median Range
+A number; mean of subgroup median upper Control Limit (UCL) based on Median Range
 }
 \description{
 Calculates the mean of subgroup medians upper control limit based on the
