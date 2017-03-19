@@ -4,13 +4,15 @@
 \alias{uBar_UCL}
 \title{Upper Control Limit: Count Data (u-chart)}
 \usage{
-uBar_UCL(y, n, ...)
+uBar_UCL(y, n, na.rm = FALSE, ...)
 }
 \arguments{
 \item{y}{Vector of counts per unit opportunity (rate). Observations
 may have a different area of opportunity, n.}
 
 \item{n}{A vector representing the area of opportunity.}
+
+\item{na.rm}{a logical value indicating whether NA values should be stripped before the computation proceeds.}
 
 \item{...}{further arguments passed to or from other methods.}
 }

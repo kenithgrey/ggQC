@@ -4,13 +4,15 @@
 \alias{pBar_LCL}
 \title{Lower Control Limit: Binomial Data (p-chart)}
 \usage{
-pBar_LCL(y, n, ...)
+pBar_LCL(y, n, na.rm = FALSE, ...)
 }
 \arguments{
 \item{y}{Vector of binomial proportion data (not counts). Observations
 may have a different area of opportunity, n.}
 
 \item{n}{A vector representing the area of opportunity.}
+
+\item{na.rm}{a logical value indicating whether NA values should be stripped before the computation proceeds.}
 
 \item{...}{further arguments passed to or from other methods.}
 }

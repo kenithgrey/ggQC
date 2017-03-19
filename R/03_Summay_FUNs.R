@@ -54,17 +54,17 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
          },
          "p" = {
             p_chart_data <- data.frame(
-                       pBar_LCL = pBar_LCL(y, n),
-                       pBar = pBar(y, n),
-                       pBar_UCL = pBar_UCL(y, n)
+                       pBar_LCL = pBar_LCL(y, n, na.rm=na.rm),
+                       pBar = pBar(y, n, na.rm=na.rm),
+                       pBar_UCL = pBar_UCL(y, n, na.rm=na.rm)
                        )
              return(p_chart_data)
          },
          "u" = {
            u_chart_data <- data.frame(
-             uBar_LCL = uBar_LCL(y, n),
-             uBar = uBar(y, n),
-             uBar_UCL = uBar_UCL(y, n)
+             uBar_LCL = uBar_LCL(y, n, na.rm=na.rm ),
+             uBar = uBar(y, n, na.rm=na.rm),
+             uBar_UCL = uBar_UCL(y, n, na.rm=na.rm)
            )
            return(u_chart_data)
          }

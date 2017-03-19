@@ -52,6 +52,7 @@ mR_points_gg <- dispersionFUN(mean, mR_points)
 #' over the same-sized area of opportunity.
 #' @param y Vector of count data. Each observation having the
 #'  same-area of opportunity.
+#' @param na.rm a logical value indicating whether NA values should be stripped before the computation proceeds.
 #' @param ... further arguments passed to or from other methods.
 #' @return A number; 3-sigma upper control limit (UCL)
 #' @examples
@@ -59,8 +60,8 @@ mR_points_gg <- dispersionFUN(mean, mR_points)
 #' y <- rpois(30, 9)
 #' cBar_UCL(y)
 #'
+cBar_UCL <- function(y, na.rm=FALSE, ...){mean(y, na.rm=na.rm)+3*sqrt(mean(y, na.rm=na.rm))}
 
-cBar_UCL <- function(y, ...){mean(y)+3*sqrt(mean(y))}
 #' @export
 #' @title Lower Control Limit: Count Data (c-chart)
 #' @description Calculates lower control limit (LCL) for count data acquired
@@ -72,15 +73,17 @@ cBar_UCL <- function(y, ...){mean(y)+3*sqrt(mean(y))}
 #' y <- rpois(30, 9)
 #' cBar_LCL(y)
 #'
-cBar_LCL <- function(y, ...){
-  LCL <- mean(y)-3*sqrt(mean(y))
+cBar_LCL <- function(y, na.rm=FALSE, ...){
+  LCL <- mean(y, na.rm=na.rm)-3*sqrt(mean(y, na.rm=na.rm))
   LCL[LCL < 0] <- 0
   return(LCL)
 }
 
 
 # Binomial np-chart -----------------------------------------------------------
-binCheck_pChart <- function(p, n){sum(as.integer(p*n > n)) == 0}
+binCheck_pChart <- function(p, n, na.rm=FALSE){
+  sum(as.integer(p*n > n), na.rm=na.rm) == 0
+  }
 npChartErrorMessage <- "Items of Opportunity 'n' < Item Nonconforming check value of 'n'."
 #' @export
 #' @title Upper Control Limit: Binomial Data (np-chart)
@@ -90,6 +93,7 @@ npChartErrorMessage <- "Items of Opportunity 'n' < Item Nonconforming check valu
 #' @param y Vector of binomial count data (not proportions). Each observation
 #' having the same-area of opportunity.
 #' @param n A number representing the area of opportunity.
+#' @param na.rm a logical value indicating whether NA values should be stripped before the computation proceeds.
 #' @param ... further arguments passed to or from other methods.
 #' @return A number; 3-sigma upper control limit (UCL)
 #' @examples
@@ -98,10 +102,10 @@ npChartErrorMessage <- "Items of Opportunity 'n' < Item Nonconforming check valu
 #' npBar_UCL(y = p, n = 30)
 #'
 
-npBar_UCL <- function(y, n, ...){
+npBar_UCL <- function(y, n, na.rm=FALSE, ...){
   y <- y/n
-  if(binCheck_pChart(y, n)){
-    n*mean(y)+3*sqrt(n*mean(y)*(1-mean(y)))
+  if(binCheck_pChart(y, n, na.rm=na.rm)){
+    n*mean(y, na.rm=na.rm)+3*sqrt(n*mean(y, na.rm=na.rm)*(1-mean(y, na.rm=na.rm)))
   }else{
     warning(npChartErrorMessage)
   }
@@ -119,9 +123,9 @@ npBar_UCL <- function(y, n, ...){
 #' p <- rbinom(n = 100, size = 30, prob = .2)
 #' npBar(y = p, n = 30)
 #'
-npBar <- function(y, n,...){
+npBar <- function(y, n, na.rm=FALSE, ...){
   y <- y/n
-  n*mean(y)
+  n*mean(y, na.rm=na.rm)
 }
 
 #' @export
@@ -137,10 +141,10 @@ npBar <- function(y, n,...){
 #' npBar_LCL(y = p, n = 30)
 #'
 
-npBar_LCL <- function(y, n, ...){
+npBar_LCL <- function(y, n, na.rm=FALSE, ...){
   y <- y/n
-  if(binCheck_pChart(y, n)){
-    LCL <- n*mean(y)-3*sqrt(n*mean(y)*(1-mean(y)))
+  if(binCheck_pChart(y, n, na.rm=na.rm)){
+    LCL <- n*mean(y,na.rm=na.rm)-3*sqrt(n*mean(y, na.rm=na.rm)*(1-mean(y, na.rm=na.rm)))
     LCL[LCL < 0] <- 0
     return(LCL)
   }else{
@@ -157,6 +161,7 @@ npBar_LCL <- function(y, n, ...){
 #' @param y Vector of binomial proportion data (not counts). Observations
 #' may have a different area of opportunity, n.
 #' @param n A vector representing the area of opportunity.
+#' @param na.rm a logical value indicating whether NA values should be stripped before the computation proceeds.
 #' @param ... further arguments passed to or from other methods.
 #' @return A vector; point-wise 3-sigma upper control limit (UCL)
 #' @examples
@@ -166,9 +171,20 @@ npBar_LCL <- function(y, n, ...){
 #' pBar_UCL(y = p/n, n = n)
 #'
 
-pBar_UCL <- function(y, n, ...){
-  pbar <- pBar2(y,n)
-  pbar+(3*sqrt( pbar*(1-pbar) / n ))
+pBar_UCL <- function(y, n, na.rm=FALSE, ...){
+  PBAR_DF <- data.frame(y = y, n = n)
+  if(na.rm == TRUE){
+    PBAR_DF <- stats::na.omit(PBAR_DF)
+  }else if (!sum(is.na(PBAR_DF)) == 0) {
+    warning("NAs in args 'y' or 'n', resolve or use na.rm = FALSE")
+    return(NULL)
+  }
+
+
+    pbar <- pBar2(PBAR_DF$y,PBAR_DF$n, na.rm=na.rm)
+    UCL <- pbar+(3*sqrt( pbar*(1-pbar) / PBAR_DF$n ))
+
+  return(UCL)
 }
 
 #' @export
@@ -186,13 +202,29 @@ pBar_UCL <- function(y, n, ...){
 #' pBar(y = p/n, n = n)
 #'
 
-pBar <- function(y, n,...){
-  pbar <- sum(n * y)/sum(n)
-  rep(pbar, length(n))
+pBar <- function(y, n, na.rm=FALSE, ...){
+  PBAR_DF <- data.frame(y = y, n = n)
+  if(na.rm == TRUE){
+    PBAR_DF <- stats::na.omit(PBAR_DF)
+  }else if (!sum(is.na(PBAR_DF)) == 0) {
+    warning("NAs in args 'y' or 'n', resolve or use na.rm = FALSE")
+    return(NULL)
+  }
+
+  pbar <- sum(PBAR_DF$n * PBAR_DF$y, na.rm = na.rm)/sum(PBAR_DF$n, na.rm = na.rm)
+  return(rep(pbar, nrow(PBAR_DF)))
 }
 
-pBar2 <- function(y, n,...){
-  pbar <- sum(n * y)/sum(n)
+pBar2 <- function(y, n, na.rm=FALSE, ...){
+  PBAR_DF <- data.frame(y = y, n = n)
+  if(na.rm == TRUE){
+    PBAR_DF <- stats::na.omit(PBAR_DF)
+  }else if (!sum(is.na(PBAR_DF)) == 0) {
+    warning("NAs in args 'y' or 'n', resolve or use na.rm = FALSE")
+    return(NULL)
+  }
+
+  pbar <- sum(PBAR_DF$n * PBAR_DF$y, na.rm=na.rm)/sum(PBAR_DF$n, na.rm=na.rm)
   pbar
 }
 
@@ -210,10 +242,19 @@ pBar2 <- function(y, n,...){
 #' n <- rpois(100, 100)
 #' pBar_LCL(y = p/n, n = n)
 #'
-pBar_LCL <- function(y, n, ...){
-  pbar <- pBar2(y,n)
-  LCL <- pbar-(3*sqrt( pbar*(1-pbar) / n ))
+pBar_LCL <- function(y, n, na.rm=FALSE, ...){
+  PBAR_DF <- data.frame(y = y, n = n)
+  if(na.rm == TRUE){
+    PBAR_DF <- stats::na.omit(PBAR_DF)
+  }else if (!sum(is.na(PBAR_DF)) == 0) {
+    warning("NAs in args 'y' or 'n', resolve or use na.rm = FALSE")
+    return(NULL)
+  }
+
+  pbar <- pBar2(PBAR_DF$y,PBAR_DF$n, na.rm=na.rm)
+  LCL <- pbar-(3*sqrt( pbar*(1-pbar) / PBAR_DF$n ))
   LCL[LCL < 0] <- 0
+
   return(LCL)
 }
 
@@ -226,6 +267,7 @@ pBar_LCL <- function(y, n, ...){
 #' @param y Vector of counts per unit opportunity (rate). Observations
 #' may have a different area of opportunity, n.
 #' @param n A vector representing the area of opportunity.
+#' @param na.rm a logical value indicating whether NA values should be stripped before the computation proceeds.
 #' @param ... further arguments passed to or from other methods.
 #' @return A vector; point-wise 3-sigma upper control limit (UCL)
 #' @examples
@@ -234,7 +276,17 @@ pBar_LCL <- function(y, n, ...){
 #' n <- rpois(100, 15)
 #' uBar_UCL(y = counts / n, n = n)
 #'
-uBar_UCL <- function(y, n, ...){(pBar(y, n) + 3*sqrt( pBar(y, n) / n ))}
+uBar_UCL <- function(y, n, na.rm=FALSE, ...){
+  UBAR_DF <- data.frame(y = y, n = n)
+  if(na.rm == TRUE){
+    UBAR_DF <- stats::na.omit(UBAR_DF)
+  }else if (!sum(is.na(UBAR_DF)) == 0) {
+    warning("NAs in args 'y' or 'n', resolve or use na.rm = FALSE")
+    return(NULL)
+  }
+  UCL <- uBar(UBAR_DF$y, UBAR_DF$n, na.rm = na.rm) + 3*sqrt( uBar(UBAR_DF$y, UBAR_DF$n, na.rm = na.rm) / UBAR_DF$n )
+  return(UCL)
+}
 
 #' @export
 #' @title Mean Rate: Count Data (u-chart)
@@ -250,9 +302,16 @@ uBar_UCL <- function(y, n, ...){(pBar(y, n) + 3*sqrt( pBar(y, n) / n ))}
 #' n <- rpois(100, 15)
 #' uBar(y = counts / n, n = n)
 #'
-uBar <- function(y, n, ...){
-  pbar <- sum(n * y)/sum(n)
-  rep(pbar, length(n))
+uBar <- function(y, n, na.rm = FALSE, ...){
+  UBAR_DF <- data.frame(y = y, n = n)
+  if(na.rm == TRUE){
+    UBAR_DF <- stats::na.omit(UBAR_DF)
+  }else if (!sum(is.na(UBAR_DF)) == 0) {
+    warning("NAs in args 'y' or 'n', resolve or use na.rm = FALSE")
+    return(NULL)
+  }
+  ubar <- sum(UBAR_DF$n * UBAR_DF$y)/sum(UBAR_DF$n)
+  rep(ubar, nrow(UBAR_DF))
 }
 
 #' @export
@@ -268,8 +327,15 @@ uBar <- function(y, n, ...){
 #' n <- rpois(100, 15)
 #' uBar_LCL(y = counts / n, n = n)
 #
-uBar_LCL <- function(y, n, ...){
-  LCL <- pBar(y, n) -(3*sqrt(pBar(y, n) / n ))
+uBar_LCL <- function(y, n, na.rm=FALSE, ...){
+  UBAR_DF <- data.frame(y = y, n = n)
+  if(na.rm == TRUE){
+    UBAR_DF <- stats::na.omit(UBAR_DF)
+  }else if (!sum(is.na(UBAR_DF)) == 0) {
+    warning("NAs in args 'y' or 'n', resolve or use na.rm = FALSE")
+    return(NULL)
+  }
+  LCL <- uBar(UBAR_DF$y, UBAR_DF$n, na.rm = na.rm) - 3*sqrt( uBar(UBAR_DF$y, UBAR_DF$n, na.rm = na.rm) / UBAR_DF$n )
   LCL[LCL < 0] <- 0
   return(LCL)
 }

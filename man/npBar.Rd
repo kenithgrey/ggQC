@@ -4,13 +4,15 @@
 \alias{npBar}
 \title{Mean Value: Binomial Data (np-chart)}
 \usage{
-npBar(y, n, ...)
+npBar(y, n, na.rm = FALSE, ...)
 }
 \arguments{
 \item{y}{Vector of binomial count data (not proportions). Each observation
 having the same-area of opportunity.}
 
 \item{n}{A number representing the area of opportunity.}
+
+\item{na.rm}{a logical value indicating whether NA values should be stripped before the computation proceeds.}
 
 \item{...}{further arguments passed to or from other methods.}
 }

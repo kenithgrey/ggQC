@@ -4,11 +4,13 @@
 \alias{cBar_LCL}
 \title{Lower Control Limit: Count Data (c-chart)}
 \usage{
-cBar_LCL(y, ...)
+cBar_LCL(y, na.rm = FALSE, ...)
 }
 \arguments{
 \item{y}{Vector of count data. Each observation having the
 same-area of opportunity.}
+
+\item{na.rm}{a logical value indicating whether NA values should be stripped before the computation proceeds.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
