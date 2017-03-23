@@ -90,7 +90,7 @@ stat_mR <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, color=color.mr_line, ...))
+    params = list(na.rm = na.rm, color=color.mr_point, ...))
 
   Connects <- ggplot2::layer(
     stat = Stat_MR,
@@ -100,7 +100,7 @@ stat_mR <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, color=color.mr_point, ...))
+    params = list(na.rm = na.rm, color=color.mr_line, ...))
 
   Limits <- ggplot2::layer(
     stat = STAT_QC, data = data, mapping = mapping,
