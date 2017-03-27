@@ -4,9 +4,8 @@ Title: Quality Control Charts for GGplot
 Version: 0.0.0.9000
 Author: Kenith Grey
 Maintainer: Kenith Grey <kenithgrey@r-bar.net>
-Description: Plot single and multi-facet quality control charts
-  within the ggplot framework using stat_QC and stat_mR. Calculate 
-  quality control limits using QC_Lines. 
+Description: Plot single and faceted type quality control charts
+  within the grammar of graphics plotting framework.  
 Depends: R (>= 2.10)
 License: GPL-3 | file LICENSE
 Encoding: UTF-8

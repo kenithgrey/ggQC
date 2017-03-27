@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Preparing an XmR plot is common when dealing with processes where a single product/item is made or measured and there is a significant time gap between the next production or observation. XmR plots can also be useful when dealing with outputs from batch process rather than continuous process. 
+Preparing an XmR plot is common when dealing with processes where a single product/item is made or measured and there is a significant time gap between the next production or observation. XmR plots can also be useful when dealing with outputs from batch process rather than a continuous process. 
 
 Generating an XmR plot with ggQC is simple. To get us started, let's simulate some data on the diameter of a golden egg produced monthly by a golden goose. 
 
@@ -29,7 +29,7 @@ Golden_Egg_df$egg_diameter[3] <- 2.5
 
 ##Simple XmR Plot##
 
-Great lets make the plot:
+Great! Let's make the plot:
 
 ```{r fig.width=5}
 library(ggplot2)
@@ -42,9 +42,9 @@ XmR_Plot <- ggplot(Golden_Egg_df, aes(x = month, y = egg_diameter)) +
 XmR_Plot
 ```
 
-As expected the 3rd egg is not typical for our golden goose, falling slightly outside the upper control limit. Wouldn't be nice if it produced more large eggs like this. Perhaps we should go back and see if the feed was different during the month. 
+As expected, the 3rd egg is not typical for our golden goose, falling slightly outside the upper control limit. Wouldn't it be nice if it produced more large eggs like this. Perhaps we should go back and see if the feed was different during the month. 
 
-You take the control chart to your boss, he too asks about the feed stock during the third month, but he also wants to know what the control limits are on the plot. To display the control limits, you use stat_QC_labels function as shown below. 
+You take the control chart to your boss. He too asks about the feed stock during the third month, but he also wants to know what the control limits are on the plot. To display the control limits, you use the stat_QC_labels function as shown below. 
 
 ##Labeled XmR Plot##
 
@@ -54,7 +54,7 @@ XmR_Plot + stat_QC_labels(method="XmR")
 
 ##mR Plot##
 
-You return back to you boss. He is pleased with the plot, but now wishes to see a plot illustrating egg-to-egg consistency. For this, you will need a Moving Range (mR) plot. Using ggQC, we will call the stat_mR function to render the necessary data. 
+You return back to your boss. He is pleased with the plot, but now wishes to see a plot illustrating egg-to-egg consistency. For this, you will need a Moving Range (mR) plot. Using ggQC, we will call the stat_mR function to render the necessary data. 
 
     **Note** it is normal for stat_mR() to produce a warning, because the first point becomes an NA. 
 
@@ -68,9 +68,9 @@ mR_Plot
 
 ##Faceting##
 
-The farmer is pleased.  The consistency looks good with the exception of the third month. Moving on, he mentions that there is a town fair coming up and there will be eggs there produced by geese from two other towns (Trentown and Maxhall). He gives you last year's monthly data for each goose and wishes to compare how his own goose performed using control charts.
+The farmer is pleased.  The consistency looks good with the exception of the third month. Moving on, he mentions that there is a town fair coming up and there will be eggs there produced by geese from two other towns (Trentown and Maxhall). He gives you last year's monthly data for each goose and wishes to compare how his own goose's performed using control charts.
 
-Below we put the data provided in data frames and bind them together into one data frame. (data is simulated)  
+Below, we put the data provided in data frames and bind them together into one data frame. (data is simulated)  
 ```{r}
 set.seed(6666)
 OurGoose <- data.frame(month=1:12,
@@ -90,7 +90,7 @@ Maxhall <- data.frame(month=1:12,
 GooseData <- rbind(OurGoose, TrentTown, Maxhall)
 ```
 
-Knowing the farmer will want to look at the diameter of the eggs and the consistency of production you anticipate his request with the following faceted plot. 
+Knowing the farmer will want to look at the diameter of the eggs and the consistency of production, you anticipate his request with the following faceted plot. 
 
 ```{r fig.width=7.5, fig.height=5.5, message=FALSE, warning=FALSE}
 library(gridExtra)
@@ -124,7 +124,7 @@ ddply(GooseData, .variables = "group",
 ```
 
 For more Information and Examples using ggQC please visit 
-([ggQC.r-bar.net](ggQC.r-bar.net))
+([ggQC.r-bar.net](http:\\ggQC.r-bar.net\index.html))
 
 
 
