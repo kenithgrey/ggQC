@@ -10,21 +10,21 @@ vignette: >
 ---
 
 
-XbarR charts are useful when monitoring a continuous process over time. Some examples might include parts coming off an assembly line. Molded parts produced several at a time over several cycles. Batch uniformity of continuously produced chemical. 
+XbarR charts are useful when monitoring a continuous process over time. Some examples might include (i) parts coming off an assembly line, (ii) molded parts produced several at a time over several cycles, or (iii) batch uniformity of continuously produced chemical. 
 
-Generating an XbarR plot and XbarS plot with ggQC is simple. To get us started, let's simulate some production line data on candles. The candles are shaped using a mold capable of producing 4 units a cycle. Each cycle taking an hour. Thus in 24h period, the process would yield 96 candles. The parameter being tracked is candle diameter.  
+Generating an XbarR plot or XbarS plot with ggQC is simple. To get us started, let's simulate some production line data on candles. The candles are shaped using a mold capable of producing 4 units a cycle. Each cycle takes an hour. Thus in a 24 hour period, the process would yield 96 candles. The parameter being tracked is candle width.  
 
 ```{r}
 set.seed(5555)
 candle_df1t3 <- data.frame(
                 Cycle = as.factor(rep(1:24, each=3)),
-                candel_width = rnorm(n = 3*24, mean = 10, sd = 1),
+                candle_width = rnorm(n = 3*24, mean = 10, sd = 1),
                 mold_cell = as.ordered(rep(1:3))
              ) 
 
 candle_df4 <- data.frame(
                 Cycle = as.factor(rep(1:24, each=1)),
-                candel_width = rnorm(n = 1*24, mean = 11, sd = 2),
+                candle_width = rnorm(n = 1*24, mean = 11, sd = 2),
                 mold_cell = as.ordered(rep(4, each=24))
              )
 
@@ -45,7 +45,7 @@ Making the plot with ggQC and ggplot is simple
 ```{r, fig.width=7}
 
 
-XbarR <- ggplot(candle_df, aes(x = Cycle, y = candel_width, group = 1)) +
+XbarR <- ggplot(candle_df, aes(x = Cycle, y = candle_width, group = 1)) +
          stat_summary(fun.y = mean, geom = "point") +
          stat_summary(fun.y = mean, geom = "line") +
          stat_QC() 
@@ -66,7 +66,7 @@ Your line manager is happy to see the candles are being produced as intended, bu
 ##R Bar Chart##
 
 ```{r fig.width=7}
-R_Bar <- ggplot(candle_df, aes(x = Cycle, y = candel_width, group = 1)) +
+R_Bar <- ggplot(candle_df, aes(x = Cycle, y = candle_width, group = 1)) +
          stat_summary(fun.y = QCrange, geom = "point") +
          stat_summary(fun.y = QCrange, geom = "line") +
          stat_QC(method="rBar") +
@@ -75,11 +75,11 @@ R_Bar <- ggplot(candle_df, aes(x = Cycle, y = candel_width, group = 1)) +
 R_Bar
 ```
 
-The second run for the day was more inconsistent than usual and the line manager lifts an eye brow. He has just received a customer complaint that some of the candles are too wide to fit it their candle holders. He asks if you can show the individuals on the plot and the natural control limits?
+The second run for the day was more inconsistent than usual, and the line manager lifts an eye brow. He has just received a customer complaint that some of the candles are too wide to fit it their candle holders. He asks if you can show the individuals on the plot and the natural control limits.
 
 ##XbarR with Individuals##
 ```{r, fig.width=7}
-XbarR <- ggplot(candle_df, aes(x = Cycle, y = candel_width, group = 1)) + 
+XbarR <- ggplot(candle_df, aes(x = Cycle, y = candle_width, group = 1)) + 
          stat_summary(fun.y = mean, geom = "point") +
          stat_summary(fun.y = mean, geom = "line") +
          stat_QC() + stat_QC_labels() +
@@ -96,7 +96,7 @@ The line manager is surprised to see so many widths over 13 units and wants you 
 
 ##Colorizing the Data##
 ```{r fig.width=7}
-XbarR <- ggplot(candle_df, aes(x = Cycle, y = candel_width, group = 1, color=mold_cell)) + 
+XbarR <- ggplot(candle_df, aes(x = Cycle, y = candle_width, group = 1, color=mold_cell)) + 
          stat_summary(fun.y = mean, geom = "point") +
          stat_summary(fun.y = mean, geom = "line") +
          stat_QC() + stat_QC_labels() +
@@ -114,7 +114,7 @@ Mold Cell 4 looks a little suspicious. So you plot an XmR chart for each cell.
 ##Faceting##
 ```{r fig.width=7}
 XmR <- ggplot(candle_df, 
-      aes(x = Cycle, y = candel_width, group = 1, color = mold_cell)) +         
+      aes(x = Cycle, y = candle_width, group = 1, color = mold_cell)) +         
          geom_point() + geom_line() +
          stat_QC(method="XmR") + stat_QC_labels(method="XmR") +
          facet_grid(.~mold_cell)
@@ -124,9 +124,9 @@ XmR
 
 ```
 
-Nice work looks like we need to replace the mold. 
+Nice work! Looks like we need to replace the mold. 
 
 ---
 
 For more information and examples using ggQC please visit 
-([ggQC.r-bar.net](ggQC.r-bar.net))
+([ggQC.r-bar.net](http:\\ggQC.r-bar.net\index.html))
