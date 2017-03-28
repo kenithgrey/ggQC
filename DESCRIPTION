@@ -1,7 +1,7 @@
 Package: ggQC
 Type: Package
 Title: Quality Control Charts for the Grammar of Graphics Plotting System
-Version: 0.0.0.9000
+Version: 0.0.1.0
 Author: Kenith Grey
 Maintainer: Kenith Grey <kenithgrey@r-bar.net>
 Description: Plot single and faceted type quality control charts

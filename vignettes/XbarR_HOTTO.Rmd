@@ -12,7 +12,7 @@ vignette: >
 
 XbarR charts are useful when monitoring a continuous process over time. Some examples might include (i) parts coming off an assembly line, (ii) molded parts produced several at a time over several cycles, or (iii) batch uniformity of continuously produced chemical. 
 
-Generating an XbarR plot or XbarS plot with ggQC is simple. To get us started, let's simulate some production line data on candles. The candles are shaped using a mold capable of producing 4 units a cycle. Each cycle takes an hour. Thus in a 24 hour period, the process would yield 96 candles. The parameter being tracked is candle width.  
+Generating an Xbar or XbarS plot with ggQC is simple. To get us started, let's simulate some production line data on candles. The candles are shaped using a mold capable of producing 4 units a cycle. Each cycle takes an hour. Thus in a 24 hour period, the process would yield 96 candles. The parameter being tracked is candle width.  
 
 ```{r}
 set.seed(5555)
@@ -35,12 +35,12 @@ library(ggQC)
 
 ##Simple XbarR Plot##
 
-Making the plot with ggQC and ggplot is simple
+Making a plot with ggQC and ggplot is simple
 
 **NOTEs**: 
 
   * Remember to set the group aesthetic equal to 1. Otherwise you will end up with far more control lines than you want.
-  * XbarR charts are the default method for stat_QC and stat_QC_labels functions. 
+  * XbarR is the default method for stat_QC and stat_QC_labels functions. 
 
 ```{r, fig.width=7}
 

@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Preparing an XmR plot is common when dealing with processes where a single product/item is made or measured and there is a significant time gap between the next production or observation. XmR plots can also be useful when dealing with outputs from batch process rather than a continuous process. 
+Preparing an XmR plot is common when dealing with processes where a single product/item is made or measured and there is a significant time gap between the next production or observation. XmR plots can also be useful when dealing with outputs from a batch process rather than a continuous one. 
 
 Generating an XmR plot with ggQC is simple. To get us started, let's simulate some data on the diameter of a golden egg produced monthly by a golden goose. 
 
