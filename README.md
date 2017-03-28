@@ -8,7 +8,7 @@ Plot single and multi-facet quality control charts within the ggplot framework u
 Methods supported:
 
 -   **Individuals Charts** : mR, XmR
--   **Attribute Charts **: c, np, p, u
+-   **Attribute Charts ** : c, np, p, u
 -   **Studentized Charts**: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar, xMedian.rMedian
 -   **Dispersion Charts**: rBar, rMedian, sBar
 
@@ -37,7 +37,8 @@ XmR_Plot
 Installation
 ============
 
-cran: install.package("ggQC") github: devtools::install\_github("kenithgrey/ggQC")
+-   cran: install.package("ggQC")
+-   github: devtools::install\_github("kenithgrey/ggQC")
 
 Overview
 ========
