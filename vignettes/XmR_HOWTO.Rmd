@@ -124,7 +124,7 @@ ddply(GooseData, .variables = "group",
 ```
 
 For more Information and Examples using ggQC please visit 
-([ggQC.r-bar.net](http:\\ggQC.r-bar.net\index.html))
+([ggQC.r-bar.net](http://ggQC.r-bar.net/index.html))
 
 
 

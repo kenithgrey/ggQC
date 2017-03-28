@@ -129,4 +129,4 @@ Nice work! Looks like we need to replace the mold.
 ---
 
 For more information and examples using ggQC please visit 
-([ggQC.r-bar.net](http:\\ggQC.r-bar.net\index.html))
+([ggQC.r-bar.net](http://ggQC.r-bar.net/index.html))
