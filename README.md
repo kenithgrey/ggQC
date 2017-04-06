@@ -8,7 +8,7 @@ Plot single and multi-facet quality control charts within the ggplot framework u
 Methods supported:
 
 -   **Individuals Charts** : mR, XmR
--   **Attribute Charts ** : c, np, p, u
+-   **Attribute Charts** : c, np, p, u
 -   **Studentized Charts**: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar, xMedian.rMedian
 -   **Dispersion Charts**: rBar, rMedian, sBar
 
@@ -48,3 +48,8 @@ Overview
 -   stat\_mR(): ggplot stat to generate mR chart.
 -   stat\_QC\_labels(): ggplot stat to write text labels on control chart center line and limits.
 -   30 plus functions to calculate specific control chart constants. (recommend using QC\_Lines())
+
+More Examples
+=============
+
+For more Information and Examples using ggQC, visit ([ggQC.r-bar.net](http://ggQC.r-bar.net/index.html))
