@@ -41,8 +41,18 @@ d3 <- function(n) {
   sqrt(2*stats::integrate(Ew2, 0, Inf)$value-d2(n)^2)
 }
 #d3(2)
+#this function is needed for d4 calcs over n=100
+min_Ptukey <- function(par, nmeans){
+  abs(.5 - ptukey(q = par, nmeans = nmeans, df = Inf))
+}
 
-d4 <- function(n) {stats::qtukey(p = .5, nmeans = n, df = Inf)}
+d4 <- function(n) {
+  if (n  < 100) {
+    stats::qtukey(p = .5, nmeans = n, df = Inf)
+  }else{
+      optimise(f = min_Ptukey, interval = c(1,20), nmeans=n)$minimum
+    }
+}
 #d4(100)
 
 c4 <- function(n) {sqrt(2/(n-1)) * gamma(n/2)/gamma((n-1)/2)}
