@@ -1,27 +1,6 @@
 ##################################
 #Starting place for a pareto Stat#
 ##################################
-
-# df <- data.frame(
-#   x = letters[1:10],
-#   y = as.integer(runif(n = 10, min = 0, max=100))
-# )
-#
-# #
-# # df<-df[order(df$Time, decreasing = T),]
-# # df$cumsum_prop <- cumsum(df$Time/sum(df$Time))
-# # df$Thing_FAC <- factor(df$Thing, ordered = T, levels = df$Thing)
-# #
-# require(ggplot2)
-# ggplot(df, aes(x=x, y=y)) +
-#   Stat_pareto()
-#   geom_point() +
-#   geom_col(data = df, aes(x=Thing_FAC, y=Time, fill=Thing_FAC), color="black") +
-#   scale_fill_manual(values = colorRampPalette(c("red", "white"))(nrow(df))) +
-#   guides(fill=FALSE) +
-#   scale_y_continuous(sec.axis = sec_axis(~./max(.)))
-
-#https://rpubs.com/kohske/dual_axis_in_ggplot2
 ##############################
 # Copyright 2017 Kenith Grey #
 ##############################
@@ -43,33 +22,22 @@
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
                               compute_group = function(data, scales, cumsums=F){
-                              print(data)
+                              #print(data)
                               df <- data
-                              print(str(scales$x$range$range))
+                              #print(str(scales$x$range$range))
                               df$range <- strsplit(scales$x$range$range, " ")
                               df<-df[order(df$y, decreasing = T),]
                               df$x <- seq(1:nrow(df))
                               if (cumsums) {
                                 df$y_Natural <- df$y
                                 df$y <- cumsum(df$y)
+                                return(df)
                               }
                               scales$x$range$range <- as.character(df$range)
-                              print(str(scales$x$range$range))
-                              print(df)
-                              #df$x <- factor(df$x,
-                              #       levels = df$x[order(df$y)])
+                              df$fill <- grDevices::colorRampPalette(c("red", "white"))(nrow(df))
+                              #print(str(scales$x$range$range))
                               #print(df)
-                              #print(strsplit(" ", scales$x$range$range))
-                              #print(data)
-                              #data<-df
-                              #x$name <- factor(x$name, levels = x$name[order(x$val)])
-                              #data2<-data[order(data$y, decreasing = T),]
-                              #data2$x <- factor(data2$x, ordered = T,
-                              #                  levels = data2$x[order(data2$y)])
-                              # data2$breaks <- c(data$x)#if (cumsums) data2$y <- cumsum(data2$y)
-                              # # print(data2)
-                              #print(data2)
-                              #data2
+                              df
                               }
 
 
@@ -118,13 +86,6 @@ Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
 #'    stat_mR() + ylab("Moving Range") +
 #'    facet_grid(.~processID, scales = "free_x")
 
-# ggplot(df, aes(x=Thing_FAC, y=cumsum(Time))) +
-#   geom_point() +
-#   geom_col(data = df, aes(x=Thing_FAC, y=Time, fill=Thing_FAC), color="black") +
-#   scale_fill_manual(values = colorRampPalette(c("red", "white"))(nrow(df))) +
-#   guides(fill=FALSE) +
-#   scale_y_continuous(sec.axis = sec_axis(~./max(.)))
-
 Stat_pareto <- function(mapping = NULL,
                     data = NULL,
                     geom = "point",
@@ -149,7 +110,19 @@ Stat_pareto <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, cumsums = T, ...))
 
-  scaleX <- ggplot2::scale_y_continuous(sec.axis = sec_axis(~./(max(.)*.95)))
+  Line <- ggplot2::layer(
+    stat = Stat_PARETO,
+    data = data,
+    mapping = aes(group=1),
+    geom = "line",
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, cumsums = T, ...))
+
+  SEC.scaleY <- ggplot2::scale_y_continuous(sec.axis = sec_axis(~./(max(.)*.95)))
+
+  #BarColors <-
 
   Bars <- ggplot2::layer(
     stat = Stat_PARETO,
@@ -159,11 +132,14 @@ Stat_pareto <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, cumsums = F, ...))
+    params = list(na.rm = na.rm, cumsums = F,
+                  color = "black",
+                  #fill = grDevices::colorRampPalette(c("red", "white"))(10),
+                  ...))
 
 
 
-  return(list(Points, Bars, scaleX))
+  return(list(Bars, Points, Line, SEC.scaleY))
 
 }
 
