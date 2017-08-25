@@ -2,6 +2,7 @@
 
 export(QC_Lines)
 export(QCrange)
+export(Stat_pareto)
 export(cBar_LCL)
 export(cBar_UCL)
 export(mR)

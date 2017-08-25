@@ -1,4 +1,4 @@
-##################################
+#################################
 #Starting place for a pareto Stat#
 ##################################
 ##############################
@@ -21,70 +21,69 @@
 # You should have received a copy of the GNU General Public License
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
-                              compute_group = function(data, scales, cumsums=F){
+                              compute_group = function(data, scales, cumsums=F, fill.bars=c("red", "white")){
                               #print(data)
-                              df <- data
+                              df <- data # copy the data
                               #print(str(scales$x$range$range))
-                              df$range <- strsplit(scales$x$range$range, " ")
-                              df<-df[order(df$y, decreasing = T),]
-                              df$x <- seq(1:nrow(df))
-                              if (cumsums) {
+                              df$range <- strsplit(scales$x$range$range, " ") #get the current listing of the X axis
+                              df<-df[order(df$y, decreasing = T),] # Reorder the data frame acording to the value of Y
+                              df$x <- seq(1:nrow(df)) # resequence the x labeles
+                              if (cumsums) { # Bars or Points if Points
                                 df$y_Natural <- df$y
-                                df$y <- cumsum(df$y)
+                                df$y <- cumsum(df$y) # get the cumlative
                                 return(df)
                               }
-                              scales$x$range$range <- as.character(df$range)
-                              df$fill <- grDevices::colorRampPalette(c("red", "white"))(nrow(df))
+                              scales$x$range$range <- as.character(df$range) # reset the scale labels
+                              df$fill <- grDevices::colorRampPalette(fill.bars)(nrow(df)) # makes the prety color gradient in the bars
                               #print(str(scales$x$range$range))
                               #print(df)
-                              df
+                              df # returns the data frame
                               }
 
 
 )
 
 #' @export
-#' @title Generate mR chart in ggplot
-#' @description ggplot stat used to create a mR chart in ggplot
+#' @title Generate a Pareto Plot with ggplot
+#' @description stat function to creat ggplot Pareto chart
+#' #####NEED TO FILL THESE IN######
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
-#' @param color.mr_point color, to be used for the mR points.
-#' @param color.mr_line color, to be used for line connecting points.
-#' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
-#' @param color.qc_center color, used to colorize the plot's center line.
-#' @return data need to produce the mR plot in ggplot.
+#' @param group defines grouping for variable for pareto plot, default and suggested is 1.
+#' @param color.point color, used to define point color of cumulative percentage line
+#' @param size.point number, used to define point size of cumulative percentage line
+#' @param color.line color, used to define line color of cumulative percentage line
+#' @param size.line color, used to define line weight of cumulative percentage line
+#' @param fill.bars character vector length 2, start and end colors for pareto bars.
+#'
+#' @return Pareto plot.
+#'
 #' @examples
-#' #########################
-#' #  Example 1: mR Chart  #
-#' #########################
+#' ############################
+#' #  Example 1: Pareto Plot  #
+#' ############################
 #'
 #'# Load Libraries ----------------------------------------------------------
 #'  require(ggQC)
 #'  require(ggplot2)
 #'
 #'# Setup Data --------------------------------------------------------------
-#'  set.seed(5555)
-#'  Process1 <- data.frame(processID = as.factor(rep(1,100)),
-#'                         metric_value = rnorm(100,0,1),
-#'                         subgroup_sample=rep(1:20, each=5),
-#'                         Process_run_id = 1:100)
-#'  set.seed(5556)
-#'  Process2 <- data.frame(processID = as.factor(rep(2,100)),
-#'                         metric_value = rnorm(100,5, 1),
-#'                         subgroup_sample=rep(1:10, each=10),
-#'                         Process_run_id = 101:200)
+#'  df <- data.frame(
+#'                   x = letters[1:10],
+#'                   y = as.integer(runif(n = 10, min = 0, max=100))
+#'                  )
 #'
-#'  Both_Processes <- rbind(Process1, Process2)
+#'# Render Pareto Plot ------------------------------------------------------
 #'
-#'# One Plot Both Processes -------------------------------------------------
-#'  ggplot(Both_Processes, aes(x=Process_run_id, y = metric_value)) +
-#'    stat_mR() + ylab("Moving Range")
 #'
-#'# Facet Plot - Both Processes ---------------------------------------------
-#'  ggplot(Both_Processes, aes(x=Process_run_id, y = metric_value)) +
-#'    stat_mR() + ylab("Moving Range") +
-#'    facet_grid(.~processID, scales = "free_x")
+#' ggplot(df, aes(x=x, y=y)) +
+#'  Stat_pareto(color.point = "red",
+#'              size.point = 3,
+#'              color.line = "black",
+#'              #size.line = 1,
+#'              fill.bars = c("blue", "orange"),
+#'  )
 
 Stat_pareto <- function(mapping = NULL,
                     data = NULL,
@@ -95,51 +94,60 @@ Stat_pareto <- function(mapping = NULL,
                     inherit.aes = TRUE,
                     group = 1,
                     na.rm = FALSE,
-                    color.mr_point="black",
-                    color.mr_line="black", color.qc_limits = "red",
-                    color.qc_center = "blue",
+                    color.point="black",
+                    size.point=2,
+                    color.line="black",
+                    size.line=.5,
+                    fill.bars=c("red", "white"),
                     ...) {
 
-  Points <- ggplot2::layer(
+  Points <- ggplot2::layer( #take care of the points
     stat = Stat_PARETO,
     data = data,
-    mapping = aes(group=1),
+    mapping = ggplot2::aes(group=1),
     geom = geom,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, cumsums = T, ...))
+    params = list(na.rm = na.rm, cumsums = T,
+                  color = color.point,
+                  size = size.point, ...))
 
-  Line <- ggplot2::layer(
+  Line <- ggplot2::layer( # Take care of the lines connecting points
     stat = Stat_PARETO,
     data = data,
-    mapping = aes(group=1),
+    mapping = ggplot2::aes(group=1),
     geom = "line",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, cumsums = T, ...))
+    params = list(na.rm = na.rm, cumsums = T,
+                  color = color.line,
+                  size = size.line,
+                   ...))
 
-  SEC.scaleY <- ggplot2::scale_y_continuous(sec.axis = sec_axis(~./(max(.)*.95)))
+  # Takes care of the double axis
+  SEC.scaleY <- ggplot2::scale_y_continuous(
+    sec.axis = ggplot2::sec_axis(~./(max(.)*.95)*100,
+    name = "Cumulative Percentage" ))
 
-  #BarColors <-
 
-  Bars <- ggplot2::layer(
+  Bars <- ggplot2::layer( #draw the bars
     stat = Stat_PARETO,
     data = data,
-    mapping = aes(group=1),
+    mapping = ggplot2::aes(group=1),
     geom = "col",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, cumsums = F,
                   color = "black",
-                  #fill = grDevices::colorRampPalette(c("red", "white"))(10),
+                  fill.bars = fill.bars,
                   ...))
 
 
 
-  return(list(Bars, Points, Line, SEC.scaleY))
+  return(list(Bars, Line, Points, SEC.scaleY))
 
 }
 

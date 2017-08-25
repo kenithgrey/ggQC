@@ -43,14 +43,14 @@ d3 <- function(n) {
 #d3(2)
 #this function is needed for d4 calcs over n=100
 min_Ptukey <- function(par, nmeans){
-  abs(.5 - ptukey(q = par, nmeans = nmeans, df = Inf))
+  abs(.5 - stats::ptukey(q = par, nmeans = nmeans, df = Inf))
 }
 
 d4 <- function(n) {
   if (n  < 100) {
     stats::qtukey(p = .5, nmeans = n, df = Inf)
   }else{
-      optimise(f = min_Ptukey, interval = c(1,20), nmeans=n)$minimum
+      stats::optimise(f = min_Ptukey, interval = c(1,20), nmeans=n)$minimum
     }
 }
 #d4(100)
