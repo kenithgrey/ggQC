@@ -1,10 +1,10 @@
-
+#require(testthat)
 # ylines_ind --> QC_Lines mR ----------------------------------------------
 context("QC_Lines mR")
 set.seed(5555)
 dataIn <- rnorm(100, 0, 1)
   mR_Test1 <- QC_Lines(data = dataIn, method = "mR")
-  mR_Test2 <- ylines_indv(y = dataIn, method = "mR")
+  mR_Test2 <- QC_Lines(data = dataIn, method = "mR")
 
 dataIn2 <- c(NA, dataIn)
   mR_Test4 <- QC_Lines(data = dataIn2, method = "mR")
@@ -53,17 +53,11 @@ Wheeler49_and_WheelerEMP15_Test <- plyr::ddply(df_wheelerXmR, .variables = "gen"
   QC_Lines(data = data$values, method = "XmR")}) # Good
 
 
-# Wheeler49_Test <- as.data.frame.list(ylines_indv(y=Wheeler49_df$values, method="XmR")) # Good
-# WheelerEMP15_Test <- as.data.frame.list(ylines_indv(y=WheelerEMP15_df$values, method="XmR")) # Good
-# Wheeler49_and_WheelerEMP15_Test <- plyr::ddply(df_wheelerXmR, .variables = "gen", .fun=function(data){
-#   ylines_indv(data$values, method = "XmR")}) # Good
-
-
 # XmR Group Limit and Range Function  -------------------------------------
-
-# write.table(x = Wheeler49_Test, file = "Wheeler49_Result.csv", quote = F, sep = ",", row.names = F )
-# write.table(x = WheelerEMP15_Test, file = "WheelerEMP15_Result.csv", quote = F, sep = ",", row.names = F)
-# write.table(x = Wheeler49_and_WheelerEMP15_Test, file = "Wheeler49_and_WheelerEMP15_Result.csv", quote = F, sep = ",", row.names = F)
+#### tests/testthat/
+# write.table(x = Wheeler49_Test, file = "tests/testthat/Wheeler49_Result.csv", quote = F, sep = ",", row.names = F )
+# write.table(x = WheelerEMP15_Test, file = "tests/testthat/WheelerEMP15_Result.csv", quote = F, sep = ",", row.names = F)
+# write.table(x = Wheeler49_and_WheelerEMP15_Test, file = "tests/testthat/Wheeler49_and_WheelerEMP15_Result.csv", quote = F, sep = ",", row.names = F)
 
 Wheeler49_Result <- read.csv("Wheeler49_Result.csv", header=T)
 WheelerEMP15_Result <- read.csv("WheelerEMP15_Result.csv", header=T)

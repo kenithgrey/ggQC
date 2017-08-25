@@ -21,7 +21,9 @@
 # 2nd Order Functions ------------------------------------------------------
   # Report Lines for XmR chart
 
-
+sigma_est_symetric <- function(y, n=n, na.rm=na.rm, center, threesigma) {
+         return(abs(center(y, na.rm=na.rm) - threesigma(y,na.rm=na.rm))/3)
+         }
 
 ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
   switch(method,
@@ -31,15 +33,20 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
                 mR = mR, mR_UCL = mR_UCL,
                 xBar_one_LCL = xBar_one_LCL,
                 mean = mean,
-                xBar_one_UCL = xBar_one_UCL)
-                },
+                xBar_one_UCL = xBar_one_UCL
+                )},
          "XmR" = {
            QC_indv_functions <- list(
                 xBar_one_LCL = xBar_one_LCL,
                 mean = mean,
                 xBar_one_UCL = xBar_one_UCL,
-                mR_LCL = ZERO,mR = mR, mR_UCL = mR_UCL)
-                 },
+                mR_LCL = ZERO,mR = mR, mR_UCL = mR_UCL,
+                sigma = function(y=y, n=n, na.rm=na.rm){
+                         sigma_est_symetric(y = y, na.rm = na.rm,
+                         center = mean,
+                         threesigma = xBar_one_UCL)
+                    }
+                 )},
          "c" = {
            QC_indv_functions <- list(
                 cBar_LCL = cBar_LCL,
