@@ -1,7 +1,7 @@
 require(ggQC)
 # Desipersion Central Limit Tests -----------------------------------------
 
-
+#"tests/testthat/"
 # Setup -------------------------------------------------------------------
 web_data <- read.table("minitabTestFile_SBAR.csv", sep=",", header=T)
 #web_data
@@ -102,6 +102,7 @@ testthat::test_that("QC_ylines method = sBar works", {
 
 xBar_sBar_QC_ylines_test <- as.data.frame.list(QC_Lines(web_data, formula = values~groups, method = "xBar.sBar"))
 #write.csv(x = xBar_sBar_QC_ylines_test, file = "tests/testthat/sxBar_sBar_QC_ylines_results.csv", quote = F, row.names = F)
+
 sBar_QC_ylines_results <- read.csv(file = "sxBar_sBar_QC_ylines_results.csv", header=TRUE)
 
 context("xBar_sBar_LCL -- xBar_sBar_UCL")

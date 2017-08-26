@@ -85,6 +85,7 @@ W43_missing_formula_DF <- as.data.frame.list(QC_Lines(Wheeler_43_missing, formul
 
 Rbar_QC_ylines_test <- rbind(W43_V_G_DF, W43_formula_DF, W43_missing_V_G_DF, W43_missing_formula_DF)
 #write.csv(x = Rbar_QC_ylines_results, file = "tests/testthat/Rbar_QC_ylines_results.csv", quote = F, row.names = F)
+#"tests/testthat/"
 Rbar_QC_ylines_results <- read.csv(file = "Rbar_QC_ylines_results.csv", header=TRUE)
 
 testthat::test_that("QC_ylines method = rBar works", {
