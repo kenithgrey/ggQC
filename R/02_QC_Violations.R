@@ -21,7 +21,18 @@
 
 # Rule Set ----------------------------------------------------------------
 RuleSet <-
-data.frame(
+data.frame(Sigma_Rule = c(3,2,1,0),
+  Description = c("Points Exceeding 3 Sigma",
+                  "2 or more consecutive, same-side points exceeding 2 Sigma",
+                  "4 or more consecutive, same-side points exceeding 1 Sigma",
+                  "8 or more consecutive, same-side points"
+                  ),
+  Alt_Description = factor(c("Violation 3 Sigma","Violation 2 Sigma",
+                      "Violation 1 Sigma","Violation Same Side"),
+                      levels = c("Violation Same Side",
+                                 "Violation 1 Sigma",
+                                 "Violation 2 Sigma",
+                                 "Violation 3 Sigma")),
   Rule = c(1:4),
   breaks = c(
     "c(-Inf,-3,-2,-1,0,1,2,3,Inf)",
@@ -38,8 +49,13 @@ data.frame(
     ), stringsAsFactors = F
 )
 
+# RuleSet$Alt_Description <- transform(RuleSet,
+#   Alt_Description = factor(Alt_Description,
+#                  levels = ))
+
 #devtools::use_data(RuleSet, internal = TRUE, overwrite = T)
 
+# Find Run Length Violations ----------------------------------------------
 Find_Run_Length_Violations <- function(Rule, Test_df) #calls out to RuleSet df
 {
   ####
@@ -52,8 +68,8 @@ Find_Run_Length_Violations <- function(Rule, Test_df) #calls out to RuleSet df
   #df$Rule_2_Results <- Find_Run_Length_Violations(2, Test_df = df)
 
   inputDF <- Test_df
-  #inputDF$score <- (inputDF$Test_Vector-QCL$mean)/QCL$sigma
-  inputDF$sigma_bin <- cut(inputDF$score, breaks = eval(parse(text = RuleSet$breaks[Rule])))
+  #inputDF$z_score <- (inputDF$Test_Vector-QCL$mean)/QCL$sigma
+  inputDF$sigma_bin <- cut(inputDF$z_score, breaks = eval(parse(text = RuleSet$breaks[Rule])))
 
 
   output <- rle(as.vector(inputDF$sigma_bin))
@@ -84,6 +100,7 @@ Find_Run_Length_Violations <- function(Rule, Test_df) #calls out to RuleSet df
   )
 }
 
+# QC Violations Function --------------------------------------------------
 #' @export
 QC_Violations <- function(data, value=NULL, grouping=NULL, formula=NULL, method=NULL, ...)
 {
@@ -93,7 +110,7 @@ QC_Violations <- function(data, value=NULL, grouping=NULL, formula=NULL, method=
    sigma_est <- QC_Lines(data = data, value=value, grouping=grouping,
                          method = method, formula=formula, na.rm = T)
    CentralFUN <- mean
-   print("Mean Route")
+   #print("Mean Route")
    if(is.null(formula)){
       f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
    }else{f1 <- formula}
@@ -106,7 +123,7 @@ QC_Violations <- function(data, value=NULL, grouping=NULL, formula=NULL, method=
  }else if (method %in% c("xMedian.rBar", "xMedian.rMedian")){
    sigma_est <- QC_Lines(data = data, value=value, grouping=grouping,
                          method = method, formula=formula, na.rm = T)
-   CentralFUN <- median
+   #CentralFUN <- median
    print("Median Route")
    if(is.null(formula)){
       f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
@@ -139,16 +156,28 @@ QC_Violations <- function(data, value=NULL, grouping=NULL, formula=NULL, method=
   # Get Sigma ---------------------------------------------------------------
 
 
-  df$score <- (df$data - sigma_est[1,CentralLimitCol])/sigma_est$sigma
-  df$UorL<-ifelse(df$score < 0, -1, 1)
+  df$z_score <- (df$data - sigma_est[1,CentralLimitCol])/sigma_est$sigma
+  df$UorL<-ifelse(df$z_score < 0, -1, 1)
 
   # Check the Rules ------------------------------------------------------------------
-  df$Rule_1_bin<- cut(df$score, breaks = eval(parse(text = RuleSet$breaks[1])))
+  df$Rule_1_bin<- cut(df$z_score, breaks = eval(parse(text = RuleSet$breaks[1])))
 
-  df$Rule_1_Results <- df$Rule_1_bin %in% c("(-Inf,-3]", "(3, Inf]")
-  df$Rule_2_Results <- Find_Run_Length_Violations(2, Test_df = df)
-  df$Rule_3_Results <- Find_Run_Length_Violations(3, Test_df = df)
-  df$Rule_4_Results <- Find_Run_Length_Violations(4, Test_df = df)
+  df$Violation_3_Sigma <- df$Rule_1_bin %in% c("(-Inf,-3]", "(3, Inf]")
+  df$Violation_2_Sigma <- Find_Run_Length_Violations(2, Test_df = df)
+  df$Violation_1_Sigma <- Find_Run_Length_Violations(3, Test_df = df)
+  df$Violation_Same_Side <- Find_Run_Length_Violations(4, Test_df = df)
+  #print(nrow(df))
+  df %>%
+    dplyr::select(data, z_score, Violation_1_Sigma, Violation_2_Sigma,
+           Violation_3_Sigma, Violation_Same_Side) %>%
+    dplyr::mutate(Index = 1:n()) %>%
+    tidyr::gather(Violation_Result, values, 3:6) %>%
+    dplyr::mutate(Violation_Result = gsub(pattern="_",
+                                   replacement=" ",
+                                   x=Violation_Result)) %>%
+    rename(Violation = values)  ->
+  df
+  #ggTest$x <- rep(1:(nrow(ggTest)/4), times=4)
   return(df)
 }
 
