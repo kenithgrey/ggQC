@@ -21,11 +21,32 @@
 # You should have received a copy of the GNU General Public License
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
-          compute_group = function(data, scales, method=method, callFrom=NULL){
-            if(method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian")) {
-              CentralLimitCol <- 6
-            }else if (method == "XmR"){
+          compute_group = function(data, scales, method = method, callFrom = NULL, n=NULL){
+
+        df <- data # copy the data
+
+            if (method == "XmR"){
+              df$Index <- 1:nrow(df)
               CentralLimitCol <- 2
+
+              viloation_df <- QC_Violations(data = data$y, method = method)
+              df2 <- merge(df, viloation_df, by="Index", all.x = TRUE)
+              df3 <- df2[df2$Violation_Result == df2$PANEL, ]
+
+              centerLine <- QC_Lines(data = data$y, method=method)[CentralLimitCol][[1]]
+              Sigma <- QC_Lines(data = data$y, method=method)$sigma
+
+            }else if(method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian")) {
+              df$Index <- 1:nrow(df)
+
+              CentralLimitCol <- 6
+              viloation_df <- QC_Violations(data = df, value = "y", grouping = "x", method = method)
+              df2 <- merge(df, viloation_df, by="Index", all.y = TRUE) #don't think the index soln will work
+              df3 <- df2[df2$Violation_Result == df2$PANEL, ]
+              df3$y <- df3$data
+              centerLine <- QC_Lines(data = df, value = "y", grouping = "x", n=n, method = method)[CentralLimitCol][[1]]
+              Sigma <- QC_Lines(data = df, value = "y", grouping = "x", n=n, method = method)$sigma
+
             }else{
               return(warning(paste("Unknown method: ", method,
                                    "\n Please see help file or use the following methods:",
@@ -33,51 +54,24 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
                                    xBar.rMedian, xBar.sBar")))
             }
 
-            #print("stat")
-            #print(head(data))
-          #print(method)
-          df <- data # copy the data
-          df$Index <- 1:nrow(df)
-          if (method == "XmR"){
-          #print("Do XmR")
-          viloation_df <- QC_Violations(data = data$y, method = "XmR")
-          #print("DF2")
-          df2 <- merge(df, viloation_df, by="Index", all.x = TRUE)
-          #print(head(df2))
+        #Setup the color display for points or lines
+        if (callFrom == "SigmaLines"){
+          df3$colour <- "darkgreen"
+        }else{
+          df3$colour <- ifelse(df3$Violation == TRUE, "red", "black")
+        }
 
-          #print("DF3")
-          df3 <- df2[df2$Violation_Result == df2$PANEL, ]
-          #print(head(df3))
-          if (callFrom == "SigmaLines"){
-            df3$colour <- "green"
-          }else{
-            df3$colour <- ifelse(df3$Violation == TRUE, "red", "black")
-          }
-          #make the lines that go at the sigma levels
-          centerLine <- QC_Lines(data = data$y, method=method)[CentralLimitCol][[1]]
-          Sigma <- QC_Lines(data = data$y, method=method)$sigma
-          #print(centerLine[[1]])
-          #print(Sigma)
-          df3$yintercept <- c(centerLine, centerLine + (as.numeric(df3$PANEL[1])-1)*Sigma, centerLine -
-                            (as.numeric(df3$PANEL[1])-1)*Sigma)
-          #print(yintercept)
-          #print(unique(df3$PANEL))
-          #print(head(df3))
-          #df3$size<- df3$z_score
-          # print(data.frame(Pannel_name=unique(df3$PANEL)),
-          #       pnum = as.numeric(unique(df3$PANEL)))
-          #print(head(df3))
-
-          df3
-                              }else if(method %in% c("c", "p", "u", "np")){
-                                print("c, p, u, and np charts not supported by Stat_qc_violations")
-                              }else{
-                                print("Do XbarR type anaylsis")
-                              }
-
-                              }
+        #make the lines that go at the sigma levels
+        df3$yintercept <- c(centerLine,
+                            centerLine + (as.numeric(df3$PANEL[1])-1)*Sigma,
+                            centerLine - (as.numeric(df3$PANEL[1])-1)*Sigma)
+        #print(df3)
+        return(df3)
 
 
+
+
+  }
 )
 
 #' @export
@@ -139,63 +133,31 @@ stat_qc_violations <- function(mapping = NULL,
                     # fill.bars=c("red", "white"),
                     ...) {
 
-  Points <- ggplot2::layer( #take care of the points
+Points <- ggplot2::layer( #take care of the points
     stat = Stat_QC_VIOLATIONS,
     data = data,
     mapping = mapping,
     geom = geom,
-    #color = color,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(method=method, callFrom="Points",  ...))
 
-  SigmaLines <- ggplot2::layer( #take care of the points
+SigmaLines <- ggplot2::layer( #take care of the points
     stat = Stat_QC_VIOLATIONS,
     data = data,
     mapping = mapping,
     geom = "hline",
-    #color = "green",
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(method=method, callFrom="SigmaLines", ...))
 
-  # Line <- ggplot2::layer( # Take care of the lines connecting points
-  #   stat = Stat_PARETO,
-  #   data = data,
-  #   mapping = ggplot2::aes(group=1),
-  #   geom = "line",
-  #   position = position,
-  #   show.legend = show.legend,
-  #   inherit.aes = inherit.aes,
-  #   params = list(na.rm = na.rm, cumsums = T,
-  #                 color = color.line,
-  #                 size = size.line,
-  #                  ...))
-  Facet <- facet_qc_violations(method=method)
-  # Takes care of the double axis
-  # SEC.scaleY <- ggplot2::scale_y_continuous(
-  #   sec.axis = ggplot2::sec_axis(~./(max(.)*.95)*100,
-  #   name = "Cumulative Percentage" ))
-
-
-  # Bars <- ggplot2::layer( #draw the bars
-  #   stat = Stat_PARETO,
-  #   data = data,
-  #   mapping = ggplot2::aes(group=1),
-  #   geom = "col",
-  #   position = position,
-  #   show.legend = show.legend,
-  #   inherit.aes = inherit.aes,
-  #   params = list(na.rm = na.rm, cumsums = F,
-  #                 color = "black",
-  #                 fill.bars = fill.bars,
-  #                 ...))
+Facet <- facet_qc_violations(method=method)
 
 
 
-  return(list(SigmaLines, Points, Facet))
+return(list(SigmaLines, Points, Facet))
 
 }
 
