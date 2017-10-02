@@ -2,7 +2,7 @@
 % Please edit documentation in R/04_stat_qc_violations.r
 \name{stat_qc_violations}
 \alias{stat_qc_violations}
-\title{Generate a Pareto Plot with ggplot}
+\title{Inpect QC Violations}
 \usage{
 stat_qc_violations(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
@@ -45,53 +45,47 @@ the default plot specification, e.g. \code{\link{borders}}.}
 \item{na.rm}{a logical value indicating whether NA values should be
 stripped before the computation proceeds.}
 
+\item{method}{string, calling the following methods:
+\itemize{
+  \item \bold{Individuals Charts}: XmR,
+  \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
+xMedian.rMedian
+}}
+
 \item{...}{other arguments passed on to \code{\link{layer}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
 \code{color = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
-
-\item{group}{defines grouping for variable for pareto plot, default and suggested is 1.}
-
-\item{color.point}{color, used to define point color of cumulative percentage line}
-
-\item{size.point}{number, used to define point size of cumulative percentage line}
-
-\item{color.line}{color, used to define line color of cumulative percentage line}
-
-\item{size.line}{color, used to define line weight of cumulative percentage line}
-
-\item{fill.bars}{character vector length 2, start and end colors for pareto bars.}
 }
 \value{
-Pareto plot.
+faceted plot.
 }
 \description{
-stat function to creat ggplot Pareto chart
+stat function to creat faceted plot of QC violations
 #####NEED TO FILL THESE IN######
 }
 \examples{
-############################
-#  Example 1: Pareto Plot  #
-############################
-
+#####################################
+#  Example 1: XmR Check Violations  #
+#####################################
 # Load Libraries ----------------------------------------------------------
  require(ggQC)
  require(ggplot2)
 
 # Setup Data --------------------------------------------------------------
- df <- data.frame(
-                  x = letters[1:10],
-                  y = as.integer(runif(n = 10, min = 0, max=100))
-                 )
-
-# Render Pareto Plot ------------------------------------------------------
-
-
-ggplot(df, aes(x=x, y=y)) +
- Stat_pareto(color.point = "red",
-             size.point = 3,
-             color.line = "black",
-             #size.line = 1,
-             fill.bars = c("blue", "orange"),
+ set.seed(5555)
+ QC_data <- data.frame(
+ data = c(c(-1, 2.3, 2.4, 2.5),                           #Outlier Data
+          sample(c(rnorm(60),5,-5), 62, replace = FALSE), #Normal Data
+          c(1,-.3, -2.4,-2.6,-2.5,-2.7, .3)),             #Outlier Data
+ Run_Order = 1:73                                         #Run Order
  )
+# Render QC Viloation Plot ------------------------------------------------------
+ ggplot(QC_data, aes(x=Run_Order, y=data)) +
+   geom_line() +
+   stat_qc_violations(method="XmR")   #Makes facet graph with viloations
+
+#######################################
+#  Example 2: Xbar Check Violations   #
+#######################################
 }

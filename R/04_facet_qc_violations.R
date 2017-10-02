@@ -12,12 +12,6 @@ Facet_QC_VIOLATIONS <-
                 #df <- data[[1]] # copy the data
                 #print(head(df))
                 #df$Index <- 1:nrow(df)
-        # if (params$method == "XmR"){
-        #   }else if(method %in% c("c", "p", "u", "np")){
-        #     print("c, p, u, and np charts not supported by stat_qc_violations")
-        #   }else{
-        #     print("Do XbarR type anaylsis")
-        # }
 
         id <- factor(unique(RuleSet$Alt_Description))
 
@@ -39,12 +33,6 @@ Facet_QC_VIOLATIONS <-
         cbind(layout, .violations = layout$PANEL)
       },
 
-      # if(method %in% method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian"){
-      #
-      #
-      # }
-
-
       map_data = function(data, layout, params) {
         if (is.null(data) || nrow(data) == 0) {
             return(cbind(data, PANEL = integer(0)))
@@ -57,11 +45,11 @@ Facet_QC_VIOLATIONS <-
                                     data$group <- 1
                                     return(data)})
 
-                )
+                        )
 
       }
 )
-#' @export
+
 facet_qc_violations <-
   function(nrow = NULL, ncol = NULL,
            scales = "fixed", shrink = TRUE,
@@ -76,7 +64,7 @@ facet_qc_violations <-
 
     facet$params$method <- method
 
-    ggproto(NULL, Facet_QC_VIOLATIONS,
+    ggplot2::ggproto(NULL, Facet_QC_VIOLATIONS,
           shrink = shrink, params = facet$params
   )
 }

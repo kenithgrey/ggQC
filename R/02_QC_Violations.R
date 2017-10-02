@@ -123,8 +123,8 @@ QC_Violations <- function(data, value=NULL, grouping=NULL, formula=NULL, method=
  }else if (method %in% c("xMedian.rBar", "xMedian.rMedian")){
    sigma_est <- QC_Lines(data = data, value=value, grouping=grouping,
                          method = method, formula=formula, na.rm = T)
-   #CentralFUN <- median
-   print("Median Route")
+   CentralFUN <- stats::median
+   #print("Median Route")
    if(is.null(formula)){
       f1 <- formula(eval(parse(text=paste0(value, "~", grouping))))
    }else{f1 <- formula}
@@ -167,18 +167,19 @@ QC_Violations <- function(data, value=NULL, grouping=NULL, formula=NULL, method=
   df$Violation_1_Sigma <- Find_Run_Length_Violations(3, Test_df = df)
   df$Violation_Same_Side <- Find_Run_Length_Violations(4, Test_df = df)
   #print(nrow(df))
-  df %>%
-    dplyr::select(data, z_score, Violation_1_Sigma, Violation_2_Sigma,
-           Violation_3_Sigma, Violation_Same_Side) %>%
-    dplyr::mutate(Index = 1:n()) %>%
-    tidyr::gather(Violation_Result, values, 3:6) %>%
-    dplyr::mutate(Violation_Result = gsub(pattern="_",
-                                   replacement=" ",
-                                   x=Violation_Result)) %>%
-    rename(Violation = values)  ->
+  df -> .
+    dplyr::select(., c("data", "z_score", "Violation_1_Sigma", "Violation_2_Sigma",
+           "Violation_3_Sigma", "Violation_Same_Side")) -> .
+    dplyr::mutate(., Index = 1:nrow(.)) -> .
+    tidyr::gather(., "Violation_Result", "values", 3:6) -> .
+    dplyr::mutate(., Violation_Result = gsub(pattern="_",
+                                             replacement=" ",
+                                            x=.$Violation_Result)) -> .
+    dplyr::rename(., Violation = "values")  ->
   df
-  #ggTest$x <- rep(1:(nrow(ggTest)/4), times=4)
+
   return(df)
+
 }
 
 

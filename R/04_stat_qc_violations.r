@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
-          compute_group = function(data, scales, method = method, callFrom = NULL, n=NULL){
+          compute_group = function(data, scales, method = method, callFrom = NULL, n = NULL){
 
         df <- data # copy the data
 
@@ -33,9 +33,10 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
               df2 <- merge(df, viloation_df, by="Index", all.x = TRUE)
               df3 <- df2[df2$Violation_Result == df2$PANEL, ]
 
-              centerLine <- QC_Lines(data = data$y, method=method)[CentralLimitCol][[1]]
-              Sigma <- QC_Lines(data = data$y, method=method)$sigma
-
+              if (callFrom == "SigmaLines"){
+                centerLine <- QC_Lines(data = data$y, method=method)[CentralLimitCol][[1]]
+                Sigma <- QC_Lines(data = data$y, method=method)$sigma
+                }
             }else if(method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian")) {
               df$Index <- 1:nrow(df)
 
@@ -44,8 +45,11 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
               df2 <- merge(df, viloation_df, by="Index", all.y = TRUE) #don't think the index soln will work
               df3 <- df2[df2$Violation_Result == df2$PANEL, ]
               df3$y <- df3$data
-              centerLine <- QC_Lines(data = df, value = "y", grouping = "x", n=n, method = method)[CentralLimitCol][[1]]
-              Sigma <- QC_Lines(data = df, value = "y", grouping = "x", n=n, method = method)$sigma
+
+              if (callFrom == "SigmaLines"){
+                centerLine <- QC_Lines(data = df, value = "y", grouping = "x", n=n, method = method)[CentralLimitCol][[1]]
+                Sigma <- QC_Lines(data = df, value = "y", grouping = "x", n=n, method = method)$sigma
+                }
 
             }else{
               return(warning(paste("Unknown method: ", method,
@@ -56,15 +60,17 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 
         #Setup the color display for points or lines
         if (callFrom == "SigmaLines"){
+          df3 <- df3[1:3,]
           df3$colour <- "darkgreen"
-        }else{
+          df3$yintercept <- c(centerLine,
+                              centerLine + (as.numeric(df3$PANEL[1])-1)*Sigma,
+                              centerLine - (as.numeric(df3$PANEL[1])-1)*Sigma)
+          }else{
           df3$colour <- ifelse(df3$Violation == TRUE, "red", "black")
         }
 
         #make the lines that go at the sigma levels
-        df3$yintercept <- c(centerLine,
-                            centerLine + (as.numeric(df3$PANEL[1])-1)*Sigma,
-                            centerLine - (as.numeric(df3$PANEL[1])-1)*Sigma)
+
         #print(df3)
         return(df3)
 
@@ -75,46 +81,46 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 )
 
 #' @export
-#' @title Generate a Pareto Plot with ggplot
-#' @description stat function to creat ggplot Pareto chart
+#' @title Inpect QC Violations
+#' @description stat function to creat faceted plot of QC violations
 #' #####NEED TO FILL THESE IN######
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
-#' @param group defines grouping for variable for pareto plot, default and suggested is 1.
-#' @param color.point color, used to define point color of cumulative percentage line
-#' @param size.point number, used to define point size of cumulative percentage line
-#' @param color.line color, used to define line color of cumulative percentage line
-#' @param size.line color, used to define line weight of cumulative percentage line
-#' @param fill.bars character vector length 2, start and end colors for pareto bars.
-#'
-#' @return Pareto plot.
+#' @param method string, calling the following methods:
+#' \itemize{
+#'   \item \bold{Individuals Charts}: XmR,
+#'   \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
+#' xMedian.rMedian
+#' }
+#' @return faceted plot.
 #'
 #' @examples
-#' ############################
-#' #  Example 1: Pareto Plot  #
-#' ############################
-#'
+#' #####################################
+#' #  Example 1: XmR Check Violations  #
+#' #####################################
 #'# Load Libraries ----------------------------------------------------------
 #'  require(ggQC)
 #'  require(ggplot2)
 #'
 #'# Setup Data --------------------------------------------------------------
-#'  df <- data.frame(
-#'                   x = letters[1:10],
-#'                   y = as.integer(runif(n = 10, min = 0, max=100))
-#'                  )
-#'
-#'# Render Pareto Plot ------------------------------------------------------
-#'
-#'
-#' ggplot(df, aes(x=x, y=y)) +
-#'  Stat_pareto(color.point = "red",
-#'              size.point = 3,
-#'              color.line = "black",
-#'              #size.line = 1,
-#'              fill.bars = c("blue", "orange"),
+#'  set.seed(5555)
+#'  QC_data <- data.frame(
+#'  data = c(c(-1, 2.3, 2.4, 2.5),                           #Outlier Data
+#'           sample(c(rnorm(60),5,-5), 62, replace = FALSE), #Normal Data
+#'           c(1,-.3, -2.4,-2.6,-2.5,-2.7, .3)),             #Outlier Data
+#'  Run_Order = 1:73                                         #Run Order
 #'  )
+#'# Render QC Viloation Plot ------------------------------------------------------
+#'  ggplot(QC_data, aes(x=Run_Order, y=data)) +
+#'    geom_line() +
+#'    stat_qc_violations(method="XmR")   #Makes facet graph with viloations
+#'
+#' #######################################
+#' #  Example 2: Xbar Check Violations   #
+#' #######################################
+
+
 
 stat_qc_violations <- function(mapping = NULL,
                     data = NULL,
