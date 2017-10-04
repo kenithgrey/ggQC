@@ -2,11 +2,14 @@
 % Please edit documentation in R/04_stat_qc_violations.r
 \name{stat_qc_violations}
 \alias{stat_qc_violations}
-\title{Inpect QC Violations}
+\title{Inspect QC Violations}
 \usage{
 stat_qc_violations(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
-  na.rm = FALSE, method = "xBar.rBar", ...)
+  na.rm = FALSE, method = "xBar.rBar", geom_points = TRUE,
+  geom_line = TRUE, point.size = 1.5, point.color = "black",
+  violation_point.color = "red", rule.color = "darkgreen",
+  line.color = NULL, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link{aes}} or
@@ -61,8 +64,14 @@ to the paired geom/stat.}
 faceted plot.
 }
 \description{
-stat function to creat faceted plot of QC violations
-#####NEED TO FILL THESE IN######
+ggplot stat function that renders a faceted plot of QC violations
+based on the following 4 rules:
+\itemize{
+\item \bold{Violation Same Side:} 8 or more consecutive, same-side points
+\item \bold{Violation 1 Sigma:} 4 or more consecutive, same-side points exceeding 1 sigma
+\item \bold{Violation 2 Sigma:} 2 or more consecutive, same-side points exceeding 2 sigma
+\item \bold{Violation 3 Sigma:} any points exceeding 3 sigma
+}
 }
 \examples{
 #####################################
@@ -73,19 +82,98 @@ stat function to creat faceted plot of QC violations
  require(ggplot2)
 
 # Setup Data --------------------------------------------------------------
- set.seed(5555)
- QC_data <- data.frame(
- data = c(c(-1, 2.3, 2.4, 2.5),                           #Outlier Data
-          sample(c(rnorm(60),5,-5), 62, replace = FALSE), #Normal Data
-          c(1,-.3, -2.4,-2.6,-2.5,-2.7, .3)),             #Outlier Data
- Run_Order = 1:73                                         #Run Order
- )
+
+    set.seed(5555)
+    QC_XmR <- data.frame(
+    data = c(c(-1, 2.3, 2.4, 2.5),                    #Outlier Data
+          sample(c(rnorm(60),5,-5), 62, replace = F), #Normal Data
+          c(1,-.3, -2.4,-2.6,-2.5,-2.7, .3)),         #Outlier Data
+    Run_Order = 1:73                                  #Run Order
+    )
+
+
 # Render QC Viloation Plot ------------------------------------------------------
- ggplot(QC_data, aes(x=Run_Order, y=data)) +
-   geom_line() +
-   stat_qc_violations(method="XmR")   #Makes facet graph with viloations
+
+   ggplot(QC_XmR, aes(x = Run_Order, y = data)) +
+     stat_qc_violations(method = "XmR")   #Makes facet graph with viloations
 
 #######################################
 #  Example 2: Xbar Check Violations   #
 #######################################
+
+# Setup Some Data ------------------------------------------------------------
+     QC_xBar.rBar <- do.call(rbind, lapply(1:3, function(X){
+       set.seed(5555+X)                               #Loop over 3 seeds
+       data.frame(
+         sub_group = rep(1:42),                       #Define Subgroups
+         sub_class = letters[X],
+         c(
+          c(runif(n = 5, min = 2.0,3.2)),             #Outlier Data
+          sample(c(rnorm(30),5,-4), 32, replace = F), #Normal Data
+          c(runif(n = 5, min = -3.2, max = -2.0))     #Outlier Data
+         )
+      )
+     }
+   )
+)
+
+colnames(QC_xBar.rBar) <- c("sub_group","sub_class", "value")
+
+# Render QC Viloation Plot --------------------------------------------------
+    ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
+      stat_qc_violations(method = "xBar.rBar")
+      #stat_qc_violations(method="xBar.rMedian")
+      #stat_qc_violations(method="xBar.sBar")
+      #stat_qc_violations(method="xMedian.rBar")
+      #stat_qc_violations(method="xMedian.rMedian")
+
+#######################################################
+# Complete User Control - By Pass stat_qc_violation   #
+#######################################################
+#### The code below has two options if you are looking for complete
+#### control over the look and feel of the graph. Use option 1 or option
+#### 2 as appropriate. If you want something quick and easy use examples above.
+
+##### Option 1: Setup for XmR Data
+ # QC_XmR: Defined in Example 1
+   QC_Vs <- QC_Violations(data  = QC_XmR$data, method = "XmR")
+   QC_Vs$Violation_Result <- ordered(QC_Vs$Violation_Result,
+                                     levels=FacetNames)
+   QC_Stats <- QC_Lines(data  = QC_XmR$data, method = "XmR")
+   MEAN <- QC_Stats$mean
+   SIGMA <- QC_Stats$sigma
+
+##### Option 2: Setup for xBar.rBar Type Data
+ # QC_xBar.rBar: Defined in Example 2
+   QC_Vs <- QC_Violations(data  = QC_xBar.rBar,
+                          formula = value~sub_group,
+                          method = "xBar.rBar")
+   QC_Vs$Violation_Result <- ordered(QC_Vs$Violation_Result,
+                                     levels=FacetNames)
+   QC_Stats <- QC_Lines(data  = QC_xBar.rBar,
+                        formula = value~sub_group,
+                        method = "xBar.rBar")
+   MEAN <- QC_Stats$xBar_Bar
+   SIGMA <- QC_Stats$sigma
+
+##### Setup second table for horizontal rules
+ FacetNames <- c("Violation Same Side",
+                 "Violation 1 Sigma",
+                 "Violation 2 Sigma",
+                 "Violation 3 Sigma")
+
+ QC_Stats_df <- data.frame(
+   Violation_Result = factor(x = FacetNames, levels = FacetNames),
+   SigmaPlus = MEAN+SIGMA*0:3,
+   MEAN = MEAN,
+   SigmaMinus = MEAN-SIGMA*0:3
+ )
+
+##### Make the Plot
+ ggplot(QC_Vs, aes(x=Index, y=data, color=Violation, group=1)) +
+   geom_point() + geom_line() +
+   facet_grid(.~Violation_Result) +
+   geom_hline(data = QC_Stats_df, aes(yintercept = c(SigmaPlus))) +
+   geom_hline(data = QC_Stats_df, aes(yintercept = c(SigmaMinus))) +
+   geom_hline(data = QC_Stats_df, aes(yintercept = c(MEAN)))
 }
