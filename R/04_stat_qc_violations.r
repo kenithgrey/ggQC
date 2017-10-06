@@ -100,15 +100,23 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #' \item \bold{Violation 3 Sigma:} any points exceeding 3 sigma
 #' }
 #'
-#' @inheritParams ggplot2::stat_identity
-#' @param na.rm a logical value indicating whether NA values should be
-#' stripped before the computation proceeds.
 #' @param method string, calling the following methods:
 #' \itemize{
 #'   \item \bold{Individuals Charts}: XmR,
 #'   \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
 #' xMedian.rMedian
 #' }
+#'
+#' @param geom_points boolean, draw points
+#' @param point.size number, size of points on chart
+#' @param point.color string, color of points on charts (e.g., "black")
+#' @param violation_point.color string, color of viloation points on charts (e.g., "red")
+#' @param geom_line boolean, draw line
+#' @param line.color string, color of lines connecting points
+#' @param rule.color string, color or horizontal rules indicateing distribution center and sigma levels
+#' @param na.rm a logical value indicating whether NA values should be
+#' stripped before the computation proceeds.
+#' @inheritParams ggplot2::stat_identity
 #'
 #' @return faceted plot.
 #'
@@ -124,10 +132,10 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'
 #'     set.seed(5555)
 #'     QC_XmR <- data.frame(
-#'     data = c(c(-1, 2.3, 2.4, 2.5),                    #Outlier Data
-#'           sample(c(rnorm(60),5,-5), 62, replace = F), #Normal Data
-#'           c(1,-.3, -2.4,-2.6,-2.5,-2.7, .3)),         #Outlier Data
-#'     Run_Order = 1:73                                  #Run Order
+#'     data = c(c(-1, 2.3, 2.4, 2.5),                        #Outlier Data
+#'           sample(c(rnorm(60),5,-5), 62, replace = FALSE), #Normal Data
+#'           c(1,-.3, -2.4,-2.6,-2.5,-2.7, .3)),             #Outlier Data
+#'     Run_Order = 1:73                                      #Run Order
 #'     )
 #'
 #'
@@ -142,14 +150,14 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'
 #'# Setup Some Data ------------------------------------------------------------
 #'      QC_xBar.rBar <- do.call(rbind, lapply(1:3, function(X){
-#'        set.seed(5555+X)                               #Loop over 3 seeds
+#'        set.seed(5555+X)                                   #Loop over 3 seeds
 #'        data.frame(
-#'          sub_group = rep(1:42),                       #Define Subgroups
+#'          sub_group = rep(1:42),                           #Define Subgroups
 #'          sub_class = letters[X],
 #'          c(
-#'           c(runif(n = 5, min = 2.0,3.2)),             #Outlier Data
-#'           sample(c(rnorm(30),5,-4), 32, replace = F), #Normal Data
-#'           c(runif(n = 5, min = -3.2, max = -2.0))     #Outlier Data
+#'           c(runif(n = 5, min = 2.0,3.2)),                 #Outlier Data
+#'           sample(c(rnorm(30),5,-4), 32, replace = FALSE), #Normal Data
+#'           c(runif(n = 5, min = -3.2, max = -2.0))         #Outlier Data
 #'          )
 #'       )
 #'      }
@@ -167,7 +175,7 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'       #stat_qc_violations(method="xMedian.rMedian")
 #'
 #' #######################################################
-#' # Complete User Control - By Pass stat_qc_violation   #
+#' # Complete User Control - Bypass stat_qc_violation   #
 #' #######################################################
 #' #### The code below has two options if you are looking for complete
 #' #### control over the look and feel of the graph. Use option 1 or option
@@ -176,8 +184,6 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #' ##### Option 1: Setup for XmR Type Data
 #'  # QC_XmR: Defined in Example 1
 #'    QC_Vs <- QC_Violations(data  = QC_XmR$data, method = "XmR")
-#'    QC_Vs$Violation_Result <- ordered(QC_Vs$Violation_Result,
-#'                                      levels=FacetNames)
 #'    QC_Stats <- QC_Lines(data  = QC_XmR$data, method = "XmR")
 #'    MEAN <- QC_Stats$mean
 #'    SIGMA <- QC_Stats$sigma
@@ -187,8 +193,6 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'    QC_Vs <- QC_Violations(data  = QC_xBar.rBar,
 #'                           formula = value~sub_group,
 #'                           method = "xBar.rBar")
-#'    QC_Vs$Violation_Result <- ordered(QC_Vs$Violation_Result,
-#'                                      levels=FacetNames)
 #'    QC_Stats <- QC_Lines(data  = QC_xBar.rBar,
 #'                         formula = value~sub_group,
 #'                         method = "xBar.rBar")
@@ -200,6 +204,9 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'                  "Violation 1 Sigma",
 #'                  "Violation 2 Sigma",
 #'                  "Violation 3 Sigma")
+#'
+#'  QC_Vs$Violation_Result <- ordered(QC_Vs$Violation_Result,
+#'                                      levels=FacetNames)
 #'
 #'  QC_Stats_df <- data.frame(
 #'    Violation_Result = factor(x = FacetNames, levels = FacetNames),
