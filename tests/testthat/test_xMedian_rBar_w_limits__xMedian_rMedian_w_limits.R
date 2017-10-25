@@ -207,6 +207,8 @@ testthat::test_that("QC_ylines method = rBar works", {
 
 xMedian_rBar_QC_ylines_test <- rbind(W232_missing_formula_DF_rBar,
                              W232_missing_V_G_DF_rBar)
+
+#with(xMedian_rBar_QC_ylines_test, (xMedian_rBar_UCL-xMedian_Bar)/3)
 #write.csv(x = xMedian_rBar_QC_ylines_test, file = "tests/testthat/xMedian_rBar_QC_ylines_results.csv", quote = F, row.names = F)
 xMedian_rMedian_QC_ylines_results <- read.csv(file = "xMedian_rBar_QC_ylines_results.csv", header=TRUE)
 

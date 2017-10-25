@@ -22,7 +22,6 @@
   # Report Lines for XmR chart
 
 
-
 ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
   switch(method,
          "mR" = {
@@ -31,32 +30,48 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
                 mR = mR, mR_UCL = mR_UCL,
                 xBar_one_LCL = xBar_one_LCL,
                 mean = mean,
-                xBar_one_UCL = xBar_one_UCL)
-                },
+                xBar_one_UCL = xBar_one_UCL
+                )},
          "XmR" = {
            QC_indv_functions <- list(
                 xBar_one_LCL = xBar_one_LCL,
                 mean = mean,
                 xBar_one_UCL = xBar_one_UCL,
-                mR_LCL = ZERO,mR = mR, mR_UCL = mR_UCL)
-                 },
+                mR_LCL = ZERO,mR = mR, mR_UCL = mR_UCL,
+                sigma = function(y=y, n=n, na.rm=na.rm){
+                         sigma_est_symetric(y = y, na.rm = na.rm,
+                         center = mean,
+                         threesigma = xBar_one_UCL)
+                    }
+                 )},
          "c" = {
            QC_indv_functions <- list(
                 cBar_LCL = cBar_LCL,
                 cBar = mean,
-                cBar_UCL = cBar_UCL)
-               },
+                cBar_UCL = cBar_UCL,
+                sigma = function(y=y, n=n, na.rm=na.rm){
+                  sigma_est_symetric(y = y, na.rm = na.rm, n=n,
+                                     center = mean,
+                                     threesigma = cBar_UCL)
+                }
+              )},
          "np" = {
            QC_indv_functions <- list(
              npBar_LCL = npBar_LCL,
              npBar = npBar,
-             npBar_UCL = npBar_UCL)
-         },
+             npBar_UCL = npBar_UCL,
+             sigma = function(y=y, n=n, na.rm=na.rm){
+               sigma_est_symetric(y = y, na.rm = na.rm, n=n,
+                                  center = npBar,
+                                  threesigma = npBar_UCL)
+             }
+           )},
          "p" = {
             p_chart_data <- data.frame(
                        pBar_LCL = pBar_LCL(y, n, na.rm=na.rm),
                        pBar = pBar(y, n, na.rm=na.rm),
                        pBar_UCL = pBar_UCL(y, n, na.rm=na.rm)
+                      # Does not make sense to calculate a chart sigma here
                        )
              return(p_chart_data)
          },
@@ -65,7 +80,8 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
              uBar_LCL = uBar_LCL(y, n, na.rm=na.rm ),
              uBar = uBar(y, n, na.rm=na.rm),
              uBar_UCL = uBar_UCL(y, n, na.rm=na.rm)
-           )
+             # Does not make sense to calculate a chart sigma here
+             )
            return(u_chart_data)
          }
         )
@@ -211,10 +227,6 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
 #'  QC_Lines(data = bin_data$Blemish_Rate,
 #'         n = bin_data$Num_Items_Inspected, method="u")
 
-
-
-
-
 QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL, method="xBar.rBar", na.rm = FALSE){
   switch(method,
          "mR" = {
@@ -270,32 +282,73 @@ QC_Lines <- function(data=NULL, value=NULL, grouping=NULL, formula=NULL, n=NULL,
                          d2_N = NFUN,
                          xBar_rBar_LCL = xBar_rBar_LCL,
                          xBar_Bar = xBar_Bar,
-                         xBar_rBar_UCL = xBar_rBar_UCL)},
+                         xBar_rBar_UCL = xBar_rBar_UCL,
+                         sigma = function(data=data, value=value, grouping=grouping,
+                                           formula=formula, n=n){
+                            sigma_est_symetric_grouping(
+                              data=data, value=value, grouping=grouping,
+                              formula=formula, n=n,
+                              center = xBar_Bar,
+                              threesigma = xBar_rBar_UCL)}
+                         )
+           },
          "xBar.rMedian" = {
            Lines <- list(rMedian_LCL = rMedian_LCL, rMedian = rMedian,
                          rMedian_UCL = rMedian_UCL, d4_N = NFUN,
                          xBar_rMedian_LCL = xBar_rMedian_LCL,
                          xBar_Bar = xBar_Bar,
-                         xBar_rMedian_UCL = xBar_rMedian_UCL)},
+                         xBar_rMedian_UCL = xBar_rMedian_UCL,
+                         sigma = function(data=data, value=value, grouping=grouping,
+                                          formula=formula, n=n){
+                           sigma_est_symetric_grouping(
+                             data=data, value=value, grouping=grouping,
+                             formula=formula, n=n,
+                             center = xBar_Bar,
+                             threesigma = xBar_rMedian_UCL)})
+           },
          "xBar.sBar" = {
            Lines <- list(sBar_LCL = sBar_LCL,
                          sBar = sBar,
                          sBar_UCL = sBar_UCL, c4_N = NFUN,
                          xBar_sBar_LCL = xBar_sBar_LCL,
                          xBar_Bar = xBar_Bar,
-                         xBar_sBar_UCL = xBar_sBar_UCL)},
+                         xBar_sBar_UCL = xBar_sBar_UCL,
+                         sigma = function(data=data, value=value, grouping=grouping,
+                           formula=formula, n=n){
+                           sigma_est_symetric_grouping(
+                             data=data, value=value, grouping=grouping,
+                             formula=formula, n=n,
+                             center = xBar_Bar,
+                             threesigma = xBar_sBar_UCL)})
+                         },
          "xMedian.rBar" = {
            Lines <- list(rBar_LCL = rBar_LCL , rBar = rBar, rBar_UCL = rBar_UCL,
                          b2_N = NFUN,
                          xMedian_rBar_LCL = xMedian_rBar_LCL,
                          xMedian_Bar = xMedian_Bar,
-                         xMedian_rBar_UCL = xMedian_rBar_UCL)},
+                         xMedian_rBar_UCL = xMedian_rBar_UCL,
+                         sigma = function(data=data, value=value, grouping=grouping,
+                           formula=formula, n=n){
+                           sigma_est_symetric_grouping(
+                             data=data, value=value, grouping=grouping,
+                             formula=formula, n=n,
+                             center = xMedian_Bar,
+                             threesigma = xMedian_rBar_UCL)})
+                         },
          "xMedian.rMedian" = {
            Lines <- list(rMedian_LCL = rMedian_LCL, rMedian = rMedian,
                          rMedian_UCL = rMedian_UCL, b4_N = NFUN,
                          xMedian_rMedian_LCL = xMedian_rMedian_LCL,
                          xMedian_Bar = xMedian_Bar,
-                         xMedian_rMedian_UCL = xMedian_rMedian_UCL)},
+                         xMedian_rMedian_UCL = xMedian_rMedian_UCL,
+                         sigma = function(data=data, value=value, grouping=grouping,
+                                          formula=formula, n=n){
+                           sigma_est_symetric_grouping(
+                             data=data, value=value, grouping=grouping,
+                             formula=formula, n=n,
+                             center = xMedian_Bar,
+                             threesigma = xMedian_rMedian_UCL)})
+                         },
          "rBar" = {
            Lines <- list(N = NFUN, N = NFUN,
                          xBar_Bar = xBar_Bar,

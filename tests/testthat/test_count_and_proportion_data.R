@@ -1,3 +1,4 @@
+#require(testthat)
 # c-chart Checks ----------------------------------------------------------
 set.seed(5555)
 y <- rpois(30, 9)
@@ -31,12 +32,13 @@ testthat::test_that("np-chart functions", {
   expect_warning(npBar_UCL(p, n=10))
   expect_equal(npBar_LCL(p, n=30), 0, tolerance = .02, scale = 1)
   expect_equal(np_QC_lines_test,
-               c(0,6.1,12.7), tolerance = .042, scale = 1)
+               c(0,6.1,12.7, (12.7-6.1)/3), tolerance = .042, scale = 1)
   })
 
 
 
 # p-charts checks ----------------------------------------------------------------
+#"tests/testthat/"
 wheeler264 <- read.table(file = "wheeler_USPC_264.csv", header=T, sep=",")
  # wheeler264_test <- QC_Lines(data = wheeler264$Proportion_Incomplete,
  #                                n = wheeler264$Num_Items_in_Set,

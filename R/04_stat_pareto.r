@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
-                              compute_group = function(data, scales, cumsums=F, fill.bars=c("red", "white")){
+                              compute_group = function(data, scales, cumsums=F, bars.fill=c("red", "white")){
                               #print(data)
                               df <- data # copy the data
                               #print(str(scales$x$range$range))
@@ -34,7 +34,7 @@ Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
                                 return(df)
                               }
                               scales$x$range$range <- as.character(df$range) # reset the scale labels
-                              df$fill <- grDevices::colorRampPalette(fill.bars)(nrow(df)) # makes the prety color gradient in the bars
+                              df$fill <- grDevices::colorRampPalette(bars.fill)(nrow(df)) # makes the prety color gradient in the bars
                               #print(str(scales$x$range$range))
                               #print(df)
                               df # returns the data frame
@@ -46,16 +46,15 @@ Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
 #' @export
 #' @title Generate a Pareto Plot with ggplot
 #' @description stat function to creat ggplot Pareto chart
-#' #####NEED TO FILL THESE IN######
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
 #' @param group defines grouping for variable for pareto plot, default and suggested is 1.
-#' @param color.point color, used to define point color of cumulative percentage line
-#' @param size.point number, used to define point size of cumulative percentage line
-#' @param color.line color, used to define line color of cumulative percentage line
-#' @param size.line color, used to define line weight of cumulative percentage line
-#' @param fill.bars character vector length 2, start and end colors for pareto bars.
+#' @param point.color color, used to define point color of cumulative percentage line
+#' @param point.size number, used to define point size of cumulative percentage line
+#' @param line.color color, used to define line color of cumulative percentage line
+#' @param line.size color, used to define line weight of cumulative percentage line
+#' @param bars.fill character vector length 2, start and end colors for pareto bars.
 #'
 #' @return Pareto plot.
 #'
@@ -78,14 +77,13 @@ Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
 #'
 #'
 #' ggplot(df, aes(x=x, y=y)) +
-#'  Stat_pareto(color.point = "red",
-#'              size.point = 3,
-#'              color.line = "black",
+#'  stat_pareto(point.color = "red",
+#'              point.size = 3,
+#'              line.color = "black",
 #'              #size.line = 1,
-#'              fill.bars = c("blue", "orange"),
+#'              bars.fill = c("blue", "orange"),
 #'  )
-
-Stat_pareto <- function(mapping = NULL,
+stat_pareto <- function(mapping = NULL,
                     data = NULL,
                     geom = "point",
                     #yintercept = NULL,
@@ -94,11 +92,11 @@ Stat_pareto <- function(mapping = NULL,
                     inherit.aes = TRUE,
                     group = 1,
                     na.rm = FALSE,
-                    color.point="black",
-                    size.point=2,
-                    color.line="black",
-                    size.line=.5,
-                    fill.bars=c("red", "white"),
+                    point.color="black",
+                    point.size=2,
+                    line.color="black",
+                    line.size=.5,
+                    bars.fill=c("red", "white"),
                     ...) {
 
   Points <- ggplot2::layer( #take care of the points
@@ -110,8 +108,8 @@ Stat_pareto <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, cumsums = T,
-                  color = color.point,
-                  size = size.point, ...))
+                  color = point.color,
+                  size = point.size, ...))
 
   Line <- ggplot2::layer( # Take care of the lines connecting points
     stat = Stat_PARETO,
@@ -122,8 +120,8 @@ Stat_pareto <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, cumsums = T,
-                  color = color.line,
-                  size = size.line,
+                  color = line.color,
+                  size = line.size,
                    ...))
 
   # Takes care of the double axis
@@ -142,7 +140,7 @@ Stat_pareto <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, cumsums = F,
                   color = "black",
-                  fill.bars = fill.bars,
+                  bars.fill = bars.fill,
                   ...))
 
 

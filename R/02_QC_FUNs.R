@@ -19,6 +19,36 @@
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 
 # General Funs ------------------------------------------------------------
+sigma_est_symetric <-
+  function(y,
+           n = n,
+           na.rm = na.rm,
+           center,
+           threesigma) {
+    return(abs(center(y, na.rm = na.rm, n = n) - threesigma(y, na.rm = na.rm, n =
+                                                              n)) / 3)
+  }
+
+sigma_est_symetric_grouping <-
+  function(data = data,
+           value = value,
+           grouping = grouping,
+           formula = formula,
+           n = n,
+           center,
+           threesigma) {
+    return(abs(
+      center(
+        data = data, value = value,
+        grouping = grouping,formula = formula,
+        n = n) - threesigma(
+        data = data, value = value,
+        grouping = grouping, formula = formula,
+        n = n)
+             ) / 3)
+  }
+
+
 ZERO <- function(...){0}
 
 #' @export

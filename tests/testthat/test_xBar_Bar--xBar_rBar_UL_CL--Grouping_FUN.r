@@ -1,3 +1,5 @@
+#"tests/testthat/"
+
 # Setup ------------------------------------------------------------------
 Wheeler_43 <- read.table("Wheeler_USPC_43.csv", sep=",", header=T)
 Wheeler_43
@@ -94,6 +96,7 @@ Wheeler104_test <- as.data.frame.list(QC_Lines(Wheeler108, formula=value~Hour+Pr
   # rUCL = 18.03
   # xBar_LCL = 3.98
   # xBar_UCL = 15.50
+  # sigma = 1.9185
 
 Wheeler105_test <- as.data.frame.list(QC_Lines(Wheeler108, formula=value~Hour+Cavity, method = "xBar.rBar"))
   # n = 5
@@ -103,11 +106,14 @@ Wheeler105_test <- as.data.frame.list(QC_Lines(Wheeler108, formula=value~Hour+Ca
   # rUCL = 7.42
   # xBar_LCL = 7.71
   # xBar_UCL = 11.77
+  # sigma = 0.6753593
 
 Wheeler108_test <- plyr::ddply(Wheeler108,
                                .variables = c("Cavity"),
                                .fun = function(df) {
                                  QC_Lines(data = df, formula = value~Cavity+Hour)}  )
+#(Wheeler108_test$xBar_rBar_UCL - Wheeler108_test$xBar_Bar)/3 - Wheeler108_test$sigma
+
 # +=========+========+======+=====+=====+
 # |Cavity   | I      |II    |III  | IV  |
 # |n        | 5      |5     |5    | 5   |
@@ -117,12 +123,13 @@ Wheeler108_test <- plyr::ddply(Wheeler108,
 # |rUCL     | 6.98   |7.29  |8.35 |7.08 |
 # |xBar_LCL | 12.75  |6.98  |5.19 |5.93 |
 # |xBar_UCL | 16.55  |10.96 |9.75 |9.79 |
+# |sigma    | 0.634  |0.663 |0.76 |0.64 |
 # |Matches  | YES    |YES   |YES  |YES  |
 # +=========+========+======+=====+=====+
 
-# write.csv(x = Wheeler104_test, file = "Wheeler104_results.csv")
-# write.csv(x = Wheeler105_test, file = "Wheeler105_results.csv")
-# write.csv(x = Wheeler108_test[,-1], file = "Wheeler108_results.csv")
+ write.csv(x = Wheeler104_test, file = "Wheeler104_results.csv")
+ write.csv(x = Wheeler105_test, file = "Wheeler105_results.csv")
+ write.csv(x = Wheeler108_test[,-1], file = "Wheeler108_results.csv")
 
 #Wheeler104_test <-read.csv(file="Wheeler104_test.csv")
 #Wheeler105_test <- read.csv(file="Wheeler105_test.csv")

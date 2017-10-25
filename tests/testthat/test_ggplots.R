@@ -26,8 +26,8 @@
 #   stat_QC(method="p")
 #
 # ggplot(data = wheeler264, aes(x=Day, y=Proportion_Incomplete, n=Num_Items_in_Set)) +
-#   geom_point() + geom_line() +
-#   stat_pchart()
+#   geom_point() + geom_line() + stat_QC(method="p")
+#
 
 # U-CHART ----------------------------------------------------------------
 # |CHECK-PLOT| u-chart ggplot Checks
