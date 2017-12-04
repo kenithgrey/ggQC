@@ -25,7 +25,10 @@ Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
                               #print(data)
                               df <- data # copy the data
                               #print(str(scales$x$range$range))
-                              df$range <- strsplit(scales$x$range$range, " ") #get the current listing of the X axis
+                              #print(scales$x$range$range)
+                              #print(unlist(scales$x$range$range))
+                              #df$range <- strsplit(scales$x$range$range, " ") #get the current listing of the X axis
+                              df$range <- scales$x$range$range
                               df<-df[order(df$y, decreasing = T),] # Reorder the data frame acording to the value of Y
                               df$x <- seq(1:nrow(df)) # resequence the x labeles
                               if (cumsums) { # Bars or Points if Points
