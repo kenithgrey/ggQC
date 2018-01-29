@@ -106,11 +106,11 @@ based on the following 4 rules:
     )
 
 
-# Render QC Viloation Plot ------------------------------------------------------
+# Render QC Violation Plot ------------------------------------------------------
 
-   ggplot(QC_XmR, aes(x = Run_Order, y = data)) +
+   EX1 <- ggplot(QC_XmR, aes(x = Run_Order, y = data)) +
      stat_qc_violations(method = "XmR")   #Makes facet graph with viloations
-
+   #EX1
 #######################################
 #  Example 2: Xbar Check Violations   #
 #######################################
@@ -134,13 +134,13 @@ based on the following 4 rules:
 colnames(QC_xBar.rBar) <- c("sub_group","sub_class", "value")
 
 # Render QC Viloation Plot --------------------------------------------------
-    ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
+    EX2 <- ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
       stat_qc_violations(method = "xBar.rBar")
       #stat_qc_violations(method="xBar.rMedian")
       #stat_qc_violations(method="xBar.sBar")
       #stat_qc_violations(method="xMedian.rBar")
       #stat_qc_violations(method="xMedian.rMedian")
-
+   #EX2
 #######################################################
 # Complete User Control - Bypass stat_qc_violation   #
 #######################################################
