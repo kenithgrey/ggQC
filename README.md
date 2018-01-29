@@ -43,10 +43,12 @@ Installation
 Overview
 ========
 
--   QC\_Lines() : Output quality control chart data in table format
--   stat\_QC() : ggplot stat to generate control charts supported methods
+-   QC\_Lines(): Output quality control chart data in table format
+-   QC\_Violations(): Check for QC Violations
+-   stat\_QC(): ggplot stat to generate control charts supported methods
 -   stat\_mR(): ggplot stat to generate mR chart.
 -   stat\_QC\_labels(): ggplot stat to write text labels on control chart center line and limits.
+-   stat\_qc\_violations(): ggplot stat to examine QC Violations.
 -   30 plus functions to calculate specific control chart constants. (recommend using QC\_Lines())
 
 More Examples

@@ -49,11 +49,12 @@ XmR_Plot
   * github: devtools::install_github("kenithgrey/ggQC")
 
 #Overview#
-
- * QC_Lines() : Output quality control chart data in table format
- * stat_QC()  : ggplot stat to generate control charts supported methods
+ * QC_Lines(): Output quality control chart data in table format
+ * QC_Violations(): Check for QC Violations
+ * stat_QC(): ggplot stat to generate control charts supported methods
  * stat_mR(): ggplot stat to generate mR chart.
  * stat_QC_labels(): ggplot stat to write text labels on control chart center line and limits. 
+ * stat_qc_violations(): ggplot stat to examine QC Violations. 
  * 30 plus functions to calculate specific control chart constants. (recommend using QC_Lines()) 
  
 #More Examples#

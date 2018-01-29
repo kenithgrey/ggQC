@@ -4,3 +4,7 @@
 ^.*\.md$
 ^README\.Rmd$
 ^README-.*\.png$
+^news\.md$
+^news\.Rmd$
+^revdep/$
+^revdep$
