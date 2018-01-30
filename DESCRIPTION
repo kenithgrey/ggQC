@@ -13,12 +13,12 @@ LazyData: true
 Suggests: testthat,
     gridExtra,
     knitr,
-    rmarkdown
+    rmarkdown,
+    reshape2,
+    plyr
 RoxygenNote: 6.0.1
 Imports: ggplot2,
-    reshape2,
     stats,
-    plyr,
     dplyr,
     tidyr
 VignetteBuilder: knitr
