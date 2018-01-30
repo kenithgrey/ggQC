@@ -63,9 +63,9 @@ xMedian.rMedian
 
 \item{point.color}{string, color of points on charts (e.g., "black")}
 
-\item{violation_point.color}{string, color of viloation points on charts (e.g., "red")}
+\item{violation_point.color}{string, color of violation points on charts (e.g., "red")}
 
-\item{rule.color}{string, color or horizontal rules indicateing distribution center and sigma levels}
+\item{rule.color}{string, color or horizontal rules indicating distribution center and sigma levels}
 
 \item{line.color}{string, color of lines connecting points}
 
@@ -109,7 +109,7 @@ based on the following 4 rules:
 # Render QC Violation Plot ------------------------------------------------------
 
    EX1 <- ggplot(QC_XmR, aes(x = Run_Order, y = data)) +
-     stat_qc_violations(method = "XmR")   #Makes facet graph with viloations
+     stat_qc_violations(method = "XmR")   #Makes facet graph with violations
    #EX1
 #######################################
 #  Example 2: Xbar Check Violations   #
@@ -133,7 +133,7 @@ based on the following 4 rules:
 
 colnames(QC_xBar.rBar) <- c("sub_group","sub_class", "value")
 
-# Render QC Viloation Plot --------------------------------------------------
+# Render QC Violation Plot --------------------------------------------------
     EX2 <- ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
       stat_qc_violations(method = "xBar.rBar")
       #stat_qc_violations(method="xBar.rMedian")

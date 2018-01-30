@@ -2,7 +2,7 @@
 % Please edit documentation in R/04_stat_qc.R
 \name{stat_QC_labels}
 \alias{stat_QC_labels}
-\title{Write QC Line Lables to ggplot QC Charts.}
+\title{Write QC Line Labels to ggplot QC Charts.}
 \usage{
 stat_QC_labels(mapping = NULL, data = NULL, geom = "label",
   position = "identity", na.rm = FALSE, show.legend = NA,
@@ -78,7 +78,7 @@ to the paired geom/stat.}
 data need to produce the mR plot in ggplot.
 }
 \description{
-Write QC line lables to ggplot QC Charts. Useful if you want
+Write QC line labels to ggplot QC Charts. Useful if you want
 to see the value of the center line and QC limits. see method argument
 for methods supported.
 }

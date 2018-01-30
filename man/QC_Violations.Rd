@@ -46,7 +46,7 @@ a dataframe, with the following columns
     \item \bold{Violation 2 Sigma:} 2 or more consecutive, same-side points exceeding 2 sigma
     \item \bold{Violation 3 Sigma:} any points exceeding 3 sigma
     }
-\item \bold{Index}: boolean, does the datapoint violate the rule?
+\item \bold{Index}: boolean, does the data point violate the rule?
 }
 }
 \description{

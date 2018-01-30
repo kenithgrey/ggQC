@@ -68,7 +68,7 @@ to the paired geom/stat.}
 Pareto plot.
 }
 \description{
-stat function to creat ggplot Pareto chart
+stat function to create ggplot Pareto chart
 }
 \examples{
 ############################
