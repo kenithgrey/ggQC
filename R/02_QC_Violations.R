@@ -144,7 +144,7 @@ Find_Run_Length_Violations <- function(Rule, Test_df) #calls out to RuleSet df
 #'     \item \bold{Violation 2 Sigma:} 2 or more consecutive, same-side points exceeding 2 sigma
 #'     \item \bold{Violation 3 Sigma:} any points exceeding 3 sigma
 #'     }
-#' \item \bold{Index}: boolean, does the datapoint violate the rule?
+#' \item \bold{Index}: boolean, does the data point violate the rule?
 #' }
 #' @note If using the \bold{formula} argument do not use \bold{value} and \bold{group} arguments.
 #' @references Wheeler, DJ, and DS Chambers. Understanding Statistical Process Control, 2nd Ed. Knoxville, TN: SPC, 1992. Print.

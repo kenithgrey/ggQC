@@ -297,8 +297,8 @@ stat_QC <- function(mapping = NULL,
 
 
 #' @export
-#' @title Write QC Line Lables to ggplot QC Charts.
-#' @description Write QC line lables to ggplot QC Charts. Useful if you want
+#' @title Write QC Line Labels to ggplot QC Charts.
+#' @description Write QC line labels to ggplot QC Charts. Useful if you want
 #' to see the value of the center line and QC limits. see method argument
 #' for methods supported.
 #' @inheritParams ggplot2::stat_identity

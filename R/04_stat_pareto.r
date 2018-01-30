@@ -48,7 +48,7 @@ Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
 
 #' @export
 #' @title Generate a Pareto Plot with ggplot
-#' @description stat function to creat ggplot Pareto chart
+#' @description stat function to create ggplot Pareto chart
 #' @inheritParams ggplot2::stat_identity
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.

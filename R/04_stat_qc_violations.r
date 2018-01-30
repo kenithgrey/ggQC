@@ -110,10 +110,10 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #' @param geom_points boolean, draw points
 #' @param point.size number, size of points on chart
 #' @param point.color string, color of points on charts (e.g., "black")
-#' @param violation_point.color string, color of viloation points on charts (e.g., "red")
+#' @param violation_point.color string, color of violation points on charts (e.g., "red")
 #' @param geom_line boolean, draw line
 #' @param line.color string, color of lines connecting points
-#' @param rule.color string, color or horizontal rules indicateing distribution center and sigma levels
+#' @param rule.color string, color or horizontal rules indicating distribution center and sigma levels
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
 #' @inheritParams ggplot2::stat_identity
@@ -142,7 +142,7 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'# Render QC Violation Plot ------------------------------------------------------
 #'
 #'    EX1 <- ggplot(QC_XmR, aes(x = Run_Order, y = data)) +
-#'      stat_qc_violations(method = "XmR")   #Makes facet graph with viloations
+#'      stat_qc_violations(method = "XmR")   #Makes facet graph with violations
 #'    #EX1
 #' #######################################
 #' #  Example 2: Xbar Check Violations   #
@@ -166,7 +166,7 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'
 #' colnames(QC_xBar.rBar) <- c("sub_group","sub_class", "value")
 #'
-#'# Render QC Viloation Plot --------------------------------------------------
+#'# Render QC Violation Plot --------------------------------------------------
 #'     EX2 <- ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
 #'       stat_qc_violations(method = "xBar.rBar")
 #'       #stat_qc_violations(method="xBar.rMedian")
