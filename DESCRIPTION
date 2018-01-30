@@ -1,6 +1,6 @@
 Package: ggQC
 Type: Package
-Title: Quality Control Charts for ggplot
+Title: Quality Control Charts for GGplot
 Version: 0.0.2
 Author: Kenith Grey
 Maintainer: Kenith Grey <kenithgrey@r-bar.net>
