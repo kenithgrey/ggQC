@@ -26,7 +26,7 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
                                    point.color = point.color,
                                    violation_point.color = violation_point.color,
                                    rule.color = rule.color){
-
+        #print(head(data))
         df <- data # copy the data
 
             if (method == "XmR"){
@@ -66,11 +66,20 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 
         #Setup the color display for points or lines
         if (callFrom == "SigmaLines"){
+          #print(head(df3))
+          df3[df3$PANEL == "Violation Same Side", ]$SigmaLines <- 0
+          df3[df3$PANEL == "Violation 1 Sigma", ]$SigmaLines <- 1
+          df3[df3$PANEL == "Violation 2 Sigma", ]$SigmaLines <- 2
+          df3[df3$PANEL == "Violation 3 Sigma", ]$SigmaLines <- 3
+
+
           df3 <- df3[1:3,]
+
+          print(head(df3))
           df3$colour <- rule.color
           df3$yintercept <- c(centerLine,
-                              centerLine + (as.numeric(df3$PANEL[1])-1)*Sigma,
-                              centerLine - (as.numeric(df3$PANEL[1])-1)*Sigma)
+                              centerLine + df3$SigmaLines[1]*Sigma,
+                              centerLine - df3$SigmaLines[1]*Sigma)
           }else if(callFrom == "Points"){
           df3$colour <- ifelse(df3$Violation == TRUE, violation_point.color, point.color)
 
@@ -244,6 +253,7 @@ stat_qc_violations <- function(mapping = NULL,
                     violation_point.color = "red",
 
                     rule.color = "darkgreen",
+                    show.facets = c(1:4),
 
                     line.color=NULL,
                     # size.line=.5,
@@ -289,7 +299,7 @@ SigmaLines <- ggplot2::layer( #take care of the points
     params = list(method=method, callFrom="SigmaLines",
                   rule.color = rule.color, ...))
 
-Facet <- facet_qc_violations(method=method)
+Facet <- facet_qc_violations(method=method, show.facets=show.facets)
 
 
 if(all(geom_line, geom_points)){
