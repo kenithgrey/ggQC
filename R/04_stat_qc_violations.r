@@ -67,19 +67,29 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
         #Setup the color display for points or lines
         if (callFrom == "SigmaLines"){
           #print(head(df3))
-          df3[df3$PANEL == "Violation Same Side", ]$SigmaLines <- 0
-          df3[df3$PANEL == "Violation 1 Sigma", ]$SigmaLines <- 1
-          df3[df3$PANEL == "Violation 2 Sigma", ]$SigmaLines <- 2
-          df3[df3$PANEL == "Violation 3 Sigma", ]$SigmaLines <- 3
+          df3$SigmaLines <- NA
+          #print(df3)
+          if(nrow(df3) > 0){
+            if(df3$Violation_Result[1] == "Violation Same Side"){
+              df3[df3$Violation_Result == "Violation Same Side", ]$SigmaLines <- 0
+            }else if(df3$Violation_Result[1] == "Violation 1 Sigma"){
+              df3[df3$Violation_Result == "Violation 1 Sigma", ]$SigmaLines <- 1
+            }else if(df3$Violation_Result[1] == "Violation 2 Sigma"){
+              df3[df3$Violation_Result == "Violation 2 Sigma", ]$SigmaLines <- 2
+            }else if(df3$Violation_Result[1] == "Violation 3 Sigma"){
+              df3[df3$Violation_Result == "Violation 3 Sigma", ]$SigmaLines <- 3
+            }
+
 
 
           df3 <- df3[1:3,]
 
-          print(head(df3))
           df3$colour <- rule.color
           df3$yintercept <- c(centerLine,
                               centerLine + df3$SigmaLines[1]*Sigma,
                               centerLine - df3$SigmaLines[1]*Sigma)
+          }else{return(NULL)}
+
           }else if(callFrom == "Points"){
           df3$colour <- ifelse(df3$Violation == TRUE, violation_point.color, point.color)
 

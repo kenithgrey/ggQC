@@ -36,7 +36,7 @@ Facet_QC_VIOLATIONS <-
         # Add scale identification
         layout$SCALE_X <- if (params$free$x) id else 1L
         layout$SCALE_Y <- if (params$free$y) id else 1L
-        print(cbind.data.frame(layout, .violations = layout$PANEL))
+        #print(cbind.data.frame(layout, .violations = layout$PANEL))
         #str(layout)
         cbind.data.frame(layout, .violations = layout$PANEL)
       },
