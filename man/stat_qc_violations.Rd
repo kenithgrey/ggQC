@@ -69,6 +69,8 @@ xMedian.rMedian
 
 \item{rule.color}{string, color or horizontal rules indicating distribution center and sigma levels}
 
+\item{show.facets}{vector, selects violation facet 1 through 4. eg., c(1:4), c(1,4)}
+
 \item{line.color}{string, color of lines connecting points}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
@@ -143,6 +145,18 @@ colnames(QC_xBar.rBar) <- c("sub_group","sub_class", "value")
       #stat_qc_violations(method="xMedian.rBar")
       #stat_qc_violations(method="xMedian.rMedian")
    #EX2
+
+#######################################
+#  Example 3: Selected Facets         #
+#######################################
+
+# Render QC Violation Plot --------------------------------------------------
+    EX3 <- ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
+      stat_qc_violations(method = "xBar.rBar", show.facets = c(4))
+
+   #EX3
+
+
 #######################################################
 # Complete User Control - Bypass stat_qc_violation   #
 #######################################################

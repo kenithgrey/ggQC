@@ -8,3 +8,4 @@
 ^news\.Rmd$
 ^revdep/$
 ^revdep$
+^Build-Ignore

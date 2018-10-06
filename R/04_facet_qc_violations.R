@@ -1,6 +1,6 @@
 Facet_QC_VIOLATIONS <-
   ggplot2::ggproto("Facet_QC_VIOLATIONS", ggplot2::FacetWrap,
-                    compute_layout = function(data, params, method=method, show.facets=show.facets) {
+                    compute_layout = function(data, params, method=method) {
 
                 ### Test Area ###
                 #print(params)
@@ -14,7 +14,16 @@ Facet_QC_VIOLATIONS <-
                 #print(head(df))
                 #df$Index <- 1:nrow(df)
 
-        id <- factor(unique(RuleSet$Alt_Description))
+
+    if(any(!params$show.facets %in% 1:4)){
+      stop("Error: show.facets must be vector with values between 1:4")
+    }
+    if(any(params$show.facets %in% 1:4)){
+      if(any(duplicated(params$show.facets)))
+        stop("Error: show.facets must be a unique integer vector between 1:4")
+    }
+
+    id <- factor(unique(RuleSet$Alt_Description))
         #SHOW.FACETS <- show.facets
         layout <- data.frame(PANEL = factor(id,
                    levels = c("Violation Same Side",
