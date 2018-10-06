@@ -1,5 +1,5 @@
 ##############################
-# Copyright 2017 Kenith Grey #
+# Copyright 2018 Kenith Grey #
 ##############################
 
 # Copyright Notice --------------------------------------------------------
@@ -19,13 +19,38 @@
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 
 STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
-  compute_group = function(data, scales, n=NULL, digits=1, method=NULL, draw.line=draw.line){
-     temp <- aggregate(data=data, y~x, mean)
+  compute_group = function(data, scales, n=NULL, digits=1,
+                           method=NULL, draw.line=draw.line,
+                           physical.limits=c(NA,NA)){
+
+    temp <- aggregate(data=data, y~x, mean)
      #print(temp)
 
      if(method %in% c("mR", "XmR", "c")){
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
+
+        if(!all(is.na(physical.limits))){
+          if(!any(is.na(physical.limits))){
+            if(physical.limits[1] > dflines[1]){
+              dflines[1] <- physical.limits[1]
+            }
+
+            if(physical.limits[2] < dflines[3]){
+              dflines[3] <- physical.limits[2]
+            }
+
+          }else if(!is.na(physical.limits[1])){
+             if(physical.limits[1] > dflines[1]){
+             dflines[1] <- physical.limits[1]
+             }
+          }else if(!is.na(physical.limits[2])){
+            if(physical.limits[2] < dflines[3]){
+              dflines[3] <- physical.limits[2]
+            }
+          }
+       }
+
        limits_df <- data.frame(yintercept = t(dflines)[qcline])
 
      }else if(method == "np"){
@@ -73,6 +98,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        return(uchart_data)
 
      }else{
+       #Studentized charts Xbar-Rbar etc.
        qcline <- if(draw.line == "center") c(6) else c(5,7)
        dflines <- QC_Lines(data = data, value = "y", grouping = "x", n=n, method = method)
        limits_df <- data.frame(yintercept = t(dflines[,qcline]))
@@ -248,7 +274,8 @@ stat_QC <- function(mapping = NULL,
                     n=NULL,
                     #digits=1,
                     method="xBar.rBar",
-                    color.qc_limits = "red", color.qc_center = "green", ...) {
+                    color.qc_limits = "red", color.qc_center = "green",
+                    physical.limits=c(NA,NA), ...) {
 
   if(method %in% c("p", "u")){
     Limits <- ggplot2::layer(
@@ -257,7 +284,8 @@ stat_QC <- function(mapping = NULL,
       position = position, show.legend = show.legend,
       inherit.aes = inherit.aes,
       params = list(na.rm = na.rm, n=n, digits=1, method=method,
-                    color= color.qc_limits, direction="vh", draw.line = "limit",
+                    color= color.qc_limits, direction="vh",
+                    draw.line = "limit",
                     ...)
     )
 
@@ -278,7 +306,8 @@ stat_QC <- function(mapping = NULL,
     geom = geom, position = position, show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n, digits=1, method=method,
-                  color= color.qc_limits, draw.line = "limit", ...)
+                  color= color.qc_limits, draw.line = "limit",
+                  physical.limits=physical.limits, ...)
   )
 
   Centerline <- ggplot2::layer(
@@ -287,7 +316,8 @@ stat_QC <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n,
                   digits=1, method=method,
-                  color=color.qc_center, draw.line = "center", ...)
+                  color=color.qc_center, draw.line = "center",
+                  physical.limits=c(NA,NA), ...)
   )
   }
 
