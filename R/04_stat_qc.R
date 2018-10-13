@@ -101,14 +101,49 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        #Studentized charts Xbar-Rbar etc.
        qcline <- if(draw.line == "center") c(6) else c(5,7)
        dflines <- QC_Lines(data = data, value = "y", grouping = "x", n=n, method = method)
-       limits_df <- data.frame(yintercept = t(dflines[,qcline]))
+       limits_txt_lbl <- c("LCL", "UCL")
 
+       if(!all(is.na(physical.limits))){
+         if(!any(is.na(physical.limits))){
+           if(physical.limits[1] > dflines[5]){
+             dflines[5] <- physical.limits[1]
+             limits_txt_lbl <- c("LB", "UCL")
+           }
+           if(physical.limits[2] < dflines[7]){
+             dflines[7] <- physical.limits[2]
+             limits_txt_lbl <- c("LCL", "UB")
+           }
+         }else if(!is.na(physical.limits[1])){
+           if(physical.limits[1] > dflines[5]){
+             dflines[5] <- physical.limits[1]
+             limits_txt_lbl <- c("LB", "UCL")
+           }
+         }else if(!is.na(physical.limits[2])){
+           if(physical.limits[2] < dflines[7]){
+             dflines[7] <- physical.limits[2]
+             limits_txt_lbl <- c("LCL", "UB")
+           }
+         }
+       }
+       limits_df <- data.frame(yintercept = t(dflines[,qcline]))
      }
-     #print(limits_df)
-     limits_df$y = limits_df$yintercept
-     limits_df$x = Inf
-     limits_df$label = round(limits_df$yintercept,digits)
-     #print(limits_df)
+
+
+     limits_df$y <- limits_df$yintercept
+     limits_df$x <- Inf
+     limits_df$label <- paste0(round(limits_df$yintercept,digits))
+     limits_df$hjust <- 1.1
+
+
+     if(!any(qcline %in% c(1,6))){
+       limits_df_txt_lbl <- limits_df
+       limits_df_txt_lbl$x <- -Inf
+       limits_df_txt_lbl$label <- limits_txt_lbl
+       limits_df_txt_lbl$hjust <- 0
+       limits_df <- rbind(limits_df_txt_lbl, limits_df)
+      #print(limits_df)
+       }
+
      #print(data$group)
      limits_df
 
@@ -424,7 +459,7 @@ stat_QC_labels <- function(mapping = NULL,
                            inherit.aes = TRUE,
                            n=NULL,digits=1, method="xBar.rBar",
                            color.qc_limits = "red", color.qc_center = "black",
-                           text.size=3,
+                           text.size=3, physical.limits=c(NA,NA),
                            ...) {
   Center <- ggplot2::layer(
     stat = STAT_QC,
@@ -434,10 +469,10 @@ stat_QC_labels <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, hjust=1.1,
+    params = list(na.rm = na.rm, #hjust=0, #1.1,
                   vjust=.5, size=text.size,n=n,
                   digits=digits,method=method, color=color.qc_center,
-                  draw.line = "center", ...)
+                  draw.line = "center",...)
   )
 
   Limits <- ggplot2::layer(
@@ -448,10 +483,11 @@ stat_QC_labels <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, hjust=1.1,
+    params = list(na.rm = na.rm, #hjust=0, #1.1,
                   vjust=.5, size=text.size,n=n,
                   digits=digits,method=method, color=color.qc_limits,
-                  draw.line = "limit",...)
+                  draw.line = "limit", physical.limits=physical.limits,
+                  ...)
   )
 return(list(Center, Limits))
 }
