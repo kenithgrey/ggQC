@@ -29,29 +29,36 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
      if(method %in% c("mR", "XmR", "c")){
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
+       limits_txt_lbl <- c("LCL", "UCL")
 
         if(!all(is.na(physical.limits))){
           if(!any(is.na(physical.limits))){
             if(physical.limits[1] > dflines[1]){
               dflines[1] <- physical.limits[1]
+              limits_txt_lbl <- c("LB", "UCL")
             }
 
             if(physical.limits[2] < dflines[3]){
               dflines[3] <- physical.limits[2]
+              limits_txt_lbl <- c("LCL", "UB")
             }
 
           }else if(!is.na(physical.limits[1])){
              if(physical.limits[1] > dflines[1]){
              dflines[1] <- physical.limits[1]
+             limits_txt_lbl <- c("LB", "UCL")
              }
           }else if(!is.na(physical.limits[2])){
             if(physical.limits[2] < dflines[3]){
               dflines[3] <- physical.limits[2]
+              limits_txt_lbl <- c("LCL", "UB")
             }
           }
        }
 
        limits_df <- data.frame(yintercept = t(dflines)[qcline])
+
+
 
      }else if(method == "np"){
        if (is.null(n)){
@@ -128,6 +135,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        limits_df <- data.frame(yintercept = t(dflines[,qcline]))
      }
 
+    #print(qcline)
 
      limits_df$y <- limits_df$yintercept
      limits_df$x <- Inf
@@ -135,12 +143,14 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
      limits_df$hjust <- 1.1
 
 
-     if(!any(qcline %in% c(1,6))){
+     if(!any(qcline %in% c(2,6))){
+       #print("hello")
        limits_df_txt_lbl <- limits_df
        limits_df_txt_lbl$x <- -Inf
        limits_df_txt_lbl$label <- limits_txt_lbl
        limits_df_txt_lbl$hjust <- 0
        limits_df <- rbind(limits_df_txt_lbl, limits_df)
+       #print(limits_df)
       #print(limits_df)
        }
 
