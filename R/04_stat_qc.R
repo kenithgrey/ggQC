@@ -29,16 +29,20 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
      if(method %in% c("mR", "XmR", "c")){
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
+       print(physical.limits)
        limits_txt_lbl <- c("LCL", "UCL")
 
-        if(!all(is.na(physical.limits))){
+        if(!all(is.na(physical.limits)) & method %in% c("XmR", "c")){
           if(!any(is.na(physical.limits))){
-            if(physical.limits[1] > dflines[1]){
+
+            if(physical.limits[1] > dflines[1] & physical.limits[2] < dflines[3]){
+              dflines[1] <- physical.limits[1]
+              dflines[3] <- physical.limits[2]
+              limits_txt_lbl <- c("LB", "UB")
+            }else if(physical.limits[1] > dflines[1]){
               dflines[1] <- physical.limits[1]
               limits_txt_lbl <- c("LB", "UCL")
-            }
-
-            if(physical.limits[2] < dflines[3]){
+            }else if(physical.limits[2] < dflines[3]){
               dflines[3] <- physical.limits[2]
               limits_txt_lbl <- c("LCL", "UB")
             }
@@ -55,9 +59,9 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
             }
           }
        }
-
+       print(dflines)
        limits_df <- data.frame(yintercept = t(dflines)[qcline])
-
+       print(limits_df)
 
 
      }else if(method == "np"){
@@ -110,13 +114,17 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        dflines <- QC_Lines(data = data, value = "y", grouping = "x", n=n, method = method)
        limits_txt_lbl <- c("LCL", "UCL")
 
-       if(!all(is.na(physical.limits))){
+       if(!all(is.na(physical.limits)) & !method %in% c("rBar", "rMedian", "sBar")){
          if(!any(is.na(physical.limits))){
-           if(physical.limits[1] > dflines[5]){
+
+           if(physical.limits[1] > dflines[5] & physical.limits[2] < dflines[7]){
+             dflines[5] <- physical.limits[1]
+             dflines[7] <- physical.limits[2]
+             limits_txt_lbl <- c("LB", "UB")
+           }else if(physical.limits[1] > dflines[5]){
              dflines[5] <- physical.limits[1]
              limits_txt_lbl <- c("LB", "UCL")
-           }
-           if(physical.limits[2] < dflines[7]){
+           }else if(physical.limits[2] < dflines[7]){
              dflines[7] <- physical.limits[2]
              limits_txt_lbl <- c("LCL", "UB")
            }
@@ -190,6 +198,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #'   \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
+#' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
 #' @param color.qc_center color, used to colorize the plot's center line.
 #' @return data need to produce the mR plot in ggplot.
 #' @examples
@@ -395,6 +404,7 @@ stat_QC <- function(mapping = NULL,
 #' \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
+#' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
 #' @param color.qc_center color, used to colorize the plot's center line.
 #' @return data need to produce the mR plot in ggplot.
 #' @examples

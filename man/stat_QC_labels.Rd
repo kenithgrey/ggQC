@@ -8,7 +8,7 @@ stat_QC_labels(mapping = NULL, data = NULL, geom = "label",
   position = "identity", na.rm = FALSE, show.legend = NA,
   inherit.aes = TRUE, n = NULL, digits = 1, method = "xBar.rBar",
   color.qc_limits = "red", color.qc_center = "black", text.size = 3,
-  ...)
+  physical.limits = c(NA, NA), ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -71,6 +71,8 @@ xMedian.rMedian
 \item{color.qc_center}{color, used to colorize the plot's center line.}
 
 \item{text.size}{number, size of the text label}
+
+\item{physical.limits}{vector, specify lower phsical boundry and upper physical boundry}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
