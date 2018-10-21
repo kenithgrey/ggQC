@@ -22,14 +22,14 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
   compute_group = function(data, scales, n=NULL, digits=1,
                            method=NULL, draw.line=draw.line,
                            physical.limits=c(NA,NA)){
-
+    #print(scales)
     temp <- aggregate(data=data, y~x, mean)
      #print(temp)
 
      if(method %in% c("mR", "XmR", "c")){
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
-       print(physical.limits)
+       #print(physical.limits)
        limits_txt_lbl <- c("LCL", "UCL")
 
         if(!all(is.na(physical.limits)) & method %in% c("XmR", "c")){
@@ -59,9 +59,9 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
             }
           }
        }
-       print(dflines)
+       #print(dflines)
        limits_df <- data.frame(yintercept = t(dflines)[qcline])
-       print(limits_df)
+       #print(limits_df)
 
 
      }else if(method == "np"){
@@ -78,6 +78,10 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        #print(temp$y/n)
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
+       limits_txt_lbl <- c("LCL", "UCL")
+
+
+
        limits_df <- data.frame(yintercept = t(dflines)[qcline])
 
 
@@ -375,7 +379,26 @@ stat_QC <- function(mapping = NULL,
   )
   }
 
-  return(list(Limits, Centerline))
+
+  #return(list(Limits, Centerline))
+
+  QC_Labels <- stat_QC_labels(mapping = mapping,
+                              data = data,
+                              geom = "label",
+                              #yintercept = NULL,
+                              position = position,
+                              na.rm = na.rm,
+                              show.legend = show.legend,
+                              inherit.aes = inherit.aes,
+                              n=n, digits=1,
+                              method=method,
+                              color.qc_limits = "red",
+                              color.qc_center = "black",
+                              text.size=3,
+                              physical.limits=physical.limits,
+                              ...)
+
+  return(list(Limits, Centerline, QC_Labels))
 }
 
 
