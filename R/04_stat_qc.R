@@ -332,8 +332,15 @@ stat_QC <- function(mapping = NULL,
                     n=NULL,
                     #digits=1,
                     method="xBar.rBar",
-                    color.qc_limits = "red", color.qc_center = "green",
-                    physical.limits=c(NA,NA), ...) {
+                    color.qc_limits = "red",
+                    color.qc_center = "green",
+                    color.point="black",
+                    color.line="black",
+                    physical.limits=c(NA,NA),
+                    auto.label = F,
+                    #color.point="black",
+                    #color.line="black",
+                    ...) {
 
   if(method %in% c("p", "u")){
     Limits <- ggplot2::layer(
@@ -357,7 +364,40 @@ stat_QC <- function(mapping = NULL,
                     color=color.qc_center, draw.line = "center",
                     ...)
     )
+  }else if(method %in% c("mR")){
+    MR <- stat_mR(mapping = mapping,
+                        data = data,
+                        geom = "point",
+                        #yintercept = NULL,
+                        position = position,
+                        show.legend = show.legend,
+                        inherit.aes = inherit.aes,
+                        na.rm = FALSE,
+                        color.mr_point=color.point,
+                        color.mr_line=color.line,
+                        color.qc_limits = color.qc_limits,
+                        color.qc_center = color.qc_center,
+                        ...)
+
+
+
   }else{
+
+  if(method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian")){
+    meanOmedian <- ifelse(grepl("xBar", method), "mean", "median")
+    Summary_Stat_Point <-
+      stat_summary(fun.y = meanOmedian, color = color.point, geom = c("point"))
+    Summary_Stat_Line <-
+      stat_summary(fun.y = meanOmedian, color = color.line, geom = c("line"))
+  }
+
+  if(method %in% c("rBar", "rMedian", "sBar")){
+      rangeOsd <- ifelse(grepl("rBar|rMedian", method), "QCrange", "sd")
+      Summary_Stat_Point <-
+        stat_summary(fun.y = rangeOsd, color = color.point, geom = c("point"))
+      Summary_Stat_Line <-
+        stat_summary(fun.y = rangeOsd, color = color.line, geom = c("line"))
+  }
 
   Limits <- ggplot2::layer(
     stat = STAT_QC, data = data, mapping = mapping,
@@ -398,7 +438,18 @@ stat_QC <- function(mapping = NULL,
                               physical.limits=physical.limits,
                               ...)
 
-  return(list(Limits, Centerline, QC_Labels))
+
+
+  if(auto.label){
+    if(method == "mR"){return(list(MR, QC_Labels))}
+      return(list(Limits, Centerline, Summary_Stat_Point,
+                  Summary_Stat_Line, QC_Labels))
+
+  }else{
+    if(method == "mR"){return(list(MR))}
+      return(list(Limits, Centerline, Summary_Stat_Point,
+                  Summary_Stat_Line))
+    }
 }
 
 
