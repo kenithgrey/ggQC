@@ -333,11 +333,12 @@ stat_QC <- function(mapping = NULL,
                     #digits=1,
                     method="xBar.rBar",
                     color.qc_limits = "red",
-                    color.qc_center = "green",
+                    color.qc_center = "blue",
                     color.point="black",
                     color.line="black",
                     physical.limits=c(NA,NA),
                     auto.label = F,
+                    label.digits = 1,
                     #color.point="black",
                     #color.line="black",
                     ...) {
@@ -363,7 +364,11 @@ stat_QC <- function(mapping = NULL,
                     digits=1, method=method,
                     color=color.qc_center, draw.line = "center",
                     ...)
-    )
+      )
+
+    #n_p_points <- ggplot2::layer(geom = "point", color=color.point)
+    #n_p_line <- ggplot2::layer(geom="line", color=color.line)
+
   }else if(method %in% c("mR")){
     MR <- stat_mR(mapping = mapping,
                         data = data,
@@ -384,11 +389,15 @@ stat_QC <- function(mapping = NULL,
   }else{
 
   if(method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian")){
-    meanOmedian <- ifelse(grepl("xBar", method), "mean", "median")
+    meanOmedian <- ifelse(grepl("xBar|XmR|c|np", method), "mean", "median")
     Summary_Stat_Point <-
       stat_summary(fun.y = meanOmedian, color = color.point, geom = c("point"))
     Summary_Stat_Line <-
       stat_summary(fun.y = meanOmedian, color = color.line, geom = c("line"))
+  }
+
+  if(method %in% c("np", "c","XmR")){
+    #do nothing
   }
 
   if(method %in% c("rBar", "rMedian", "sBar")){
@@ -430,10 +439,10 @@ stat_QC <- function(mapping = NULL,
                               na.rm = na.rm,
                               show.legend = show.legend,
                               inherit.aes = inherit.aes,
-                              n=n, digits=1,
+                              n=n, digits=label.digits,
                               method=method,
-                              color.qc_limits = "red",
-                              color.qc_center = "black",
+                              color.qc_limits = color.qc_limits,
+                              color.qc_center = color.qc_center,
                               text.size=3,
                               physical.limits=physical.limits,
                               ...)
@@ -441,12 +450,22 @@ stat_QC <- function(mapping = NULL,
 
 
   if(auto.label){
-    if(method == "mR"){return(list(MR, QC_Labels))}
-      return(list(Limits, Centerline, Summary_Stat_Point,
+    if(method == "mR"){
+      return(list(MR, QC_Labels))
+      }
+    if(method %in% c("p", "u", "np", "c","XmR")){
+      return(list(Limits, Centerline, QC_Labels))
+    }
+    return(list(Limits, Centerline, Summary_Stat_Point,
                   Summary_Stat_Line, QC_Labels))
 
   }else{
-    if(method == "mR"){return(list(MR))}
+    if(method == "mR"){
+      return(list(MR))
+    }
+    if(method %in% c("p", "u", "np", "c","XmR")){
+      return(list(Limits, Centerline))
+    }
       return(list(Limits, Centerline, Summary_Stat_Point,
                   Summary_Stat_Line))
     }
