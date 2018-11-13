@@ -4,8 +4,8 @@
 \alias{QC_Lines}
 \title{Calculate QC Limits}
 \usage{
-QC_Lines(data = NULL, value = NULL, grouping = NULL, formula = NULL,
-  n = NULL, method = "xBar.rBar", na.rm = FALSE)
+QC_Lines(data = NULL, value = NULL, grouping = NULL,
+  formula = NULL, n = NULL, method = "xBar.rBar", na.rm = FALSE)
 }
 \arguments{
 \item{data}{vector or dataframe, as indicated below for each chart type

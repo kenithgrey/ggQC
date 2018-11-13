@@ -1,5 +1,5 @@
 ##############################
-# Copyright 2017 Kenith Grey #
+# Copyright 2018 Kenith Grey #
 ##############################
 
 # Copyright Notice --------------------------------------------------------
@@ -19,14 +19,50 @@
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 
 STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
-  compute_group = function(data, scales, n=NULL, digits=1, method=NULL, draw.line=draw.line){
-     temp <- aggregate(data=data, y~x, mean)
+  compute_group = function(data, scales, n=NULL, digits=1,
+                           method=NULL, draw.line=draw.line,
+                           physical.limits=c(NA,NA)){
+    #print(scales)
+    temp <- aggregate(data=data, y~x, mean)
      #print(temp)
 
      if(method %in% c("mR", "XmR", "c")){
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
+       #print(physical.limits)
+       limits_txt_lbl <- c("LCL", "UCL")
+
+        if(!all(is.na(physical.limits)) & method %in% c("XmR", "c")){
+          if(!any(is.na(physical.limits))){
+
+            if(physical.limits[1] > dflines[1] & physical.limits[2] < dflines[3]){
+              dflines[1] <- physical.limits[1]
+              dflines[3] <- physical.limits[2]
+              limits_txt_lbl <- c("LB", "UB")
+            }else if(physical.limits[1] > dflines[1]){
+              dflines[1] <- physical.limits[1]
+              limits_txt_lbl <- c("LB", "UCL")
+            }else if(physical.limits[2] < dflines[3]){
+              dflines[3] <- physical.limits[2]
+              limits_txt_lbl <- c("LCL", "UB")
+            }
+
+          }else if(!is.na(physical.limits[1])){
+             if(physical.limits[1] > dflines[1]){
+             dflines[1] <- physical.limits[1]
+             limits_txt_lbl <- c("LB", "UCL")
+             }
+          }else if(!is.na(physical.limits[2])){
+            if(physical.limits[2] < dflines[3]){
+              dflines[3] <- physical.limits[2]
+              limits_txt_lbl <- c("LCL", "UB")
+            }
+          }
+       }
+       #print(dflines)
        limits_df <- data.frame(yintercept = t(dflines)[qcline])
+       #print(limits_df)
+
 
      }else if(method == "np"){
        if (is.null(n)){
@@ -42,6 +78,10 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        #print(temp$y/n)
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
+       limits_txt_lbl <- c("LCL", "UCL")
+
+
+
        limits_df <- data.frame(yintercept = t(dflines)[qcline])
 
 
@@ -73,16 +113,59 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        return(uchart_data)
 
      }else{
+       #Studentized charts Xbar-Rbar etc.
        qcline <- if(draw.line == "center") c(6) else c(5,7)
        dflines <- QC_Lines(data = data, value = "y", grouping = "x", n=n, method = method)
-       limits_df <- data.frame(yintercept = t(dflines[,qcline]))
+       limits_txt_lbl <- c("LCL", "UCL")
 
+       if(!all(is.na(physical.limits)) & !method %in% c("rBar", "rMedian", "sBar")){
+         if(!any(is.na(physical.limits))){
+
+           if(physical.limits[1] > dflines[5] & physical.limits[2] < dflines[7]){
+             dflines[5] <- physical.limits[1]
+             dflines[7] <- physical.limits[2]
+             limits_txt_lbl <- c("LB", "UB")
+           }else if(physical.limits[1] > dflines[5]){
+             dflines[5] <- physical.limits[1]
+             limits_txt_lbl <- c("LB", "UCL")
+           }else if(physical.limits[2] < dflines[7]){
+             dflines[7] <- physical.limits[2]
+             limits_txt_lbl <- c("LCL", "UB")
+           }
+         }else if(!is.na(physical.limits[1])){
+           if(physical.limits[1] > dflines[5]){
+             dflines[5] <- physical.limits[1]
+             limits_txt_lbl <- c("LB", "UCL")
+           }
+         }else if(!is.na(physical.limits[2])){
+           if(physical.limits[2] < dflines[7]){
+             dflines[7] <- physical.limits[2]
+             limits_txt_lbl <- c("LCL", "UB")
+           }
+         }
+       }
+       limits_df <- data.frame(yintercept = t(dflines[,qcline]))
      }
-     #print(limits_df)
-     limits_df$y = limits_df$yintercept
-     limits_df$x = Inf
-     limits_df$label = round(limits_df$yintercept,digits)
-     #print(limits_df)
+
+    #print(qcline)
+
+     limits_df$y <- limits_df$yintercept
+     limits_df$x <- Inf
+     limits_df$label <- paste0(round(limits_df$yintercept,digits))
+     limits_df$hjust <- 1.1
+
+
+     if(!any(qcline %in% c(2,6))){
+       #print("hello")
+       limits_df_txt_lbl <- limits_df
+       limits_df_txt_lbl$x <- -Inf
+       limits_df_txt_lbl$label <- limits_txt_lbl
+       limits_df_txt_lbl$hjust <- 0
+       limits_df <- rbind(limits_df_txt_lbl, limits_df)
+       #print(limits_df)
+      #print(limits_df)
+       }
+
      #print(data$group)
      limits_df
 
@@ -119,6 +202,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #'   \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
+#' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
 #' @param color.qc_center color, used to colorize the plot's center line.
 #' @return data need to produce the mR plot in ggplot.
 #' @examples
@@ -248,7 +332,16 @@ stat_QC <- function(mapping = NULL,
                     n=NULL,
                     #digits=1,
                     method="xBar.rBar",
-                    color.qc_limits = "red", color.qc_center = "green", ...) {
+                    color.qc_limits = "red",
+                    color.qc_center = "blue",
+                    color.point="black",
+                    color.line="black",
+                    physical.limits=c(NA,NA),
+                    auto.label = F,
+                    label.digits = 1,
+                    #color.point="black",
+                    #color.line="black",
+                    ...) {
 
   if(method %in% c("p", "u")){
     Limits <- ggplot2::layer(
@@ -257,7 +350,8 @@ stat_QC <- function(mapping = NULL,
       position = position, show.legend = show.legend,
       inherit.aes = inherit.aes,
       params = list(na.rm = na.rm, n=n, digits=1, method=method,
-                    color= color.qc_limits, direction="vh", draw.line = "limit",
+                    color= color.qc_limits, direction="vh",
+                    draw.line = "limit",
                     ...)
     )
 
@@ -270,15 +364,57 @@ stat_QC <- function(mapping = NULL,
                     digits=1, method=method,
                     color=color.qc_center, draw.line = "center",
                     ...)
-    )
+      )
+
+    #n_p_points <- ggplot2::layer(geom = "point", color=color.point)
+    #n_p_line <- ggplot2::layer(geom="line", color=color.line)
+
+  }else if(method %in% c("mR")){
+    MR <- stat_mR(mapping = mapping,
+                        data = data,
+                        geom = "point",
+                        #yintercept = NULL,
+                        position = position,
+                        show.legend = show.legend,
+                        inherit.aes = inherit.aes,
+                        na.rm = FALSE,
+                        color.mr_point=color.point,
+                        color.mr_line=color.line,
+                        color.qc_limits = color.qc_limits,
+                        color.qc_center = color.qc_center,
+                        ...)
+
+
+
   }else{
+
+  if(method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian")){
+    meanOmedian <- ifelse(grepl("xBar|XmR|c|np", method), "mean", "median")
+    Summary_Stat_Point <-
+      stat_summary(fun.y = meanOmedian, color = color.point, geom = c("point"))
+    Summary_Stat_Line <-
+      stat_summary(fun.y = meanOmedian, color = color.line, geom = c("line"))
+  }
+
+  if(method %in% c("np", "c","XmR")){
+    #do nothing
+  }
+
+  if(method %in% c("rBar", "rMedian", "sBar")){
+      rangeOsd <- ifelse(grepl("rBar|rMedian", method), "QCrange", "sd")
+      Summary_Stat_Point <-
+        stat_summary(fun.y = rangeOsd, color = color.point, geom = c("point"))
+      Summary_Stat_Line <-
+        stat_summary(fun.y = rangeOsd, color = color.line, geom = c("line"))
+  }
 
   Limits <- ggplot2::layer(
     stat = STAT_QC, data = data, mapping = mapping,
     geom = geom, position = position, show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n, digits=1, method=method,
-                  color= color.qc_limits, draw.line = "limit", ...)
+                  color= color.qc_limits, draw.line = "limit",
+                  physical.limits=physical.limits, ...)
   )
 
   Centerline <- ggplot2::layer(
@@ -287,11 +423,52 @@ stat_QC <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n,
                   digits=1, method=method,
-                  color=color.qc_center, draw.line = "center", ...)
+                  color=color.qc_center, draw.line = "center",
+                  physical.limits=c(NA,NA), ...)
   )
   }
 
-  return(list(Limits, Centerline))
+
+  #return(list(Limits, Centerline))
+
+  QC_Labels <- stat_QC_labels(mapping = mapping,
+                              data = data,
+                              geom = "label",
+                              #yintercept = NULL,
+                              position = position,
+                              na.rm = na.rm,
+                              show.legend = show.legend,
+                              inherit.aes = inherit.aes,
+                              n=n, digits=label.digits,
+                              method=method,
+                              color.qc_limits = color.qc_limits,
+                              color.qc_center = color.qc_center,
+                              text.size=3,
+                              physical.limits=physical.limits,
+                              ...)
+
+
+
+  if(auto.label){
+    if(method == "mR"){
+      return(list(MR, QC_Labels))
+      }
+    if(method %in% c("p", "u", "np", "c","XmR")){
+      return(list(Limits, Centerline, QC_Labels))
+    }
+    return(list(Limits, Centerline, Summary_Stat_Point,
+                  Summary_Stat_Line, QC_Labels))
+
+  }else{
+    if(method == "mR"){
+      return(list(MR))
+    }
+    if(method %in% c("p", "u", "np", "c","XmR")){
+      return(list(Limits, Centerline))
+    }
+      return(list(Limits, Centerline, Summary_Stat_Point,
+                  Summary_Stat_Line))
+    }
 }
 
 
@@ -320,6 +497,7 @@ stat_QC <- function(mapping = NULL,
 #' \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
+#' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
 #' @param color.qc_center color, used to colorize the plot's center line.
 #' @return data need to produce the mR plot in ggplot.
 #' @examples
@@ -394,7 +572,7 @@ stat_QC_labels <- function(mapping = NULL,
                            inherit.aes = TRUE,
                            n=NULL,digits=1, method="xBar.rBar",
                            color.qc_limits = "red", color.qc_center = "black",
-                           text.size=3,
+                           text.size=3, physical.limits=c(NA,NA),
                            ...) {
   Center <- ggplot2::layer(
     stat = STAT_QC,
@@ -404,10 +582,10 @@ stat_QC_labels <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, hjust=1.1,
+    params = list(na.rm = na.rm, #hjust=0, #1.1,
                   vjust=.5, size=text.size,n=n,
                   digits=digits,method=method, color=color.qc_center,
-                  draw.line = "center", ...)
+                  draw.line = "center",...)
   )
 
   Limits <- ggplot2::layer(
@@ -418,10 +596,11 @@ stat_QC_labels <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, hjust=1.1,
+    params = list(na.rm = na.rm, #hjust=0, #1.1,
                   vjust=.5, size=text.size,n=n,
                   digits=digits,method=method, color=color.qc_limits,
-                  draw.line = "limit",...)
+                  draw.line = "limit", physical.limits=physical.limits,
+                  ...)
   )
 return(list(Center, Limits))
 }

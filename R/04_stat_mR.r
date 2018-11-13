@@ -117,8 +117,7 @@ stat_mR <- function(mapping = NULL,
                   color=color.qc_center,draw.line = "center", ...)
   )
 
-
-return(list(Limits, Centerline, Connects, Points))
+  return(list(Limits, Centerline, Connects, Points))
 
 }
 

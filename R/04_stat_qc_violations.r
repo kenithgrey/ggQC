@@ -2,7 +2,7 @@
 #Starting place for a pareto Stat#
 ##################################
 ##############################
-# Copyright 2017 Kenith Grey #
+# Copyright 2018 Kenith Grey #
 ##############################
 
 # Copyright Notice --------------------------------------------------------
@@ -26,7 +26,7 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
                                    point.color = point.color,
                                    violation_point.color = violation_point.color,
                                    rule.color = rule.color){
-
+        #print(head(data))
         df <- data # copy the data
 
             if (method == "XmR"){
@@ -66,11 +66,30 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 
         #Setup the color display for points or lines
         if (callFrom == "SigmaLines"){
+          #print(head(df3))
+          df3$SigmaLines <- NA
+          #print(df3)
+          if(nrow(df3) > 0){
+            if(df3$Violation_Result[1] == "Violation Same Side"){
+              df3[df3$Violation_Result == "Violation Same Side", ]$SigmaLines <- 0
+            }else if(df3$Violation_Result[1] == "Violation 1 Sigma"){
+              df3[df3$Violation_Result == "Violation 1 Sigma", ]$SigmaLines <- 1
+            }else if(df3$Violation_Result[1] == "Violation 2 Sigma"){
+              df3[df3$Violation_Result == "Violation 2 Sigma", ]$SigmaLines <- 2
+            }else if(df3$Violation_Result[1] == "Violation 3 Sigma"){
+              df3[df3$Violation_Result == "Violation 3 Sigma", ]$SigmaLines <- 3
+            }
+
+
+
           df3 <- df3[1:3,]
+
           df3$colour <- rule.color
           df3$yintercept <- c(centerLine,
-                              centerLine + (as.numeric(df3$PANEL[1])-1)*Sigma,
-                              centerLine - (as.numeric(df3$PANEL[1])-1)*Sigma)
+                              centerLine + df3$SigmaLines[1]*Sigma,
+                              centerLine - df3$SigmaLines[1]*Sigma)
+          }else{return(NULL)}
+
           }else if(callFrom == "Points"){
           df3$colour <- ifelse(df3$Violation == TRUE, violation_point.color, point.color)
 
@@ -114,6 +133,7 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #' @param geom_line boolean, draw line
 #' @param line.color string, color of lines connecting points
 #' @param rule.color string, color or horizontal rules indicating distribution center and sigma levels
+#' @param show.facets vector, selects violation facet 1 through 4. eg., c(1:4), c(1,4)
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
 #' @inheritParams ggplot2::stat_identity
@@ -166,7 +186,7 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'
 #' colnames(QC_xBar.rBar) <- c("sub_group","sub_class", "value")
 #'
-#'# Render QC Violation Plot --------------------------------------------------
+#' # Render QC Violation Plot --------------------------------------------------
 #'     EX2 <- ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
 #'       stat_qc_violations(method = "xBar.rBar")
 #'       #stat_qc_violations(method="xBar.rMedian")
@@ -174,6 +194,18 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 #'       #stat_qc_violations(method="xMedian.rBar")
 #'       #stat_qc_violations(method="xMedian.rMedian")
 #'    #EX2
+#'
+#' #######################################
+#' #  Example 3: Selected Facets         #
+#' #######################################
+#'
+#' # Render QC Violation Plot --------------------------------------------------
+#'     EX3 <- ggplot(QC_xBar.rBar, aes(x = sub_group, y = value)) +
+#'       stat_qc_violations(method = "xBar.rBar", show.facets = c(4))
+#'
+#'    #EX3
+#'
+#'
 #' #######################################################
 #' # Complete User Control - Bypass stat_qc_violation   #
 #' #######################################################
@@ -244,6 +276,7 @@ stat_qc_violations <- function(mapping = NULL,
                     violation_point.color = "red",
 
                     rule.color = "darkgreen",
+                    show.facets = c(1:4),
 
                     line.color=NULL,
                     # size.line=.5,
@@ -289,7 +322,7 @@ SigmaLines <- ggplot2::layer( #take care of the points
     params = list(method=method, callFrom="SigmaLines",
                   rule.color = rule.color, ...))
 
-Facet <- facet_qc_violations(method=method)
+Facet <- facet_qc_violations(method=method, show.facets=sort(show.facets))
 
 
 if(all(geom_line, geom_points)){
