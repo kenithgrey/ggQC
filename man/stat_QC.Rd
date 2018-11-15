@@ -7,8 +7,10 @@
 stat_QC(mapping = NULL, data = NULL, geom = "hline",
   position = "identity", na.rm = FALSE, show.legend = NA,
   inherit.aes = TRUE, n = NULL, method = "xBar.rBar",
-  color.qc_limits = "red", color.qc_center = "green",
-  physical.limits = c(NA, NA), padding.x = 0.25, ...)
+  color.qc_limits = "red", color.qc_center = "blue",
+  color.point = "black", color.line = "black",
+  physical.limits = c(NA, NA), auto.label = FALSE, label.digits = 1,
+  show.1n2.sigma = FALSE, ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -27,7 +29,7 @@ data. All objects will be fortified to produce a data frame. See
 \code{\link[=fortify]{fortify()}} for which variables will be created.
 
 A \code{function} will be called with a single argument,
-the plot data. The return value must be a \code{data.frame.}, and
+the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data.}
 
 \item{geom}{The geometric object to use display the data}
@@ -68,17 +70,25 @@ xMedian.rMedian
 
 \item{color.qc_center}{color, used to colorize the plot's center line.}
 
+\item{color.point}{color, used to colorize points in studentized plots. You will need geom_point() for C, P, U, NP, and XmR charts.}
+
+\item{color.line}{color, used to colorize lines connecting points in studentized plots. You will need geom_line() for C, P, U, NP, and XmR charts.}
+
 \item{physical.limits}{vector, specify lower phsical boundry and upper physical boundry}
 
-\item{padding.x}{number, used to pad the x-axis to accomodate labels, default is 0.25.}
+\item{auto.label}{boolean setting, if T labels graph with control limits.}
+
+\item{label.digits}{integer, number of decimal places to display.}
+
+\item{show.1n2.sigma}{boolean setting, if T labels graph 1 and 2 sigma lines. Line color is set by color.qc_limits}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
-\code{color = "red"} or \code{size = 3}. They may also be parameters
+\code{colour = "red"} or \code{size = 3}. They may also be parameters
 to the paired geom/stat.}
 }
 \value{
-data need to produce the mR plot in ggplot.
+ggplot control charts.
 }
 \description{
 Produce QC charts with ggplot framework. Support for faceting and
@@ -205,4 +215,25 @@ EX4.1 <- ggplot(data = bin_data, aes(x=trial,
   stat_QC(method = "np", n = Units_Tested_Per_Batch)
 #EX5.1
 
+#############################
+#  Example 6:  c Chart     #
+#############################
+# c chart Setup -----------------------------------------------------------
+ set.seed(5555)
+ Process1 <- data.frame(Process_run_id = 1:30,
+                        Counts=rpois(n = 30, lambda = 25),
+                        Group = "A")
+ Process2 <- data.frame(Process_run_id = 1:30,
+                        Counts = rpois(n = 30, lambda = 5),
+                        Group = "B")
+
+ all_processes <- rbind(Process1, Process2)
+# Plot C Chart ------------------------------------------------------------
+
+ EX6.1 <- ggplot(all_processes, aes(x=Process_run_id, y = Counts)) +
+   geom_point() + geom_line() +
+   stat_QC(method = "c", auto.label = TRUE, label.digits = 2) +
+   scale_x_continuous(expand =  expand_scale(mult = .25)) +
+   facet_grid(.~Group)
+# EX6.1
 }

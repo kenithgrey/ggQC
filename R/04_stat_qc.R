@@ -21,15 +21,17 @@
 STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
   compute_group = function(data, scales, n=NULL, digits=1,
                            method=NULL, draw.line=draw.line,
-                           physical.limits=c(NA,NA)){
-    #print(scales)
-    temp <- aggregate(data=data, y~x, mean)
+                           physical.limits=c(NA,NA),
+                           call.from = "QC.Lines",
+                           show.1n2.sigma = FALSE){
+     temp <- aggregate(data=data, y~x, mean)
      #print(temp)
 
      if(method %in% c("mR", "XmR", "c")){
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
-       #print(physical.limits)
+       sigma <- dflines$sigma
+       center <- dflines[2]
        limits_txt_lbl <- c("LCL", "UCL")
 
         if(!all(is.na(physical.limits)) & method %in% c("XmR", "c")){
@@ -78,6 +80,8 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        #print(temp$y/n)
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
+       sigma <- dflines$sigma
+       center <- dflines[2]
        limits_txt_lbl <- c("LCL", "UCL")
 
 
@@ -116,6 +120,8 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        #Studentized charts Xbar-Rbar etc.
        qcline <- if(draw.line == "center") c(6) else c(5,7)
        dflines <- QC_Lines(data = data, value = "y", grouping = "x", n=n, method = method)
+       sigma <- dflines$sigma
+       center <- dflines[6]
        limits_txt_lbl <- c("LCL", "UCL")
 
        if(!all(is.na(physical.limits)) & !method %in% c("rBar", "rMedian", "sBar")){
@@ -153,6 +159,49 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
      limits_df$x <- Inf
      limits_df$label <- paste0(round(limits_df$yintercept,digits))
      limits_df$hjust <- 1.1
+     limits_df$alpha <- 1
+
+
+     # Sigma Limits ------------------------------------------------------------
+     if(grepl(pattern = "c|XmR|xBar|xMedian|np", method) &
+        !call.from == "QC.Label" & show.1n2.sigma){
+     sigma_df <- data.frame(
+       yintercept = c(center[[1]] + 1*sigma, center[[1]] - 1*sigma,
+                      center[[1]] + 2*sigma, center[[1]] - 2*sigma),
+       y = rep(0, 4),
+       x = rep(NA, 4),
+       label = rep(NA, 4),
+       hjust = rep(0, 4),
+       alpha = c(.20,.20,.50,.50)
+     )
+     }else if(!grepl(pattern = "c|XmR|xBar|xMedian|np", method) &
+              !call.from == "QC.Label" & show.1n2.sigma){
+       warning(paste(method, " method: does not support drawing sigma lines"))
+       sigma_df <- data.frame(
+         yintercept = integer(),
+         y = integer(),
+         x = integer(),
+         label = integer(),
+         hjust = integer(),
+         alpha = integer()
+       )
+     }else{
+       sigma_df <- data.frame(
+         yintercept = integer(),
+         y = integer(),
+         x = integer(),
+         label = integer(),
+         hjust = integer(),
+         alpha = integer()
+         )
+     }
+
+     #sigma_df <- ifelse(call.from == "QC.Label", na.omit(sigma_df), sigma_df)
+
+     #limits_df$sigma <- sigma
+     #limits_df$center <- center[[1]]
+
+     #limits_df$center <- center
 
 
      if(!any(qcline %in% c(2,6))){
@@ -161,14 +210,23 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        limits_df_txt_lbl$x <- -Inf
        limits_df_txt_lbl$label <- limits_txt_lbl
        limits_df_txt_lbl$hjust <- 0
-       limits_df <- rbind(limits_df_txt_lbl, limits_df)
+       if(call.from == "QC.Label"){
+         limits_df <- rbind(limits_df_txt_lbl, limits_df)
+       }else{
+         if(show.1n2.sigma){
+         limits_df <- rbind(limits_df_txt_lbl, limits_df, sigma_df)
+         }else{
+         limits_df <- rbind(limits_df_txt_lbl, limits_df)
+         }
+       }
+
        #print(limits_df)
       #print(limits_df)
        }
 
      #print(data$group)
-     limits_df
-
+     #print(limits_df)
+      limits_df
    }
 )
 
@@ -204,7 +262,12 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
 #' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
 #' @param color.qc_center color, used to colorize the plot's center line.
-#' @return data need to produce the mR plot in ggplot.
+#' @param color.point color, used to colorize points in studentized plots. You will need geom_point() for C, P, U, NP, and XmR charts.
+#' @param color.line color, used to colorize lines connecting points in studentized plots. You will need geom_line() for C, P, U, NP, and XmR charts.
+#' @param auto.label boolean setting, if T labels graph with control limits.
+#' @param label.digits integer, number of decimal places to display.
+#' @param show.1n2.sigma boolean setting, if T labels graph 1 and 2 sigma lines. Line color is set by color.qc_limits
+#' @return ggplot control charts.
 #' @examples
 #'# Load Libraries ----------------------------------------------------------
 #'  require(ggQC)
@@ -319,6 +382,28 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #'   stat_QC(method = "np", n = Units_Tested_Per_Batch)
 #' #EX5.1
 #'
+#'#############################
+#'#  Example 6:  c Chart     #
+#'#############################
+#'# c chart Setup -----------------------------------------------------------
+#'  set.seed(5555)
+#'  Process1 <- data.frame(Process_run_id = 1:30,
+#'                         Counts=rpois(n = 30, lambda = 25),
+#'                         Group = "A")
+#'  Process2 <- data.frame(Process_run_id = 1:30,
+#'                         Counts = rpois(n = 30, lambda = 5),
+#'                         Group = "B")
+#'
+#'  all_processes <- rbind(Process1, Process2)
+#'# Plot C Chart ------------------------------------------------------------
+#'
+#'  EX6.1 <- ggplot(all_processes, aes(x=Process_run_id, y = Counts)) +
+#'    geom_point() + geom_line() +
+#'    stat_QC(method = "c", auto.label = TRUE, label.digits = 2) +
+#'    scale_x_continuous(expand =  expand_scale(mult = .25)) +
+#'    facet_grid(.~Group)
+#'# EX6.1
+
 
 
 stat_QC <- function(mapping = NULL,
@@ -337,8 +422,9 @@ stat_QC <- function(mapping = NULL,
                     color.point="black",
                     color.line="black",
                     physical.limits=c(NA,NA),
-                    auto.label = F,
+                    auto.label = FALSE,
                     label.digits = 1,
+                    show.1n2.sigma = FALSE,
                     #color.point="black",
                     #color.line="black",
                     ...) {
@@ -391,9 +477,9 @@ stat_QC <- function(mapping = NULL,
   if(method %in% c("xBar.rBar", "xBar.rMedian", "xBar.sBar", "xMedian.rBar", "xMedian.rMedian")){
     meanOmedian <- ifelse(grepl("xBar|XmR|c|np", method), "mean", "median")
     Summary_Stat_Point <-
-      stat_summary(fun.y = meanOmedian, color = color.point, geom = c("point"))
+      ggplot2::stat_summary(fun.y = meanOmedian, color = color.point, geom = c("point"))
     Summary_Stat_Line <-
-      stat_summary(fun.y = meanOmedian, color = color.line, geom = c("line"))
+      ggplot2::stat_summary(fun.y = meanOmedian, color = color.line, geom = c("line"))
   }
 
   if(method %in% c("np", "c","XmR")){
@@ -403,9 +489,9 @@ stat_QC <- function(mapping = NULL,
   if(method %in% c("rBar", "rMedian", "sBar")){
       rangeOsd <- ifelse(grepl("rBar|rMedian", method), "QCrange", "sd")
       Summary_Stat_Point <-
-        stat_summary(fun.y = rangeOsd, color = color.point, geom = c("point"))
+        ggplot2::stat_summary(fun.y = rangeOsd, color = color.point, geom = c("point"))
       Summary_Stat_Line <-
-        stat_summary(fun.y = rangeOsd, color = color.line, geom = c("line"))
+        ggplot2::stat_summary(fun.y = rangeOsd, color = color.line, geom = c("line"))
   }
 
   Limits <- ggplot2::layer(
@@ -414,7 +500,8 @@ stat_QC <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, n=n, digits=1, method=method,
                   color= color.qc_limits, draw.line = "limit",
-                  physical.limits=physical.limits, ...)
+                  physical.limits=physical.limits,
+                  show.1n2.sigma=show.1n2.sigma, ...)
   )
 
   Centerline <- ggplot2::layer(
@@ -430,7 +517,7 @@ stat_QC <- function(mapping = NULL,
 
 
   #return(list(Limits, Centerline))
-
+  if(!method %in% c("p", "u")){
   QC_Labels <- stat_QC_labels(mapping = mapping,
                               data = data,
                               geom = "label",
@@ -438,7 +525,7 @@ stat_QC <- function(mapping = NULL,
                               position = position,
                               na.rm = na.rm,
                               show.legend = show.legend,
-                              inherit.aes = inherit.aes,
+                              inherit.aes = TRUE,
                               n=n, digits=label.digits,
                               method=method,
                               color.qc_limits = color.qc_limits,
@@ -446,14 +533,18 @@ stat_QC <- function(mapping = NULL,
                               text.size=3,
                               physical.limits=physical.limits,
                               ...)
+  }
 
 
 
   if(auto.label){
+    if(method %in% c("p", "u")){
+      return(list(Limits, Centerline))
+    }
     if(method == "mR"){
       return(list(MR, QC_Labels))
       }
-    if(method %in% c("p", "u", "np", "c","XmR")){
+    if(method %in% c("np", "c","XmR")){
       return(list(Limits, Centerline, QC_Labels))
     }
     return(list(Limits, Centerline, Summary_Stat_Point,
@@ -571,8 +662,11 @@ stat_QC_labels <- function(mapping = NULL,
                            show.legend = NA,
                            inherit.aes = TRUE,
                            n=NULL,digits=1, method="xBar.rBar",
-                           color.qc_limits = "red", color.qc_center = "black",
-                           text.size=3, physical.limits=c(NA,NA),
+                           color.qc_limits = "red",
+                           color.qc_center = "black",
+                           text.size=3,
+                           physical.limits=c(NA,NA),
+
                            ...) {
   Center <- ggplot2::layer(
     stat = STAT_QC,
@@ -584,8 +678,12 @@ stat_QC_labels <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, #hjust=0, #1.1,
                   vjust=.5, size=text.size,n=n,
-                  digits=digits,method=method, color=color.qc_center,
-                  draw.line = "center",...)
+                  digits=digits,method=method,
+                  color="black",
+                  #fill = "white",
+                  #color=color.qc_center,
+                  draw.line = "center",
+                  call.from = "QC.Label", ...)
   )
 
   Limits <- ggplot2::layer(
@@ -598,11 +696,18 @@ stat_QC_labels <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, #hjust=0, #1.1,
                   vjust=.5, size=text.size,n=n,
-                  digits=digits,method=method, color=color.qc_limits,
-                  draw.line = "limit", physical.limits=physical.limits,
+                  digits=digits,method=method,
+                  color="black",
+                  #fill = "white",
+                  #color=color.qc_limits,
+                  draw.line = "limit",
+                  physical.limits=physical.limits,
+                  call.from = "QC.Label",
                   ...)
   )
-return(list(Center, Limits))
+if(method %in% c("p", "u")){
+  return(warning("Stat_QC_Label does not support u or p charts"))
+}else{return(list(Center, Limits))}
 }
 
 

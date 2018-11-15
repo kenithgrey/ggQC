@@ -22,6 +22,8 @@ Stat_MR <- ggplot2::ggproto("Stat_MR", ggplot2::Stat,
       compute_group = function(data, scales){
         mRs3<- mR_points_gg(data = data, value = "y", grouping = "x")
         mRs <- data.frame(y=mRs3, x=data$x)
+        mRs <- mRs[2:nrow(mRs),]
+        return(mRs)
        }
 
 )
