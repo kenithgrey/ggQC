@@ -14,9 +14,9 @@ QC_Lines(data = NULL, value = NULL, grouping = NULL,
 \item \bold{Studentized & Dispersion Charts}: dataframe
 }}
 
-\item{value}{\bold{Studentized Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest}
+\item{value}{string, \bold{Studentized Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest}
 
-\item{grouping}{\bold{Studentized Charts} and \bold{Dispersion Charts}: single factor/variable to split
+\item{grouping}{string, \bold{Studentized Charts} and \bold{Dispersion Charts}: single factor/variable to split
 the dataframe "values" by}
 
 \item{formula}{\bold{Studentized Charts} and \bold{Dispersion Charts}: a formula,

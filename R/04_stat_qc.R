@@ -547,8 +547,8 @@ stat_QC <- function(mapping = NULL,
     if(method %in% c("np", "c","XmR")){
       return(list(Limits, Centerline, QC_Labels))
     }
-    return(list(Limits, Centerline, Summary_Stat_Point,
-                  Summary_Stat_Line, QC_Labels))
+    return(list(Limits, Centerline, Summary_Stat_Line,
+                Summary_Stat_Point, QC_Labels))
 
   }else{
     if(method == "mR"){
@@ -557,8 +557,9 @@ stat_QC <- function(mapping = NULL,
     if(method %in% c("p", "u", "np", "c","XmR")){
       return(list(Limits, Centerline))
     }
-      return(list(Limits, Centerline, Summary_Stat_Point,
-                  Summary_Stat_Line))
+      return(list(Limits, Centerline,
+                  Summary_Stat_Line, Summary_Stat_Point
+                  ))
     }
 }
 

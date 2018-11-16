@@ -1,5 +1,5 @@
 ##############################
-# Copyright 2017 Kenith Grey #
+# Copyright 2018 Kenith Grey #
 ##############################
 
 # Copyright Notice --------------------------------------------------------
@@ -109,8 +109,8 @@ ylines_indv <- function(y, n=1, method = "XmR", na.rm = FALSE){
 #' \item \bold{Individuals & Attribute Charts}: vector of values;
 #' \item \bold{Studentized & Dispersion Charts}: dataframe
 #' }
-#' @param value \bold{Studentized Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest
-#' @param grouping \bold{Studentized Charts} and \bold{Dispersion Charts}: single factor/variable to split
+#' @param value string, \bold{Studentized Charts} and \bold{Dispersion Charts}, numeric vector in dataframe with values of interest
+#' @param grouping string, \bold{Studentized Charts} and \bold{Dispersion Charts}: single factor/variable to split
 #' the dataframe "values" by
 #' @param formula \bold{Studentized Charts} and \bold{Dispersion Charts}: a formula,
 #' such as y ~ x1 + x2, where the y variable is
