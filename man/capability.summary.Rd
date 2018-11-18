@@ -21,5 +21,13 @@ capability.summary(LSL, USL, QC.Center, QC.Sigma, s.Sigma, digits = 2)
 data frame , listing of metric lebel and value
 }
 \description{
-Calculate Summary of Quality Performance Parameters
+function to report listing of quality performance parameters
+\itemize{
+\item \bold{Proc. Tolerance (sigma)}: Describes the number of your process sigma (from QC charting) that can fit in your customer's specification window (the larger the better).
+\item \bold{DNS (sigma)}: Distance to Nearest Specification (DNS) limit. Measure of how centered your process is and how close you are to the nearest process limit in sigma units.
+\item \bold{Cp}: Describes how many times your 6 sigma process window (from QC charting) can fit in your customer's specification window (the larger the better)
+\item \bold{Cpk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (from QC charting) between your process center and the nearest customer specification limit.
+\item \bold{Pp}: Describes how many times your 6 sigma process window (overall standard deviation) can fit in your customer's specification window (the larger the better)
+\item \bold{Ppk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (overall standard deviation) between your process center and the nearest customer specification limit.
+}
 }

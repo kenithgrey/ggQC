@@ -16,7 +16,7 @@ Suggests: testthat,
     rmarkdown,
     reshape2,
     plyr
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Imports: ggplot2,
     stats,
     dplyr,

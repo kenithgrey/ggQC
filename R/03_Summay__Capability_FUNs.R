@@ -24,10 +24,11 @@
 #' \itemize{
 #' \item \bold{Proc. Tolerance (sigma)}: Describes the number of your process sigma (from QC charting) that can fit in your customer's specification window (the larger the better).
 #' \item \bold{DNS (sigma)}: Distance to Nearest Specification (DNS) limit. Measure of how centered your process is and how close you are to the nearest process limit in sigma units.
-#' \item \bold{Cp}: Describes how many times your 6 sigma process window (from QC charting) can fit in your customer's specification window (the larger the better)}
-#' \item \bold{Cpk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (from QC charting) between your process center and the nearest customer specification limit.}
-#' \item \bold{Pp}: Describes how many times your 6 sigma process window (overall standard deviation) can fit in your customer's specification window (the larger the better)}}
-#' \item \bold{Ppk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (overall standard deviation) between your process center and the nearest customer specification limit.}
+#' \item \bold{Cp}: Describes how many times your 6 sigma process window (from QC charting) can fit in your customer's specification window (the larger the better)
+#' \item \bold{Cpk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (from QC charting) between your process center and the nearest customer specification limit.
+#' \item \bold{Pp}: Describes how many times your 6 sigma process window (overall standard deviation) can fit in your customer's specification window (the larger the better)
+#' \item \bold{Ppk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (overall standard deviation) between your process center and the nearest customer specification limit.
+#' }
 #' @param LSL number, customer's lower specification limit.
 #' @param USL number, customer's upper specification limit.
 #' @param QC.Center number, the mean or median value determined from an XmR plot or a Studentized (e.g., xBar) analysis.
@@ -50,7 +51,8 @@ capability.summary <-
                  Ppk(LSL, USL, QC.Center, s.Sigma)
       )
     )
-    format.data.frame(capability_df, digits=digits)
+    capability_df$values <- round(capability_df$values, digits)
+    capability_df
   }
 
 
@@ -60,10 +62,10 @@ capability.summary <-
 #' \itemize{
 #' \item \bold{Proc. Tolerance (sigma)}: Describes the number of your process sigma (from QC charting) that can fit in your customer's specification window (the larger the better).
 #' \item \bold{DNS (sigma)}: Distance to Nearest Specification (DNS) limit. Measure of how centered your process is and how close you are to the nearest process limit in sigma units.
-#' \item \bold{Cp}: Describes how many times your 6 sigma process window (from QC charting) can fit in your customer's specification window (the larger the better)}
-#' \item \bold{Cpk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (from QC charting) between your process center and the nearest customer specification limit.}
-#' \item \bold{Pp}: Describes how many times your 6 sigma process window (overall standard deviation) can fit in your customer's specification window (the larger the better)}}
-#' \item \bold{Ppk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (overall standard deviation) between your process center and the nearest customer specification limit.}
+#' \item \bold{Cp}: Describes how many times your 6 sigma process window (from QC charting) can fit in your customer's specification window (the larger the better)
+#' \item \bold{Cpk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (from QC charting) between your process center and the nearest customer specification limit.
+#' \item \bold{Pp}: Describes how many times your 6 sigma process window (overall standard deviation) can fit in your customer's specification window (the larger the better)
+#' \item \bold{Ppk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (overall standard deviation) between your process center and the nearest customer specification limit.
 #' }
 #' @param data vector or dataframe, as indicated below for each chart type
 #' \itemize{
