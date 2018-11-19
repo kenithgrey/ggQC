@@ -13,6 +13,8 @@ capability.summary(LSL, USL, QC.Center, QC.Sigma, s.Sigma, digits = 2)
 
 \item{QC.Center}{number, the mean or median value determined from an XmR plot or a Studentized (e.g., xBar) analysis.}
 
+\item{QC.Sigma}{number, the sigma value determined from an XmR plot or a Studentized (e.g., xBar) analysis.}
+
 \item{s.Sigma}{number, the sigma value determined from overall standard deviation (i.e., sd()).}
 
 \item{digits}{integer, how many digits to report.}

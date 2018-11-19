@@ -32,6 +32,7 @@
 #' @param LSL number, customer's lower specification limit.
 #' @param USL number, customer's upper specification limit.
 #' @param QC.Center number, the mean or median value determined from an XmR plot or a Studentized (e.g., xBar) analysis.
+#' @param QC.Sigma number, the sigma value determined from an XmR plot or a Studentized (e.g., xBar) analysis.
 #' @param s.Sigma number, the sigma value determined from overall standard deviation (i.e., sd()).
 #' @param digits integer, how many digits to report.
 #' @return data frame , listing of metric lebel and value
@@ -59,6 +60,8 @@ capability.summary <-
 #' @export
 #' @title Calculate Summary of Quality Performance Parameters
 #' @description function to report listing of quality performance parameters
+#' @param LSL numeric, Customer's lower specification limit
+#' @param USL numeric, Customer's Upper specification limit
 #' \itemize{
 #' \item \bold{Proc. Tolerance (sigma)}: Describes the number of your process sigma (from QC charting) that can fit in your customer's specification window (the larger the better).
 #' \item \bold{DNS (sigma)}: Distance to Nearest Specification (DNS) limit. Measure of how centered your process is and how close you are to the nearest process limit in sigma units.
@@ -109,8 +112,8 @@ QC_Capability <-
       QC.Center <- ifelse(method == "XmR", result[[2]], result[[6]])
       QC.Sigma <- result$sigma
       #s.Sigma <- 5
-      s.Sigma <- ifelse(method=="XmR", sd(data),
-                        eval(parse(text = paste0("sd(data$",value, ")")))
+      s.Sigma <- ifelse(method=="XmR", stats::sd(data),
+                        eval(parse(text = paste0("stats::sd(data$",value, ")")))
       )
     }else{
       warning(paste0("QC Method", method, ": Doesn't currently support the QC capability function"))

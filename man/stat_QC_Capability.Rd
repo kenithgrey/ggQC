@@ -2,13 +2,13 @@
 % Please edit documentation in R/04_stat_qc_capability.R
 \name{stat_QC_Capability}
 \alias{stat_QC_Capability}
-\title{Generic Function for drawing QC capability information on plots}
+\title{Auto QC Capability Stat Function}
 \usage{
-stat_QC_Capability(LSL, USL, method = "xBar.rBar", digits = 1,
-  mapping = NULL, data = NULL, geom = "vline",
-  position = "identity", na.rm = FALSE, show.legend = NA,
-  inherit.aes = TRUE, show = c("LSL", "USL"), direction = "v",
-  type = NA, ...)
+stat_QC_Capability(LSL, USL, method = "xBar.rBar",
+  show.lines = c("LSL", "USL"), line.direction = "v",
+  show.line.labels = TRUE, line.label.size = 3,
+  show.cap.summary = c("Cp", "Cpk", "Pp", "Ppk"), cap.summary.size = 4,
+  px = Inf, py = -Inf, digits = 3)
 }
 \arguments{
 \item{LSL}{numeric, Customer's lower specification limit}
@@ -21,196 +21,120 @@ stat_QC_Capability(LSL, USL, method = "xBar.rBar", digits = 1,
   \item \bold{Studentized Charts}: xBar.rBar, xBar.rMedian, xBar.sBar, xMedian.rBar,
 xMedian.rMedian
 }}
+
+\item{show.lines}{vector, indicating which lines to draw ie., c("LCL", "LSL", "X", "USL", "UCL")
+\itemize{
+  \item \bold{LCL}: Lower Control Limit
+  \item \bold{LSL}: Lower Specification Limit
+  \item \bold{X}: Process Center
+  \item \bold{USL}: Upper Specification Limit
+  \item \bold{UCL}: Upper Control Limit
+}}
+
+\item{line.direction}{string "v" or "h", specifies which direction to draw lines.}
+
+\item{show.line.labels}{boolean, if TRUE then draw.}
+
+\item{line.label.size}{numeric, control the size of the line labels.}
+
+\item{show.cap.summary}{vector, indicating which lines to draw ie.,
+c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig").
+The order given in the vector is the order presented in the graph.
+\itemize{
+  \item \bold{TOL}: Tolerance in Sigma Units  (USL-LSL)/sigma
+  \item \bold{DNS}: Distance to Nearest Specification Limit in Simga Units
+  \item \bold{Cp}: Cp (Within)
+  \item \bold{Cpk}: Cpk (Within)
+  \item \bold{Pp}: Pp (Between)
+  \item \bold{Ppk}: Ppk (Between)
+  \item \bold{LCL}: Lower Control Limit
+  \item \bold{X}: Process Center
+  \item \bold{UCL}: Upper Control Limit
+  \item \bold{Sig}: Sigma from control charts
+}}
+
+\item{cap.summary.size}{numeric, control the size/scale of the summary text box.}
+
+\item{px}{numeric, x position for summary text box. Use Inf to force label to x-limit.}
+
+\item{py}{numeric, y position for summary text box. Use Inf to force label to y-limits. May also need vjust parameter.}
+
+\item{digits}{integer, how many digits to report.}
 }
 \value{
-ggplot control charts.
+capability layer for histogram and density plots.
 }
 \description{
-Generic Function for drawing QC capability information on plots
+Draws lines, lables and summary statistics. Works best with histogram and density plots.
 }
 \examples{
+# Load Libraries ----------------------------------------------------------
+require(ggQC)
+require(ggplot2)
 # Setup Data --------------------------------------------------------------
 set.seed(5555)
 Process1 <- data.frame(ProcessID = as.factor(rep(1,100)),
-                       Value = rnorm(100,10,1),
-                       Subgroup = rep(1:20, each=5),
-                       Process_run_id = 1:100)
+                      Value = rnorm(100,10,1),
+                      Subgroup = rep(1:20, each=5),
+                      Process_run_id = 1:100)
 set.seed(5556)
 Process2 <- data.frame(ProcessID = as.factor(rep(2,100)),
-                       Value = rnorm(100,20, 1),
-                       Subgroup = rep(1:10, each=10),
-                       Process_run_id = 101:200)
-
+                      Value = rnorm(100,20, 1),
+                      Subgroup = rep(1:10, each=10),
+                      Process_run_id = 101:200)
 df <- rbind(Process1, Process2)
 
 ######################
-## Example 1 XmR    ##
+##  Example 1 XmR   ##
 ######################
+
 ##You may need to use the r-studio Zoom for these plots or make the size of the
 ##stat_QC_cap_summary smaller with size = some number"
 
-method <- "XmR"
-
 # Normal Histogram XmR --------------------------------------------------------
-
 EX1.1 <-  ggplot(df[df$ProcessID == 1,], aes(x=Value, QC.Subgroup=Subgroup)) +
-  geom_histogram(binwidth = 1, color="purple") +
-  geom_hline(yintercept=0, color="grey") +
-  stat_QC_cap_vlines(LSL = 5, USL = 15, show=c("X", "LSL", "USL"), method=method) +
-  stat_QC_cap_vlabels(LSL = 5, USL = 15, show=c("X", "LSL", "USL"), method=method) +
-  stat_QC_cap_summary(LSL = 5, USL = 15, method=method,
-                      #show="ALL",
-                      #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                      #show=c("Sig","TOL", "DNS"),
-                      show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                      color="black", digits=2, size=4) +
-  scale_x_continuous(expand =  expand_scale(mult = c(0.15,.8))) +
-  ylim(0,45)
+geom_histogram(binwidth = 1, color="purple") +
+ geom_hline(yintercept=0, color="grey") +
+ stat_QC_Capability(LSL=5, USL=15, show.cap.summary = "all", method="XmR") +
+ scale_x_continuous(expand =  expand_scale(mult = c(0.15,.8))) +
+ ylim(0,45)
 #Ex1.1
 
 # Facet Histogram XmR -----------------------------------------------------
-
-EX1.2 <- ggplot(df[order(df$Process_run_id),], aes(x=Value, QC.Subgroup=Subgroup, color=ProcessID)) +
-  geom_histogram(binwidth = 1) +
-  geom_hline(yintercept=0, color="grey") +
-  stat_QC_cap_vlines(LSL = 5, USL = 15, method=method) +
-  stat_QC_cap_vlabels(LSL = 5, USL = 15, method=method) +
-  stat_QC_cap_summary(LSL = 5, USL = 15, method=method,
-                      #show="ALL",
-                      #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                      #show=c("Sig","TOL", "DNS"),
-                      show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                      color="black", digits=4, size=4) +
-  scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8))) +
-  facet_grid(.~ProcessID) + ylim(0,45)
+EX1.2 <- ggplot(df[order(df$Process_run_id),],
+aes(x=Value, QC.Subgroup=Subgroup, color=ProcessID)) +
+geom_histogram(binwidth = 1) +
+ geom_hline(yintercept=0, color="grey") +
+ stat_QC_Capability(LSL=5, USL=15, show.cap.summary = "all", method="XmR") +
+ scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8))) +
+ facet_grid(.~ProcessID, scales = "free_x") + ylim(0,45)
 #EX1.2
 
-# Facet Density Plot XmR -------------------------------------------------
-
+# Normal Density XmR --------------------------------------------------------
 EX1.3 <- ggplot(df[df$ProcessID == 1,], aes(x=Value, QC.Subgroup=Subgroup)) +
-  geom_density(bw = .4, fill="purple", trim=TRUE) +
-  geom_hline(yintercept=0, color="grey") +
-  stat_QC_cap_vlines(LSL = 5, USL = 15, show=c("X", "LSL", "USL"), method=method) +
-  stat_QC_cap_vlabels(LSL = 5, USL = 15, show=c("X", "LSL", "USL"), method=method) +
-  stat_QC_cap_summary(LSL = 5, USL = 15, method=method,
-                      #show="ALL",
-                      #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                      #show=c("Sig","TOL", "DNS"),
-                      show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                      color="black", digits=2, size=4) +
-
-  scale_x_continuous(expand =  expand_scale(mult = c(0.15,.8)))  + ylim(0,.5)
+geom_density(bw = .4, fill="purple", trim=TRUE) +
+ geom_hline(yintercept=0, color="grey") +
+ stat_QC_Capability(LSL=5, USL=15, show.cap.summary = "all", method="XmR") +
+ scale_x_continuous(expand =  expand_scale(mult = c(0.15,.8)))  + ylim(0,.5)
 #EX1.3
-
-# Facet Density Plot XmR --------------------------------------------------
-
-EX1.4 <- ggplot(df[order(df$Process_run_id),], aes(x=Value, QC.Subgroup=Subgroup, color=ProcessID)) +
-  geom_density(bw = .4, fill="grey", trim=TRUE ) +
-  stat_QC_cap_vlines(LSL = 5, USL = 15, method=method) +
-  stat_QC_cap_vlabels(LSL = 5, USL = 15, method=method) +
-  stat_QC_cap_summary(LSL = 5, USL = 15, method=method, #py=.3,
-                      #show="ALL",
-                      #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                      #show=c("Sig","TOL", "DNS"),
-                      show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                      color="black", digits=4, size=4) +
-  scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8))) +
-  # geom_hline(yintercept=0, color="black") +
-  facet_grid(.~ProcessID) + ylim(0,.5)
-#EX1.4
-
 
 ########################################
 ##  Example 2: xBar.rBar or xBar.sBar ##
 ########################################
-
-method <- "xBar.rBar" #Alternativly Use "xBar.sBar" if desired
-
-
 # Single Histogram xBar.rBar ----------------------------------------------
-
 EX2.1 <- ggplot(df[df$ProcessID==1,], aes(x=Value, QC.Subgroup=Subgroup)) +
-  geom_histogram(binwidth = 1) +
-  stat_QC_Capability(LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(geom="label", LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(px=Inf, py=0, LSL = 5, USL = 15, geom="label",
-                     type="table", method=method,
-                     #show="ALL",
-                     #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                     #show=c("Sig","TOL", "DNS"),
-                     show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                     size=3.5) +
-  scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8))) #+
+ geom_histogram(binwidth = 1) +
+ stat_QC_Capability(LSL=5, USL=15, method="xBar.rBar") +
+ scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8))) #+
 #EX2.1
-
-
-# Faceted Histogram xBar.rBar ---------------------------------------------
-
-EX2.2 <- ggplot(df, aes(x=Value, QC.Subgroup=Subgroup)) +
-  geom_histogram(binwidth = 1) +
-  stat_QC_Capability(LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(geom="label", LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(px=Inf, py=0, LSL = 5, USL = 15, geom="label",
-                     type="table", method=method,
-                     #show="ALL",
-                     #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                     #show=c("Sig","TOL", "DNS"),
-                     show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                     size=3.5) +
-  scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8)))+
-  facet_grid(.~ProcessID, scales="free_x")
-#EX2.2
-
-# Single Density xBar.rBar ----------------------------------------------
-
-EX2.3 <- ggplot(df[df$ProcessID==1,], aes(x=Value, QC.Subgroup=Subgroup)) +
-  geom_density(bw = .4, fill="grey", alpha=.4) +
-  stat_QC_Capability(LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(geom="label", LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(px=Inf, py=0, LSL = 5, USL = 15, geom="label",
-                     type="table", method=method,
-                     #show="ALL",
-                     #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                     #show=c("Sig","TOL", "DNS"),
-                     show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                     size=3.5) +
-  scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8))) #+
-#EX2.3
-
-# Faceted Density xBar.rBar ---------------------------------------------
-
-EX2.4 <-  ggplot(df, aes(x=Value, QC.Subgroup=Subgroup)) +
-  geom_density(bw = .4, fill="grey", alpha=.4) +
-  stat_QC_Capability(LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(geom="label", LSL = 5, USL = 15, show = c("LSL", "USL"), method=method) +
-  stat_QC_Capability(px=Inf, py=0, LSL = 5, USL = 15, geom="label",
-                     type="table", method=method,
-                     #show="ALL",
-                     #show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk", "LCL", "X", "UCL", "Sig")
-                     #show=c("Sig","TOL", "DNS"),
-                     show=c("TOL","DNS", "Cp", "Cpk", "Pp", "Ppk"),
-                   size=3.5) +
-  scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8)))+
-  facet_grid(.~ProcessID, scales="free_x")
-#EX2.4
-
-
-###############################
-##  Example 3: xBar.rMedian  ##
-###############################
-
-## Plots involving medians should give warning: "median based QC methods represent
-## at best *potential* process capability"
-
-##These plot work the same as in examples 2.X; below is an example.
-
-method <- "xBar.rMedian"
-EX3.1 <- ggplot(df[order(df$Run),], aes(x=Value, QC.Subgroup=Run)) +
-  geom_histogram(binwidth = 1) +
-  stat_QC_Capability(LSL = 0, USL = 15, show = c("LCL", "UCL"), method=method) +
-  stat_QC_Capability(geom="label", LSL = 0, USL = 15, show = c("LCL", "UCL"), method=method) +
-  stat_QC_Capability(px=Inf, py=0, LSL = 0, USL = 15, geom="label", type="table",
-                     show=c("TOL", "DNS", "Sig"),  size=3.5, method=method) +
-  scale_x_continuous(expand =  ggplot2::expand_scale(mult = c(0.15,.8)))
-#EX3.1
+}
+\seealso{
+for more control over lines, labels, and capability data see the following functions:
+\itemize{
+ \item \code{\link{stat_QC_cap_vlabels}}
+ \item \code{\link{stat_QC_cap_hlabels}}
+ \item \code{\link{stat_QC_cap_vlines}}
+ \item \code{\link{stat_QC_cap_hlines}}
+ \item \code{\link{stat_QC_cap_summary}}
+}
 }

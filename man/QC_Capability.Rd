@@ -34,13 +34,9 @@ factors/variables}
 \item{na.rm}{a logical value indicating whether NA values should be
 stripped before the computation proceeds.}
 
-\item{digits}{integer, how many digits to report.}
-}
-\value{
-data frame , listing of metric lebel and value
-}
-\description{
-function to report listing of quality performance parameters
+\item{LSL}{numeric, Customer's lower specification limit}
+
+\item{USL}{numeric, Customer's Upper specification limit
 \itemize{
 \item \bold{Proc. Tolerance (sigma)}: Describes the number of your process sigma (from QC charting) that can fit in your customer's specification window (the larger the better).
 \item \bold{DNS (sigma)}: Distance to Nearest Specification (DNS) limit. Measure of how centered your process is and how close you are to the nearest process limit in sigma units.
@@ -48,5 +44,13 @@ function to report listing of quality performance parameters
 \item \bold{Cpk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (from QC charting) between your process center and the nearest customer specification limit.
 \item \bold{Pp}: Describes how many times your 6 sigma process window (overall standard deviation) can fit in your customer's specification window (the larger the better)
 \item \bold{Ppk}: Describes how centered your process is relative to customer specifications. How many times can you fit a 3 sigma window (overall standard deviation) between your process center and the nearest customer specification limit.
+}}
+
+\item{digits}{integer, how many digits to report.}
 }
+\value{
+data frame , listing of metric lebel and value
+}
+\description{
+function to report listing of quality performance parameters
 }
