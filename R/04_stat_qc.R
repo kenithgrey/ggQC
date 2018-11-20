@@ -22,18 +22,21 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
   compute_group = function(data, scales, n=NULL, digits=1,
                            method=NULL, draw.line=draw.line,
                            physical.limits=c(NA,NA),
-                           call.from = "QC.Lines",
-                           show.1n2.sigma = FALSE){
+                           call.from = "QC.NULL",
+                           show.1n2.sigma = FALSE, limit.txt.label=c("LCL","UCL")){
      temp <- aggregate(data=data, y~x, mean)
-     #print(temp)
-
+     # print("---NEW---")
+     # print(call.from)
+     # print(limit.txt.label)
+     LCL <- limit.txt.label[1]
+     UCL <- limit.txt.label[2]
      if(method %in% c("mR", "XmR", "c")){
        qcline <- if(draw.line == "center") c(2) else c(1,3)
        dflines <- ylines_indv(temp$y, n=n, method = method)
        sigma <- dflines$sigma
        center <- dflines[2]
-       limits_txt_lbl <- c("LCL", "UCL")
-
+       limits_txt_lbl <- limit.txt.label
+       #print(limits_txt_lbl)
         if(!all(is.na(physical.limits)) & method %in% c("XmR", "c")){
           if(!any(is.na(physical.limits))){
 
@@ -43,21 +46,21 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
               limits_txt_lbl <- c("LB", "UB")
             }else if(physical.limits[1] > dflines[1]){
               dflines[1] <- physical.limits[1]
-              limits_txt_lbl <- c("LB", "UCL")
+              limits_txt_lbl <- c("LB", UCL)
             }else if(physical.limits[2] < dflines[3]){
               dflines[3] <- physical.limits[2]
-              limits_txt_lbl <- c("LCL", "UB")
+              limits_txt_lbl <- c(LCL, "UB")
             }
 
           }else if(!is.na(physical.limits[1])){
              if(physical.limits[1] > dflines[1]){
              dflines[1] <- physical.limits[1]
-             limits_txt_lbl <- c("LB", "UCL")
+             limits_txt_lbl <- c("LB", UCL)
              }
           }else if(!is.na(physical.limits[2])){
             if(physical.limits[2] < dflines[3]){
               dflines[3] <- physical.limits[2]
-              limits_txt_lbl <- c("LCL", "UB")
+              limits_txt_lbl <- c(LCL, "UB")
             }
           }
        }
@@ -82,7 +85,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        dflines <- ylines_indv(temp$y, n=n, method = method)
        sigma <- dflines$sigma
        center <- dflines[2]
-       limits_txt_lbl <- c("LCL", "UCL")
+       limits_txt_lbl <- limit.txt.label
 
 
 
@@ -122,7 +125,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        dflines <- QC_Lines(data = data, value = "y", grouping = "x", n=n, method = method)
        sigma <- dflines$sigma
        center <- dflines[6]
-       limits_txt_lbl <- c("LCL", "UCL")
+       limits_txt_lbl <- limit.txt.label
 
        if(!all(is.na(physical.limits)) & !method %in% c("rBar", "rMedian", "sBar")){
          if(!any(is.na(physical.limits))){
@@ -133,20 +136,20 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
              limits_txt_lbl <- c("LB", "UB")
            }else if(physical.limits[1] > dflines[5]){
              dflines[5] <- physical.limits[1]
-             limits_txt_lbl <- c("LB", "UCL")
+             limits_txt_lbl <- c("LB", UCL)
            }else if(physical.limits[2] < dflines[7]){
              dflines[7] <- physical.limits[2]
-             limits_txt_lbl <- c("LCL", "UB")
+             limits_txt_lbl <- c(LCL, "UB")
            }
          }else if(!is.na(physical.limits[1])){
            if(physical.limits[1] > dflines[5]){
              dflines[5] <- physical.limits[1]
-             limits_txt_lbl <- c("LB", "UCL")
+             limits_txt_lbl <- c("LB", UCL)
            }
          }else if(!is.na(physical.limits[2])){
            if(physical.limits[2] < dflines[7]){
              dflines[7] <- physical.limits[2]
-             limits_txt_lbl <- c("LCL", "UB")
+             limits_txt_lbl <- c(LCL, "UB")
            }
          }
        }
@@ -176,7 +179,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
      )
      }else if(!grepl(pattern = "c|XmR|xBar|xMedian|np", method) &
               !call.from == "QC.Label" & show.1n2.sigma){
-       warning(paste(method, " method: does not support drawing sigma lines"))
+       warning(paste(method, " method: does not support drawing sigma lines"),call. = F)
        sigma_df <- data.frame(
          yintercept = integer(),
          y = integer(),
@@ -205,13 +208,19 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 
 
      if(!any(qcline %in% c(2,6))){
-       #print("hello")
+       #print(limit.txt.label)
+       if(!any(is.na(limit.txt.label))){
        limits_df_txt_lbl <- limits_df
        limits_df_txt_lbl$x <- -Inf
        limits_df_txt_lbl$label <- limits_txt_lbl
        limits_df_txt_lbl$hjust <- 0
+       }else{
+         limits_df_txt_lbl <- NULL
+       }
        if(call.from == "QC.Label"){
          limits_df <- rbind(limits_df_txt_lbl, limits_df)
+         # print(limits_txt_lbl)
+         # print(limits_df)
        }else{
          if(show.1n2.sigma){
          limits_df <- rbind(limits_df_txt_lbl, limits_df, sigma_df)
@@ -225,7 +234,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
        }
 
      #print(data$group)
-     #print(limits_df)
+
       limits_df
    }
 )
@@ -267,6 +276,12 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' @param auto.label boolean setting, if T labels graph with control limits.
 #' @param label.digits integer, number of decimal places to display.
 #' @param show.1n2.sigma boolean setting, if T labels graph 1 and 2 sigma lines. Line color is set by color.qc_limits
+#' @param limit.txt.label vector, provides option for nameing or not showing the limit text lables (e.g., UCL, LCL)
+#' \itemize{
+#' \item \bold{limit.txt.label = c("LCL", "UCL")}: default
+#' \item \bold{limit.txt.label = c("Low", "High")}: changes the label text to low and high
+#' \item \bold{limit.txt.label = NA}: does not show label text.
+#' }
 #' @return ggplot control charts.
 #' @examples
 #'# Load Libraries ----------------------------------------------------------
@@ -423,6 +438,7 @@ stat_QC <- function(mapping = NULL,
                     color.line="black",
                     physical.limits=c(NA,NA),
                     auto.label = FALSE,
+                    limit.txt.label=c("LCL","UCL"),
                     label.digits = 1,
                     show.1n2.sigma = FALSE,
                     #color.point="black",
@@ -501,7 +517,9 @@ stat_QC <- function(mapping = NULL,
     params = list(na.rm = na.rm, n=n, digits=1, method=method,
                   color= color.qc_limits, draw.line = "limit",
                   physical.limits=physical.limits,
-                  show.1n2.sigma=show.1n2.sigma, ...)
+                  show.1n2.sigma=show.1n2.sigma,
+                  #limit.txt.label=limit.txt.label,
+                  ...)
   )
 
   Centerline <- ggplot2::layer(
@@ -511,7 +529,9 @@ stat_QC <- function(mapping = NULL,
     params = list(na.rm = na.rm, n=n,
                   digits=1, method=method,
                   color=color.qc_center, draw.line = "center",
-                  physical.limits=c(NA,NA), ...)
+                  physical.limits=c(NA,NA),
+                  limit.txt.label=limit.txt.label,
+                  ...)
   )
   }
 
@@ -532,6 +552,7 @@ stat_QC <- function(mapping = NULL,
                               color.qc_center = color.qc_center,
                               text.size=3,
                               physical.limits=physical.limits,
+                              limit.txt.label = limit.txt.label,
                               ...)
   }
 
@@ -591,6 +612,12 @@ stat_QC <- function(mapping = NULL,
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
 #' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
 #' @param color.qc_center color, used to colorize the plot's center line.
+#' @param limit.txt.label vector, provides option for nameing or not showing the limit text lables (e.g., UCL, LCL)
+#' \itemize{
+#' \item \bold{limit.txt.label = c("LCL", "UCL")}: default
+#' \item \bold{limit.txt.label = c("Low", "High")}: changes the label text to low and high
+#' \item \bold{limit.txt.label = NA}: does not show label text.
+#' }
 #' @return data need to produce the mR plot in ggplot.
 #' @examples
 #' #########################
@@ -666,7 +693,7 @@ stat_QC_labels <- function(mapping = NULL,
                            color.qc_limits = "red",
                            color.qc_center = "black",
                            text.size=3,
-                           physical.limits=c(NA,NA),
+                           physical.limits=c(NA,NA), limit.txt.label=c("LCL","UCL"),
 
                            ...) {
   Center <- ggplot2::layer(
@@ -677,14 +704,13 @@ stat_QC_labels <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, #hjust=0, #1.1,
+    params = list(na.rm = na.rm,
                   vjust=.5, size=text.size,n=n,
                   digits=digits,method=method,
                   color="black",
-                  #fill = "white",
-                  #color=color.qc_center,
                   draw.line = "center",
-                  call.from = "QC.Label", ...)
+                  call.from = "QC.Label",
+                  limit.txt.label=limit.txt.label, ...)
   )
 
   Limits <- ggplot2::layer(
@@ -695,15 +721,14 @@ stat_QC_labels <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(na.rm = na.rm, #hjust=0, #1.1,
+    params = list(na.rm = na.rm,
                   vjust=.5, size=text.size,n=n,
                   digits=digits,method=method,
                   color="black",
-                  #fill = "white",
-                  #color=color.qc_limits,
                   draw.line = "limit",
                   physical.limits=physical.limits,
                   call.from = "QC.Label",
+                  limit.txt.label=limit.txt.label,
                   ...)
   )
 if(method %in% c("p", "u")){

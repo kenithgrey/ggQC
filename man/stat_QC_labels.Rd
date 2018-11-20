@@ -8,7 +8,7 @@ stat_QC_labels(mapping = NULL, data = NULL, geom = "label",
   position = "identity", na.rm = FALSE, show.legend = NA,
   inherit.aes = TRUE, n = NULL, digits = 1, method = "xBar.rBar",
   color.qc_limits = "red", color.qc_center = "black", text.size = 3,
-  physical.limits = c(NA, NA), ...)
+  physical.limits = c(NA, NA), limit.txt.label = c("LCL", "UCL"), ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -73,6 +73,13 @@ xMedian.rMedian
 \item{text.size}{number, size of the text label}
 
 \item{physical.limits}{vector, specify lower phsical boundry and upper physical boundry}
+
+\item{limit.txt.label}{vector, provides option for nameing or not showing the limit text lables (e.g., UCL, LCL)
+\itemize{
+\item \bold{limit.txt.label = c("LCL", "UCL")}: default
+\item \bold{limit.txt.label = c("Low", "High")}: changes the label text to low and high
+\item \bold{limit.txt.label = NA}: does not show label text.
+}}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
