@@ -269,14 +269,14 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #'   \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
-#' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
+#' @param physical.limits vector, specify lower physical boundary and upper physical boundary
 #' @param color.qc_center color, used to colorize the plot's center line.
 #' @param color.point color, used to colorize points in studentized plots. You will need geom_point() for C, P, U, NP, and XmR charts.
 #' @param color.line color, used to colorize lines connecting points in studentized plots. You will need geom_line() for C, P, U, NP, and XmR charts.
 #' @param auto.label boolean setting, if T labels graph with control limits.
 #' @param label.digits integer, number of decimal places to display.
 #' @param show.1n2.sigma boolean setting, if T labels graph 1 and 2 sigma lines. Line color is set by color.qc_limits
-#' @param limit.txt.label vector, provides option for nameing or not showing the limit text lables (e.g., UCL, LCL)
+#' @param limit.txt.label vector, provides option for naming or not showing the limit text labels (e.g., UCL, LCL)
 #' \itemize{
 #' \item \bold{limit.txt.label = c("LCL", "UCL")}: default
 #' \item \bold{limit.txt.label = c("Low", "High")}: changes the label text to low and high
@@ -610,9 +610,9 @@ stat_QC <- function(mapping = NULL,
 #' \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
 #' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
-#' @param physical.limits vector, specify lower phsical boundry and upper physical boundry
+#' @param physical.limits vector, specify lower physical boundary and upper physical boundary
 #' @param color.qc_center color, used to colorize the plot's center line.
-#' @param limit.txt.label vector, provides option for nameing or not showing the limit text lables (e.g., UCL, LCL)
+#' @param limit.txt.label vector, provides option for naming or not showing the limit text labels (e.g., UCL, LCL)
 #' \itemize{
 #' \item \bold{limit.txt.label = c("LCL", "UCL")}: default
 #' \item \bold{limit.txt.label = c("Low", "High")}: changes the label text to low and high

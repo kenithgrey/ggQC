@@ -35,7 +35,7 @@
 #' @param QC.Sigma number, the sigma value determined from an XmR plot or a Studentized (e.g., xBar) analysis.
 #' @param s.Sigma number, the sigma value determined from overall standard deviation (i.e., sd()).
 #' @param digits integer, how many digits to report.
-#' @return data frame , listing of metric lebel and value
+#' @return data frame , listing of metric labels and value
 capability.summary <-
   function(LSL, USL, QC.Center, QC.Sigma, s.Sigma, digits=2){
     capability_df <- data.frame(
@@ -90,7 +90,7 @@ capability.summary <-
 #' @param na.rm a logical value indicating whether NA values should be
 #' stripped before the computation proceeds.
 #' @param digits integer, how many digits to report.
-#' @return data frame , listing of metric lebel and value
+#' @return data frame , listing of metric labels and value
 QC_Capability <-
   function(data=NULL, value=NULL, grouping=NULL,
            formula=NULL, method="xBar.rBar",
