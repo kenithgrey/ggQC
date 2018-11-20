@@ -2,6 +2,32 @@
 output: github_document
 ---
 
+#ggQC Version 0.0.3#
+
+##New functions##
+  
+  * **stat_QC_Capability()** : NEW ggplot stat function to add QC lines, labels, and capability summaries to histograms and density charts (convenience function)
+  
+  * **QC_Capability()** : NEW function to calculated capability parameters given LSL, USL, and a data.frame containing the process data. 
+  
+  * **capability.summary()** : NEW function to calculate capability parameters if the LSL, USL, process mean and sigma from QC charting are already known.  
+  
+  * **stat_QC_cap_hlabels()**: NEW ggplot stat function to add horizontal QC capability labels to histograms and density charts
+  
+  * **stat_QC_cap_vlabels()** : NEW ggplot stat function to add vertical QC capability labels to histograms and density charts
+  
+  * **stat_QC_cap_hlines()** : NEW ggplot stat function to add horizontal QC capability lines to histograms and density charts
+  
+  * **stat_QC_cap_vlines()** : NEW ggplot stat function to add vertical QC capability lines to histograms and density charts
+  
+  * **stat_QC_cap_summary()** : NEW ggplot stat function to display QC capability parameters on a chart. 
+  
+##Updated Functions##
+  * **QC_Violations(show.facets=c(1:4))**: Use new parameter show.facets to display specific QC violation facet(s). 
+  
+  * **stat_QC()** : New auto labeling capabilities, simplified ggplot syntax for making mR and xBar style plots; can now display 1 and 2 sigma lines, and accommodate upper and lower physical limits. 
+
+
 #ggQC Version 0.0.2#
 
 ##New Functions##
@@ -14,7 +40,7 @@ output: github_document
 
 
 ##Resolved Issues##
-* Fixed (#32): Observed that when n > 100 I got a convergence error for D5. Unfortunately this causes problems with all the quailty control charts if n > 100.
+* Fixed (#32): Observed that when n > 100 I got a convergence error for D5. Unfortunately this causes problems with all the quality control charts if n > 100.
 
 #ggQC Version 0.0.1#
 
