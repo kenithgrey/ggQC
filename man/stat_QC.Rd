@@ -9,7 +9,8 @@ stat_QC(mapping = NULL, data = NULL, geom = "hline",
   inherit.aes = TRUE, n = NULL, method = "xBar.rBar",
   color.qc_limits = "red", color.qc_center = "blue",
   color.point = "black", color.line = "black",
-  physical.limits = c(NA, NA), auto.label = FALSE, label.digits = 1,
+  physical.limits = c(NA, NA), auto.label = FALSE,
+  limit.txt.label = c("LCL", "UCL"), label.digits = 1,
   show.1n2.sigma = FALSE, ...)
 }
 \arguments{
@@ -77,6 +78,13 @@ xMedian.rMedian
 \item{physical.limits}{vector, specify lower phsical boundry and upper physical boundry}
 
 \item{auto.label}{boolean setting, if T labels graph with control limits.}
+
+\item{limit.txt.label}{vector, provides option for nameing or not showing the limit text lables (e.g., UCL, LCL)
+\itemize{
+\item \bold{limit.txt.label = c("LCL", "UCL")}: default
+\item \bold{limit.txt.label = c("Low", "High")}: changes the label text to low and high
+\item \bold{limit.txt.label = NA}: does not show label text.
+}}
 
 \item{label.digits}{integer, number of decimal places to display.}
 
