@@ -22,10 +22,11 @@
 # along with ggQC.  If not, see <http://www.gnu.org/licenses/>.
 Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
           compute_group = function(data, scales, method = method, callFrom = NULL,
-                                   n = NULL, line.color=line.color,
-                                   point.color = point.color,
-                                   violation_point.color = violation_point.color,
-                                   rule.color = rule.color){
+                                   n = NULL, line.colour="black",
+                                   point.colour = "black",
+                                   violation_point.colour = "orange",
+                                   rule.colour = "blue"){
+        #print(callFrom)
         #print(head(data))
         df <- data # copy the data
 
@@ -84,17 +85,17 @@ Stat_QC_VIOLATIONS <- ggplot2::ggproto("Stat_QC_VIOLATIONS", ggplot2::Stat,
 
           df3 <- df3[1:3,]
 
-          df3$colour <- rule.color
+          df3$colour <- rule.colour
           df3$yintercept <- c(centerLine,
                               centerLine + df3$SigmaLines[1]*Sigma,
                               centerLine - df3$SigmaLines[1]*Sigma)
           }else{return(NULL)}
 
           }else if(callFrom == "Points"){
-          df3$colour <- ifelse(df3$Violation == TRUE, violation_point.color, point.color)
+          df3$colour <- ifelse(df3$Violation == TRUE, violation_point.colour, point.colour)
 
         }else if(callFrom == "Lines"){
-          df3$colour <- line.color
+          df3$colour <- line.colour
         }
 
         #make the lines that go at the sigma levels
@@ -274,11 +275,10 @@ stat_qc_violations <- function(mapping = NULL,
                     point.size = 1.5,
                     point.color = "black",
                     violation_point.color = "red",
-
                     rule.color = "darkgreen",
-                    show.facets = c(1:4),
-
                     line.color=NULL,
+
+                    show.facets = c(1:4),
                     # size.line=.5,
                     # fill.bars=c("red", "white"),
                     ...) {
@@ -293,8 +293,8 @@ Points <- ggplot2::layer( #take care of the points
     inherit.aes = inherit.aes,
     params = list(method=method, callFrom="Points",
                   size=point.size,
-                  point.color = point.color,
-                  violation_point.color = violation_point.color,
+                  point.colour = point.color,
+                  violation_point.colour = violation_point.color,
                   ...))
 }
 
@@ -307,7 +307,7 @@ Lines <- ggplot2::layer( #take care of the lines between points
   position = position,
   show.legend = show.legend,
   inherit.aes = inherit.aes,
-  params = list(method=method, callFrom="Lines",line.color=line.color,
+  params = list(method=method, callFrom="Lines",line.colour=line.color,
                 ...))
 }
 
@@ -320,7 +320,7 @@ SigmaLines <- ggplot2::layer( #take care of the points
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(method=method, callFrom="SigmaLines",
-                  rule.color = rule.color, ...))
+                  rule.colour = rule.color, ...))
 
 Facet <- facet_qc_violations(method=method, show.facets=sort(show.facets))
 
