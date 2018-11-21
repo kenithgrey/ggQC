@@ -275,8 +275,9 @@ stat_qc_violations <- function(mapping = NULL,
                     point.size = 1.5,
                     point.color = "black",
                     violation_point.color = "red",
-                    rule.color = "darkgreen",
                     line.color=NULL,
+                    rule.color = "darkgreen",
+
 
                     show.facets = c(1:4),
                     # size.line=.5,

@@ -8,8 +8,8 @@ stat_qc_violations(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   na.rm = FALSE, method = "xBar.rBar", geom_points = TRUE,
   geom_line = TRUE, point.size = 1.5, point.color = "black",
-  violation_point.color = "red", rule.color = "darkgreen",
-  show.facets = c(1:4), line.color = NULL, ...)
+  violation_point.color = "red", line.color = NULL,
+  rule.color = "darkgreen", show.facets = c(1:4), ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -67,11 +67,11 @@ xMedian.rMedian
 
 \item{violation_point.color}{string, color of violation points on charts (e.g., "red")}
 
+\item{line.color}{string, color of lines connecting points}
+
 \item{rule.color}{string, color or horizontal rules indicating distribution center and sigma levels}
 
 \item{show.facets}{vector, selects violation facet 1 through 4. eg., c(1:4), c(1,4)}
-
-\item{line.color}{string, color of lines connecting points}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
