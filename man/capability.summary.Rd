@@ -20,7 +20,7 @@ capability.summary(LSL, USL, QC.Center, QC.Sigma, s.Sigma, digits = 2)
 \item{digits}{integer, how many digits to report.}
 }
 \value{
-data frame , listing of metric lebel and value
+data frame , listing of metric labels and value
 }
 \description{
 function to report listing of quality performance parameters

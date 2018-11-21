@@ -72,9 +72,9 @@ xMedian.rMedian
 
 \item{text.size}{number, size of the text label}
 
-\item{physical.limits}{vector, specify lower phsical boundry and upper physical boundry}
+\item{physical.limits}{vector, specify lower physical boundary and upper physical boundary}
 
-\item{limit.txt.label}{vector, provides option for nameing or not showing the limit text lables (e.g., UCL, LCL)
+\item{limit.txt.label}{vector, provides option for naming or not showing the limit text labels (e.g., UCL, LCL)
 \itemize{
 \item \bold{limit.txt.label = c("LCL", "UCL")}: default
 \item \bold{limit.txt.label = c("Low", "High")}: changes the label text to low and high

@@ -171,7 +171,8 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
      sigma_df <- data.frame(
        yintercept = c(center[[1]] + 1*sigma, center[[1]] - 1*sigma,
                       center[[1]] + 2*sigma, center[[1]] - 2*sigma),
-       y = rep(0, 4),
+       y = c(center[[1]] + 1*sigma, center[[1]] - 1*sigma,
+             center[[1]] + 2*sigma, center[[1]] - 2*sigma),
        x = rep(NA, 4),
        label = rep(NA, 4),
        hjust = rep(0, 4),
@@ -198,7 +199,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
          alpha = integer()
          )
      }
-
+     #print(sigma_df)
      #sigma_df <- ifelse(call.from == "QC.Label", na.omit(sigma_df), sigma_df)
 
      #limits_df$sigma <- sigma
