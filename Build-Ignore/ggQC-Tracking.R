@@ -13,7 +13,7 @@ data.frame(download.data$downloads[2], pkg=download.data$package[2])#,
 df$day <- as.POSIXct(df$day)
 
 require(ggplot2)
-ggplot(df[df$day > "2018-10-01",], aes(x=day, y=downloads, color=pkg)) +
+ggplot(df[df$day > "2018-10-01",], aes(x=day, y=log10(downloads), color=pkg)) +
   geom_point() +
   geom_path() #+
   #scale_y_continuous(limits = c(0,30))

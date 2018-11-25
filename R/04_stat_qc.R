@@ -269,7 +269,7 @@ STAT_QC <- ggplot2::ggproto("STAT_QC", ggplot2::Stat,
 #' xMedian.rMedian
 #'   \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 #' }
-#' @param color.qc_limits color, used to colorize the plot's upper and lower mR control limits.
+#' @param color.qc_limits color, used to colorize the plot's upper and lower control limits.
 #' @param physical.limits vector, specify lower physical boundary and upper physical boundary
 #' @param color.qc_center color, used to colorize the plot's center line.
 #' @param color.point color, used to colorize points in studentized plots. You will need geom_point() for C, P, U, NP, and XmR charts.
