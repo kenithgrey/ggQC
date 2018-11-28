@@ -54,4 +54,4 @@ Overview
 More Examples
 =============
 
-For more Information and Examples using ggQC, visit ([ggQC.r-bar.net](http://ggQC.r-bar.net/index.html))
+For more Information and Examples using ggQC, visit ([rcontrolcharts.com](http://rontrolcharts.com))
