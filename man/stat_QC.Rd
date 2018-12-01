@@ -67,7 +67,7 @@ xMedian.rMedian
   \item \bold{Dispersion Charts}: rBar, rMedian, sBar.
 }}
 
-\item{color.qc_limits}{color, used to colorize the plot's upper and lower mR control limits.}
+\item{color.qc_limits}{color, used to colorize the plot's upper and lower control limits.}
 
 \item{color.qc_center}{color, used to colorize the plot's center line.}
 

@@ -2,6 +2,14 @@
 output: github_document
 ---
 
+#ggQC version 0.0.31
+
+##Bugs Fixed##
+
+  * a bug associated with drawing the 1n2 sigma lines on the QC charts. 
+  * a strange ggplot bug around the word color and colour effecting violation plots. 
+
+
 #ggQC Version 0.0.3#
 
 ##New functions##
