@@ -142,7 +142,7 @@ stat_pareto <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, cumsums = F,
-                  color = "black",
+                  col = "black",
                   bars.fill = bars.fill,
                   ...))
 
