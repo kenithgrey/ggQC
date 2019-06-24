@@ -8,7 +8,7 @@ stat_pareto(mapping = NULL, data = NULL, geom = "point",
   position = "identity", show.legend = NA, inherit.aes = TRUE,
   group = 1, na.rm = FALSE, point.color = "black", point.size = 2,
   line.color = "black", line.size = 0.5, bars.fill = c("red",
-  "white"), ...)
+  "white"), bars.colour = "black", ...)
 }
 \arguments{
 \item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
@@ -61,6 +61,8 @@ stripped before the computation proceeds.}
 \item{line.size}{color, used to define line weight of cumulative percentage line}
 
 \item{bars.fill}{character vector length 2, start and end colors for pareto bars.}
+
+\item{bars.colour}{string. What colour should the bars' border be?}
 
 \item{...}{Other arguments passed on to \code{\link[=layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like

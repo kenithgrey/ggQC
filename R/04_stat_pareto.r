@@ -58,6 +58,7 @@ Stat_PARETO <- ggplot2::ggproto("Stat_PARETO", ggplot2::Stat,
 #' @param line.color color, used to define line color of cumulative percentage line
 #' @param line.size color, used to define line weight of cumulative percentage line
 #' @param bars.fill character vector length 2, start and end colors for pareto bars.
+#' @param bars.colour string. What colour should the bars' border be?
 #'
 #' @return Pareto plot.
 #'
@@ -100,6 +101,7 @@ stat_pareto <- function(mapping = NULL,
                     line.color="black",
                     line.size=.5,
                     bars.fill=c("red", "white"),
+                    bars.colour="black",
                     ...) {
 
   Points <- ggplot2::layer( #take care of the points
@@ -142,7 +144,7 @@ stat_pareto <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, cumsums = F,
-                  col = "black",
+                  colour = bars.colour,
                   bars.fill = bars.fill,
                   ...))
 
