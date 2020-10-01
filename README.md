@@ -37,7 +37,7 @@ XmR_Plot
 Installation
 ============
 
--   cran: install.package("ggQC")
+-   cran: install.packages("ggQC")
 -   github: devtools::install\_github("kenithgrey/ggQC")
 
 Overview
